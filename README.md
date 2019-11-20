@@ -76,7 +76,7 @@
  |항목            | 설명                                           |key type                             |data type                      | unique   | nullable  |비고                 |
  |---------------|------------------------------------------------|-------------------------------------|-------------------------------|----------|-----------|---------------------|
  |AID            | 알람을 식별하는 UUID                             |primary                              | varchar(40)                   | unique   | not null  |                    |
- |TARGET_MEMBER   | 알람을 받은 회원                                |                                     | varchar(100)                  |          | not null  |   40자 이상 불가         |
+ |TARGET_MEMBER   | 알람을 받은 회원                                |foreign(TB_MEMBER) on delete cascade | varchar(100)                  |          | not null  |  이메일 패턴      |
  |ALARM_TRIGGER   | 알람을 발생시킨 대상(시스템, 관리자, 다른 회원 등) |                                     |  varchar(100)                 |         |  not null  |  40자 이상 불가         |
  |EVENT_TYPE      | 어떤 알람 이벤트인지(좋아요 알림, 대댓글알림 , 시스템 공지 등)|                           |  varchar(100)                |          | not null   |  40자 이상 불가 |
  |ALARM_DATE      | 알람을 받은 날짜                                 |                                   | datetime default now()         |         |  not null  |                 |
@@ -166,7 +166,8 @@ create table TB_ALARM(
     EVENT_TYPE varchar(100) not null ,
     ALARM_DATE datetime default now(),
     ALARM_CHECK_DATE datetime,
-    primary key (AID)
+    primary key (AID),
+    foreign key (TARGET_MEMBER) REFERENCES TB_MEMBER(EMAIL) on delete cascade
 )
 ~~~
  
