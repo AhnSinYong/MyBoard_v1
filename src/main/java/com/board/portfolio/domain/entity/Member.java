@@ -48,6 +48,10 @@ public class Member implements EntityDefaultValues {
     @JsonBackReference
     private List<Board> boardList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member")
+    @JsonBackReference
+    private List<Comment> commentList = new ArrayList<>();
+
     @PrePersist
     @Override
     public void setDefaultValues() {
