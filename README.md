@@ -19,7 +19,7 @@
  |PASSWORD     	 |회원의 비밀번호		   |            | varchar(50)            |         | not null |숫자,영문,특문 8자이상 16이하|
  |NICKNAME     	 |회원의 별명		   |           | varchar(30)            | unique   |          |최소4자 이상, 10자이하      |
  |SIGNUP_DATE  	 |회원 가입일		   |           | DATETIME default now() |          | not null |                      |                       |
- |ROLE       	 |회원의 권한		   |           | varchar(30)            |          | not null |member, admin 중 하나  |
+ |ROLE       	 |회원의 권한		   |           | varchar(30) default 'MEMBER'|          | not null |MEMBER, ADMIN 중 하나  |
  |SOCIAL_ID    	 |소셜 아이디		   |           | varchar(100)            | unique   | null     |소셜에서 제공하는 ID     |
 
 ### TB_BOARD
@@ -91,7 +91,7 @@ create table TB_MEMBER(
     PASSWORD varchar(50) not null ,
     NICKNAME varchar(30) unique ,
     SIGNUP_DATE datetime default now(),
-    ROLE varchar(30) default 'ROLE_MEMBER',
+    ROLE varchar(30) default 'MEMBER',
     SOCIAL_ID varchar(100) unique,
     primary key(EMAIL)
 );
