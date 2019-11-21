@@ -62,7 +62,7 @@
   |REG_DATE      	 | "좋아요"를 누른 날짜          |                                  | datetime default now()        |          |not null |                      |
  
  
- ### TB_FILE
+ ### TB_FILE_ATTACHMENT
  |항목            | 설명                          |key type                             |data type                      | unique   | nullable  |비고                 |
  |---------------|-------------------------------|-------------------------------------|-------------------------------|----------|-----------|---------------------|
  |FID            | 파일을 식별하는 UUID            |primary                              | varchar(40)                  | unique    | not null |                      |
@@ -71,6 +71,8 @@
  |SAVE_NAME     | 파일이 서버에 저장된 이름(FID+확장자)|                                  |  varchar(70)                  |   unique    |   not null   공백금지, 확장자 필요  |
  |EXTENSION      | 파일의 확장자                   |                                   | varchar(20)                   |              |not null   |     10글자 이상불가     |
  |DOWN           | 파일 다운로드 횟수              |                                    |   int default 0             |               | not null |                    |
+ |SAVE_DATE      | 파일이 저장된 날짜              |                                    |  datetime default now()     |                | not null|                    |
+ |EMAIL          | 파일을 저장한 사용자의 이메일    | foreign(TB_MEMBER) on delete cascade |  varchar(100)              |              |  not null |                   |
  
  ### TB_ALARM
  |항목            | 설명                                           |key type                             |data type                      | unique   | nullable  |비고                 |
@@ -147,15 +149,18 @@ create table TB_LIKE_COMMENT(
 );
 ~~~
 ~~~
-create table TB_FILE(
+create table TB_FILE_ATTACHMENT(
     FID varchar(40),
     BID int not null,
     ORIGIN_NAME varchar(70) not null ,
     SAVE_NAME varchar(70) unique ,
     EXTENSION varchar(20) not null ,
     DOWN int default 0,
+    SAVE_DATE datetime default now(),
+    EMAIL varchar(100) not null,
     primary key(FID),
-    foreign key (BID) REFERENCES TB_BOARD(BID) on delete cascade
+    foreign key (BID) REFERENCES TB_BOARD(BID) on delete cascade,
+    foreign key (EMAIL) REFERENCES TB_MEMBER(EMAIL) on delete cascade
 );
 ~~~
 ~~~
