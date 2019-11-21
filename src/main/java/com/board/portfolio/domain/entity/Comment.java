@@ -22,6 +22,7 @@ public class Comment implements EntityDefaultValues{
 
     @ManyToOne
     @JoinColumn(name = "BID")
+    @JsonManagedReference
     private Board board;
 
     @Column(name = "CONTENT")
