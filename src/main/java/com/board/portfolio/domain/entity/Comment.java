@@ -50,6 +50,5 @@ public class Comment implements EntityDefaultValues{
     public void setDefaultValues() {
         this.like = Optional.ofNullable(this.like).orElse(0);
         this.regDate = Optional.ofNullable(this.regDate).orElse(new Date());
-        System.out.println(this.cId);
     }
 }
