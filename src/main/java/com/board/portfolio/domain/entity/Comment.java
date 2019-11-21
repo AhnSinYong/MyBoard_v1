@@ -1,10 +1,13 @@
 package com.board.portfolio.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Entity
@@ -43,6 +46,10 @@ public class Comment implements EntityDefaultValues{
     @JoinColumn(name="EMAIL")
     @JsonManagedReference
     private Member member;
+
+    @OneToMany(mappedBy = "comment")
+    @JsonBackReference
+    private List<LikeComment> commentList = new ArrayList<>();
 
 
     @PrePersist
