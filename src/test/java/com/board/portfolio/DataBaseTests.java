@@ -1,11 +1,7 @@
 package com.board.portfolio;
 
-import com.board.portfolio.domain.entity.Board;
-import com.board.portfolio.domain.entity.Comment;
-import com.board.portfolio.domain.entity.Member;
-import com.board.portfolio.repository.BoardRepository;
-import com.board.portfolio.repository.CommentRepository;
-import com.board.portfolio.repository.MemberRepository;
+import com.board.portfolio.domain.entity.*;
+import com.board.portfolio.repository.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +31,10 @@ class DataBaseTests {
     BoardRepository boardRepository;
     @Autowired
     CommentRepository commentRepository;
+    @Autowired
+    LikeBoardRepository likeBoardRepository;
+    @Autowired
+    LikeCommentRepository likeCommentRepository;
 
     @Test
     void dbConnectionTest() throws ClassNotFoundException {
@@ -71,11 +71,20 @@ class DataBaseTests {
     @Test
     @Transactional
     void findCommentTest(){
-//        Member member = insertMember();
-//        Board board = insertBoard();
-        Comment comment = insertComment((long)29);
         Comment comment_ = commentRepository.findById("test-for-custom-id").orElse(null);
 
+    }
+
+    @Test
+    @Transactional
+    void findLikeBoardTest(){
+        LikeBoard likeBoard = likeBoardRepository.findById("test-for-custom-id").orElse(null);
+    }
+
+    @Test
+    void findLikeCommentTest(){
+//        LikeComment comment = likeCommentRepository.save(buildLikeComment());
+        LikeComment commentLike = likeCommentRepository.findById("test-for-custom-id").orElse(null);
     }
 
 
@@ -119,12 +128,41 @@ class DataBaseTests {
         Comment comment = buildComment(bId);
         return commentRepository.save(comment);
     }
+    private Comment buildComment(){
+        return Comment.builder()
+                .cId("test-for-custom-id")
+                .board(Board.builder().bId((long)29).build())
+                .content("testtest")
+                .member(Member.builder().email("test@naver.com").build())
+                .build();
+    }
     private Comment buildComment(Long bId){
         return Comment.builder()
                 .cId("test-for-custom-id")
                 .board(Board.builder().bId((long)29).build())
                 .content("testtest")
                 .member(Member.builder().email("test@naver.com").build())
+                .build();
+    }
+
+    private LikeBoard insertLikeBoard(Long bId){
+        LikeBoard likeBoard = buildLikeBoard(bId);
+        return likeBoardRepository.save(likeBoard);
+    }
+
+    private LikeBoard buildLikeBoard(Long bId){
+        return LikeBoard.builder()
+                .id("test-for-custom-id")
+                .board(buildBoard(bId))
+                .member(buildMember())
+                .build();
+    }
+
+    private LikeComment buildLikeComment(){
+        return LikeComment.builder()
+                .id("test-for-custom-id")
+                .comment(buildComment())
+                .member(buildMember())
                 .build();
     }
 
