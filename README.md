@@ -48,17 +48,17 @@
  ### TB_LIKE_BOARD
  |항목            | 설명                          |key type                             |data type                      | unique   | nullable  |비고                 |
  |---------------|-------------------------------|-------------------------------------|-------------------------------|----------|-----------|---------------------|
- |ID             |좋아요 이력을 식별하는 UUID      | primary                             | varchar(40)                            | unique  | not null  |             |
+ |ID             |좋아요 이력을 식별하는 UUID      | primary                             | varchar(40)                   | unique  | not null  |             |
  |BID            | "좋아요"가 눌린 게시물 ID       | foreign(TB_BOARD)  on delete cascade| int                           |          | not null  |                    |
- |EMAIL          | "좋아요"를 누른 유저             | foreign(TB_MEMBER) on delete set null |varchar(100)| 중복 "좋아요" 불가 |          |    null | 이메일 패턴이여야 함  |
- |REG_DATE      	 | "좋아요"를 누른 날짜             |                                     | datetime default now()        |          |not null |                      |
+ |EMAIL          | "좋아요"를 누른 유저             | foreign(TB_MEMBER) on delete set null |varchar(100)                 |          |    null | 이메일 패턴이여야 함  |
+ |REG_DATE      	 | "좋아요"를 누른 날짜             |                                     | datetime default now()     |          |not null |                      |
  
  ### TB_LIKE_COMMENT
   |항목            | 설명                          |key type                             |data type                      | unique   | nullable  |비고                 |
   |---------------|-------------------------------|-------------------------------------|-------------------------------|----------|-----------|---------------------|
   |ID             |좋아요 이력을 식별하는 UUID      | primary                             | varchar(40)                    | unique  | not null  |                     |
   |CID            | "좋아요"가 눌린 댓글 ID         | foreign(TB_COMMENT)  on delete cascade| varchar(40)                   |          | not null  |                    |
-  |EMAIL          | "좋아요"를 누른 유저             | foreign(TB_MEMBER) on delete set null |varchar(100)| 중복 "좋아요" 불가 |          |  null | 이메일 패턴이여야 함  |
+  |EMAIL          | "좋아요"를 누른 유저             | foreign(TB_MEMBER) on delete set null |varchar(100)|                |  null | 이메일 패턴이여야 함  |
   |REG_DATE      	 | "좋아요"를 누른 날짜          |                                  | datetime default now()        |          |not null |                      |
  
  
