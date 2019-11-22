@@ -17,18 +17,18 @@ import java.util.Optional;
 public class LikeComment implements EntityDefaultValues{
 
     @Id
-    @Column(name="ID")
-    private String id;
+    @Column(name="LIKE_COMMENT_ID")
+    private String likeCommentId;
 
     @ManyToOne
-    @JoinColumn(name = "CID")
+    @JoinColumn(name = "COMMENT_ID")
     @JsonManagedReference
     private Comment comment;
 
     @ManyToOne
     @JoinColumn(name="EMAIL")
     @JsonManagedReference
-    private Member member;
+    private Account account;
 
     @Column(name = "REG_DATE")
     @Temporal(TemporalType.TIMESTAMP)

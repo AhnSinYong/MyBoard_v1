@@ -20,11 +20,11 @@ import java.util.Optional;
 public class Comment implements EntityDefaultValues{
 
     @Id
-    @Column(name="CID")
-    private String cId;
+    @Column(name="COMMENT_ID")
+    private String commentId;
 
     @ManyToOne
-    @JoinColumn(name = "BID")
+    @JoinColumn(name = "BOARD_ID")
     @JsonManagedReference
     private Board board;
 
@@ -45,7 +45,7 @@ public class Comment implements EntityDefaultValues{
     @ManyToOne
     @JoinColumn(name="EMAIL")
     @JsonManagedReference
-    private Member member;
+    private Account account;
 
     @OneToMany(mappedBy = "comment")
     @JsonBackReference

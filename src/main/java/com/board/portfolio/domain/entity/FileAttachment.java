@@ -1,13 +1,10 @@
 package com.board.portfolio.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @Entity
@@ -20,11 +17,11 @@ import java.util.Optional;
 public class FileAttachment implements EntityDefaultValues{
 
     @Id
-    @Column(name="FID")
+    @Column(name="FILE_ID")
     private String cId;
 
     @ManyToOne
-    @JoinColumn(name = "BID")
+    @JoinColumn(name = "BOARD_ID")
     @JsonManagedReference
     private Board board;
 
@@ -47,7 +44,7 @@ public class FileAttachment implements EntityDefaultValues{
     @ManyToOne
     @JoinColumn(name="EMAIL")
     @JsonManagedReference
-    private Member member;
+    private Account account;
 
 
     @PrePersist

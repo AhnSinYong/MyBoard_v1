@@ -17,18 +17,18 @@ import java.util.Optional;
 public class LikeBoard implements EntityDefaultValues{
 
     @Id
-    @Column(name="ID")
-    private String id;
+    @Column(name="LIKE_BOARD_ID")
+    private String likeBoardId;
 
     @ManyToOne
-    @JoinColumn(name = "BID")
+    @JoinColumn(name = "BOARD_ID")
     @JsonManagedReference
     private Board board;
 
     @ManyToOne
     @JoinColumn(name="EMAIL")
     @JsonManagedReference
-    private Member member;
+    private Account account;
 
     @Column(name = "REG_DATE")
     @Temporal(TemporalType.TIMESTAMP)

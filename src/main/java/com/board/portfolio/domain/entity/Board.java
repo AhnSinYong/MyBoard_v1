@@ -21,8 +21,8 @@ public class Board implements EntityDefaultValues{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="BID")
-    private Long bId;
+    @Column(name="BOARD_ID")
+    private Long boardId;
 
     @Column(name = "TITLE")
     private String title;
@@ -47,7 +47,7 @@ public class Board implements EntityDefaultValues{
     @ManyToOne
     @JoinColumn(name="EMAIL")
     @JsonManagedReference
-    private Member member;
+    private Account account;
 
     @OneToMany(mappedBy = "board")
     @JsonBackReference

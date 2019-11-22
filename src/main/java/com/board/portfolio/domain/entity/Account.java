@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Entity
 @Table(
-        name = "TB_MEMBER",
+        name = "TB_ACCOUNT",
         uniqueConstraints = {@UniqueConstraint(columnNames = {"NICKNAME","SOCIAL_ID"})
 })
 @NoArgsConstructor
@@ -20,7 +20,7 @@ import java.util.Optional;
 @Builder
 @Getter
 @Setter
-public class Member implements EntityDefaultValues {
+public class Account implements EntityDefaultValues {
 
     @Id
     @Column(name="EMAIL")
@@ -44,19 +44,23 @@ public class Member implements EntityDefaultValues {
     @Column(name="SOCIAL_ID")
     private String socialId;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "account")
     @JsonBackReference
     private List<Board> boardList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "account")
     @JsonBackReference
     private List<Comment> commentList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "account")
     @JsonBackReference
     private List<LikeBoard> likeBoardList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "account")
+    @JsonBackReference
+    private List<LikeComment> likeCommentList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "account")
     @JsonBackReference
     private List<FileAttachment> fileAttachmentList = new ArrayList<>();
 
