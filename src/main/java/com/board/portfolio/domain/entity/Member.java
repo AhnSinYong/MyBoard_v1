@@ -56,6 +56,10 @@ public class Member implements EntityDefaultValues {
     @JsonBackReference
     private List<LikeBoard> likeBoardList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member")
+    @JsonBackReference
+    private List<FileAttachment> fileAttachmentList = new ArrayList<>();
+
     @PrePersist
     @Override
     public void setDefaultValues() {
