@@ -20,8 +20,9 @@ import java.util.Optional;
 public class Comment implements EntityDefaultValues{
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="COMMENT_ID")
-    private String commentId;
+    private Long commentId;
 
     @ManyToOne
     @JoinColumn(name = "BOARD_ID")
@@ -46,6 +47,16 @@ public class Comment implements EntityDefaultValues{
     @JoinColumn(name="EMAIL")
     @JsonManagedReference
     private Account account;
+
+    @Column(name="GROUP_")
+    private Long group;
+
+    @OneToOne
+    @JoinColumn(name="PARENT_ID")
+    private Long parentId;
+
+    @Column(name="TYPE")
+    private String type;
 
     @OneToMany(mappedBy = "comment")
     @JsonBackReference
