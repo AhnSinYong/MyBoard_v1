@@ -117,15 +117,19 @@ create table TB_BOARD(
 ~~~
 ~~~
 create table TB_COMMENT(
-    COMMENT_ID varchar(40),
+    COMMENT_ID int auto_increment,
     BOARD_ID int not null ,
     CONTENT varchar(350) not null ,
     LIKE_ int default 0,
     REG_DATE datetime default now(),
     UP_DATE datetime,
     EMAIL varchar(100),
+    GROUP_ int not null, ##COMMENT_ID 값이 들어감
+    PARENT_ID int,
+    TYPE varchar(30) not null, ##PARENT_ID가 NULL 인데 TYPE이 CHILD면 알수없음 댓글 만들면 됨
     primary key (COMMENT_ID),
     foreign key (BOARD_ID) REFERENCES  TB_BOARD(BOARD_ID) on delete cascade ,
+    foreign key (PARENT_ID) REFERENCES TB_COMMENT(COMMENT_ID) on delete set null,
     foreign key (EMAIL) REFERENCES TB_ACCOUNT(EMAIL) on delete set null
 );
 ~~~
@@ -143,7 +147,7 @@ create table TB_LIKE_BOARD(
 ~~~
 create table TB_LIKE_COMMENT(
     LIKE_COMMENT_ID varchar(40),
-    COMMENT_ID varchar(40) not null ,
+    COMMENT_ID int not null ,
     EMAIL varchar(100) ,
     REG_DATE datetime default now(),
     primary key (LIKE_COMMENT_ID),
@@ -187,16 +191,18 @@ drop table TB_ALARM;
 drop table TB_FILE_ATTACHMENT;
 drop table TB_LIKE_BOARD;
 drop table TB_LIKE_COMMENT;
-drop table TB_BOARD;
 drop table TB_COMMENT;
+drop table TB_BOARD;
 drop table TB_ACCOUNT;
 
 ## test 데이터
 insert into TB_ACCOUNT values('admin','1234','admin',now(),'ADMIN','test-id');
 insert into TB_BOARD values(29,'test-title','test-content',0,0,now(),now(),'admin');
-insert into TB_COMMENT values ('test-id',29,'test-content',0,now(),now(),'admin');
+insert into TB_COMMENT values (1,29,'test-content',0,now(),now(),'admin',1,null,'parent');
+insert into TB_COMMENT values (2,29,'test-content',0,now(),now(),'admin',1,1,'child');
 insert into TB_LIKE_BOARD values ('test-id',29,'admin',now());
-insert into TB_LIKE_COMMENT values ('test-id','test-id','admin',now());
+insert into TB_LIKE_COMMENT values ('test-id',1,'admin',now());
+insert into TB_LIKE_COMMENT values ('test-id2',2,'admin',now());
 insert into TB_FILE_ATTACHMENT values ('test-id',29,'test-origin-name','test-save-name','test-extension',0,now(),'admin');
 insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now(),now());
 ~~~
@@ -210,3 +216,7 @@ insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now
  - TB_Account에서 @OneToMany가 많은데, 이게 성능에 악영향을 주지 않을까?
  - TB_EMAIL 에서 기본키를 email로 하였는데, 이것이 인덱싱 관련해서 문제를 일으킬 수 있지 않을까?
     - MySQL은 기본키에 디폴트 인덱스를 거는 개념이 혹시 존재하나?
+    
+## 할 것
+- 표의 COMMENT 및 LIKE_COMMENT 변경사항 반영 필요
+- @Entity 오류 찾아서 수정해야함 , 테스트코드 작동시 오류발생
