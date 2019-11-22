@@ -35,6 +35,8 @@ class DataBaseTests {
     LikeBoardRepository likeBoardRepository;
     @Autowired
     LikeCommentRepository likeCommentRepository;
+    @Autowired
+    FileAttachmentRepository fileAttachmentRepository;
 
     @Test
     void dbConnectionTest() throws ClassNotFoundException {
@@ -85,6 +87,11 @@ class DataBaseTests {
     void findLikeCommentTest(){
 //        LikeComment comment = likeCommentRepository.save(buildLikeComment());
         LikeComment commentLike = likeCommentRepository.findById("test-for-custom-id").orElse(null);
+    }
+
+    @Test
+    void findFileAtachmentTest(){
+        FileAttachment fileAttachment = fileAttachmentRepository.findById("test-for-custom-id").orElse(null);
     }
 
 
