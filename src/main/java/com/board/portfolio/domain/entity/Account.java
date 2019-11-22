@@ -46,23 +46,31 @@ public class Account implements EntityDefaultValues {
 
     @OneToMany(mappedBy = "account")
     @JsonBackReference
-    private List<Board> boardList = new ArrayList<>();
+    private List<Board> boardList;
 
     @OneToMany(mappedBy = "account")
     @JsonBackReference
-    private List<Comment> commentList = new ArrayList<>();
+    private List<Comment> commentList;
 
     @OneToMany(mappedBy = "account")
     @JsonBackReference
-    private List<LikeBoard> likeBoardList = new ArrayList<>();
+    private List<LikeBoard> likeBoardList;
 
     @OneToMany(mappedBy = "account")
     @JsonBackReference
-    private List<LikeComment> likeCommentList = new ArrayList<>();
+    private List<LikeComment> likeCommentList;
 
     @OneToMany(mappedBy = "account")
     @JsonBackReference
-    private List<FileAttachment> fileAttachmentList = new ArrayList<>();
+    private List<FileAttachment> fileAttachmentList;
+
+    @OneToMany(mappedBy = "targetAccount")
+    @JsonBackReference
+    private List<Alarm> myAlarmList;
+
+    @OneToMany(mappedBy = "triggerAccount")
+    @JsonBackReference
+    private List<Alarm> triggerAlarmList;
 
     @PrePersist
     @Override
