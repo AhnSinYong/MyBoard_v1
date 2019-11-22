@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -39,7 +38,7 @@ public class Account implements EntityDefaultValues {
 
     @Column(name="ROLE")
     @Enumerated(value= EnumType.STRING)
-    private Role role;
+    private AccountRole role;
 
     @Column(name="SOCIAL_ID")
     private String socialId;
@@ -76,7 +75,7 @@ public class Account implements EntityDefaultValues {
     @Override
     public void setDefaultValues() {
         this.signUpDate = Optional.ofNullable(this.signUpDate).orElse(new Date());
-        this.role = Optional.ofNullable(this.role).orElse(Role.MEMBER);
+        this.role = Optional.ofNullable(this.role).orElse(AccountRole.MEMBER);
     }
 
 }
