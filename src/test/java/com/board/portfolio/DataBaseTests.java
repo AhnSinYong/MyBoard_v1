@@ -69,7 +69,7 @@ class DataBaseTests {
     @Test
     @Transactional
     void findCommentTest(){
-        Comment comment_ = commentRepository.findById("test-id").orElse(null);
+        Comment comment_ = commentRepository.findById((long)1).orElse(null);
 
     }
 
