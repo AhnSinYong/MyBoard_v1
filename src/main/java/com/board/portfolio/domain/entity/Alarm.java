@@ -1,13 +1,10 @@
 package com.board.portfolio.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 @Entity
@@ -33,8 +30,10 @@ public class Alarm implements EntityDefaultValues{
     @JsonManagedReference
     private Account triggerAccount;
 
+    //TODO https://lng1982.tistory.com/279   @Converter를 이용하는 방법 고려
     @Column(name = "EVENT_TYPE")
-    private String eventType;
+    @Enumerated(value = EnumType.STRING)
+    private AlarmEventType eventType;
 
     @Column(name="EVENT_CONTENT_ID")
     private String eventContentId;
