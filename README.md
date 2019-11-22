@@ -56,7 +56,7 @@
  ### TB_LIKE_COMMENT
   |항목            | 설명                          |key type                             |data type                      | unique   | nullable  |비고                 |
   |---------------|-------------------------------|-------------------------------------|-------------------------------|----------|-----------|---------------------|
-  |LIKE_COMMENT_ID             |좋아요 이력을 식별하는 UUID      | primary                             | varchar(40)                    | unique  | not null  |                     |
+  |LIKE_COMMENT_ID             |좋아요 이력을 식별하는 ID      | primary                             | int                    | unique  | not null  |                     |
   |COMMENT_ID            | "좋아요"가 눌린 댓글 ID         | foreign(TB_COMMENT)  on delete cascade| varchar(40)                   |          | not null  |                    |
   |EMAIL          | "좋아요"를 누른 유저             | foreign(TB_ACCOUNT) on delete set null |varchar(100)|                |  null | 이메일 패턴이여야 함  |
   |REG_DATE      	 | "좋아요"를 누른 날짜          |                                  | datetime default now()        |          |not null |                      |
@@ -218,5 +218,5 @@ insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now
     - MySQL은 기본키에 디폴트 인덱스를 거는 개념이 혹시 존재하나?
     
 ## 할 것
-- 표의 COMMENT 및 LIKE_COMMENT 변경사항 반영 필요
+- 표의 COMMENT 변경사항 반영 필요
 - @Entity 오류 찾아서 수정해야함 , 테스트코드 작동시 오류발생
