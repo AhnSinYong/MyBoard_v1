@@ -74,18 +74,18 @@
  |SAVE_DATE      | 파일이 저장된 날짜              |                                    |  datetime default now()     |                | not null|                    |
  |EMAIL          | 파일을 저장한 사용자의 이메일    | foreign(TB_ACCOUNT) on delete cascade |  varchar(100)              |              |  not null |                   |
  
+ 
+ 
  ### TB_ALARM
  |항목            | 설명                                           |key type                             |data type                      | unique   | nullable  |비고                 |
  |---------------|------------------------------------------------|-------------------------------------|-------------------------------|----------|-----------|---------------------|
  |ALARM_ID            | 알람을 식별하는 UUID                             |primary                              | varchar(40)                   | unique   | not null  |                    |
- |ALARM_TARGET   | 알람을 받은 대상(시스템, 관리자, 다른 회원 등)      |foreign(TB_ACCOUNT) on delete cascade | varchar(100)                  |          | not null  |  대상 ID      |
- |ALARM_TRIGGER   | 알람을 발생시킨 대상(시스템, 관리자, 다른 회원 등) |foreign(TB_ACCOUNT) on delete cascade |  varchar(100)                 |         |  not null  |  대상 ID         |
+ |TARGET_ACCOUNT   | 알람을 받은 대상(시스템, 관리자, 다른 회원 등)      |foreign(TB_ACCOUNT) on delete cascade | varchar(100)                  |          | not null  |  대상 ID      |
+ |TRIGGER_ACCOUNT   | 알람을 발생시킨 대상(시스템, 관리자, 다른 회원 등) |foreign(TB_ACCOUNT) on delete cascade |  varchar(100)                 |         |  null  |  대상 ID         |
  |EVENT_TYPE      | 어떤 알람 이벤트인지(좋아요 알림, 대댓글알림 , 시스템 공지 등)|                           |  varchar(100)                |          | not null   |  40자 이상 불가 |
- |ALARM_DATE      | 알람을 받은 날짜                                 |                                   | datetime default now()         |         |  not null  |                 |
+ |EVENT_CONTENT_ID   | 알람이벤트가 발생한 컨텐츠의 ID                  |                                   |  varchar(100)                  |         |not null    |                |
+ |RECIEVE_DATE      | 알람을 받은 날짜                                 |                                   | datetime default now()         |         |  not null  |                 |
  |CHECK_DATE      | 알람을 읽은 날짜                                 |                                    | datetime                       |          | null      |                 |
- 
- 
- 
  
  
  ### SQL(DDL)
@@ -169,15 +169,42 @@ create table TB_FILE_ATTACHMENT(
 ~~~
 create table TB_ALARM(
     ALARM_ID varchar(40),
-    ALARM_TARGET varchar(100) not null ,
-    ALARM_TRIGGER varchar(100) not null ,
+    TARGET_ACCOUNT varchar(100) not null ,
+    TRIGGER_ACCOUNT varchar(100) ,
     EVENT_TYPE varchar(100) not null ,
-    ALARM_DATE datetime default now(),
-    ALARM_CHECK_DATE datetime,
+    EVENT_CONTENT_ID varchar(100) not null ,
+    RECIEVE_DATE datetime default now(),
+    CHECK_DATE datetime,
     primary key (ALARM_ID),
-    foreign key (ALARM_TARGET) REFERENCES TB_ACCOUNT(EMAIL) on delete cascade,
-    foreign key (ALARM_TRIGGER) REFERENCES TB_ACCOUNT(EMAIL) on delete cascade
-)
+    foreign key (TARGET_ACCOUNT) REFERENCES TB_ACCOUNT(EMAIL) on delete cascade,
+    foreign key (TRIGGER_ACCOUNT) REFERENCES TB_ACCOUNT(EMAIL) on delete set null
+);
+~~~
+### 사용한 테스트 SQL
+~~~
+## table 제거
+drop table TB_ALARM;
+drop table TB_FILE_ATTACHMENT;
+drop table TB_LIKE_BOARD;
+drop table TB_LIKE_COMMENT;
+drop table TB_BOARD;
+drop table TB_COMMENT;
+drop table TB_ACCOUNT;
+
+## test 데이터
+insert into TB_ACCOUNT values('admin','1234','admin',now(),'ADMIN','test-id');
+insert into TB_BOARD values(29,'test-title','test-content',0,0,now(),now(),'admin');
+insert into TB_COMMENT values ('test-id',29,'test-content',0,now(),now(),'admin');
+insert into TB_LIKE_BOARD values ('test-id',29,'admin',now());
+insert into TB_LIKE_COMMENT values ('test-id','test-id','admin',now());
+insert into TB_FILE_ATTACHMENT values ('test-id',29,'test-origin-name','test-save-name','test-extension',0,now(),'admin');
+insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now(),now());
 ~~~
  
  
+ ## 생각해볼 것
+ - TB_ALARM에서 TB_CONTENT_ID 는 외래키로 설정하지 않았다.
+    - COMMENT,BOARD,LIKE 등등 많은 교차엔티티와 관계가 발생되고 불필요한 칼럼이 예상되었기때문
+    - 이를 해결할 더 좋은 방법이 있었을까?
+    
+ - TB_Account에서 @OneToMany가 많은데, 이게 성능에 악영향을 주지 않을까?
