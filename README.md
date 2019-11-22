@@ -208,3 +208,5 @@ insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now
     - 이를 해결할 더 좋은 방법이 있었을까?
     
  - TB_Account에서 @OneToMany가 많은데, 이게 성능에 악영향을 주지 않을까?
+ - TB_EMAIL 에서 기본키를 email로 하였는데, 이것이 인덱싱 관련해서 문제를 일으킬 수 있지 않을까?
+    - MySQL은 기본키에 디폴트 인덱스를 거는 개념이 혹시 존재하나?
