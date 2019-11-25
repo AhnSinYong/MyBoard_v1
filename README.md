@@ -21,6 +21,8 @@
  |SIGNUP_DATE  	 |회원 가입일		   |           | DATETIME default now() |          | not null |                      |                       |
  |ROLE       	 |회원의 권한		   |           | varchar(30) default 'MEMBER'|          | not null |MEMBER, ADMIN, SYSTEM 중 하나  |
  |SOCIAL_ID    	 |소셜 아이디		   |           | varchar(100)            | unique   | null     |소셜에서 제공하는 ID     |
+ |AUTH_KEY       |이메일 인증을 위한 키 |           | varchar(40)           |            | not null | 무작위 문자열   |
+ |IS_AUTH        |이메일 인증을 한 계정인지 명시|    | boolean default false  |             | not null|  이메일 인증을 마치면 true  |
 
 ### TB_BOARD
  |항목            | 설명                |key type                            |data type              | unique   | nullable  |비고                 |
@@ -100,6 +102,8 @@ create table TB_ACCOUNT(
     SIGNUP_DATE datetime default now(),
     ROLE varchar(30) default 'MEMBER',
     SOCIAL_ID varchar(100) unique,
+    AUTH_KEY varchar(40) not null,
+    IS_AUTH boolean default false,
     primary key(EMAIL)
 );
 ~~~
@@ -199,7 +203,7 @@ drop table TB_BOARD;
 drop table TB_ACCOUNT;
 
 ## test 데이터
-insert into TB_ACCOUNT values('admin','1234','admin',now(),'ADMIN','test-id');
+insert into TB_ACCOUNT values('admin','1234','admin',now(),'ADMIN','test-id','test-id',1);
 insert into TB_BOARD values(29,'test-title','test-content',0,0,now(),now(),'admin');
 insert into TB_COMMENT values (1,29,'test-content',0,now(),now(),'admin',1,null,'parent');
 insert into TB_COMMENT values (2,29,'test-content',0,now(),now(),'admin',1,1,'child');
