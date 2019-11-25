@@ -25,7 +25,7 @@
 ### TB_BOARD
  |항목            | 설명                |key type                            |data type              | unique   | nullable  |비고                 |
  |---------------|---------------------|-----------------------------------|-----------------------|----------|-----------|---------------------|
- |BOARD_ID            |게시글 식별 번호      | primary(auto inc)                        | int                     |   unique | not null  | 0부터 시작하는 숫자  |
+ |BOARD_ID            |게시글 식별 번호      | primary(auto inc)                        | int                     |   unique | not null  |   |
  |TITLE          |게시글의 제목			|                                 |varchar(110)            |           | not null  | 공백금지,50자 이하   |
  |CONTENT     	|게시글의 내용			|                                 |varchar(750)            |           | not null  |공백금지,350자 이하   |
  |LIKE_     	|게시글의 좋아요			|                                 | int default 0          |          | not null  |                      |
@@ -37,13 +37,16 @@
  ### TB_COMMENT
  |항목            | 설명                |key type                            |data type              | unique   | nullable  |비고                 |
  |---------------|---------------------|-----------------------------------|-----------------------|----------|-----------|---------------------|
- |COMMENT_ID            |댓글을 식별하는 문자(ID)|primary                           | varchar(40)         | unique     | not null  | UUID                 |
- |BOARD_ID            |댓글이 작성된 게시물 ID |foreign(TB_BOARD) on delete casecade| int              |             | not null  |0부터 시작하는 숫자     |
+ |COMMENT_ID            |댓글을 식별하는 ID|primary(auto inc)                | int         | unique     | not null  |                  |
+ |BOARD_ID            |댓글이 작성된 게시물 ID |foreign(TB_BOARD) on delete casecade| int              |             | not null  |     |
  |CONTENT        |댓글의 내용            |                                  | varchar(350)       |           |   not null  |공백금지,150자이하      |
  |LIKE_     	|댓글의 좋아요		    |                                  | int default 0      |           |   not null  |                      |
  |REG_DATE       |댓글의 생성 날짜        |                                 | datetime default now()|        |  not null |                         |
  |UP_DATE       |댓글의 수정 날짜        |                                  |datetime|                      | null |                              |
  |EMAIL         |댓글의 작성자           | foreign(TB_ACCOUNT) on delete set null| varchar(100)     |         |   null |이메일 패턴이여야 함            |
+ |GROUP_        |댓글의 그룹 번호(COMMNET_ID)|                              |int                  |           |not null      |대댓글 관계를 구분하기 위함|
+ |PARENT_ID     |댓글의 부모 ID(COMMENT_ID) | foreign(TB_COMMENT) on delete set null | int |      |          | 댓글의 부모를 나타냄 |
+ |TYPE          |댓글이 부모인지, 자식인지 구분|                               |varchar(30)        |           |not null|              |
  
  ### TB_LIKE_BOARD
  |항목            | 설명                          |key type                             |data type                      | unique   | nullable  |비고                 |
@@ -218,5 +221,3 @@ insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now
     - MySQL은 기본키에 디폴트 인덱스를 거는 개념이 혹시 존재하나?
     
 ## 할 것
-- 표의 COMMENT 변경사항 반영 필요
-- @Entity 오류 찾아서 수정해야함 , 테스트코드 작동시 오류발생
