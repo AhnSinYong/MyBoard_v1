@@ -51,12 +51,17 @@ public class Comment implements EntityDefaultValues{
     @Column(name="GROUP_")
     private Long group;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name="PARENT_ID")
-    private Long parentId;
+    @JsonManagedReference
+    private Comment parentComment;
 
     @Column(name="TYPE")
     private String type;
+
+//    @OneToMany(mappedBy = "parentId")
+//    @JsonBackReference
+//    private List<Comment>
 
     @OneToMany(mappedBy = "comment")
     @JsonBackReference
