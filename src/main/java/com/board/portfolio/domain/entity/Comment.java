@@ -57,11 +57,8 @@ public class Comment implements EntityDefaultValues{
     private Comment parentComment;
 
     @Column(name="TYPE")
-    private String type;
-
-//    @OneToMany(mappedBy = "parentId")
-//    @JsonBackReference
-//    private List<Comment>
+    @Enumerated(value = EnumType.STRING)
+    private CommentType type;
 
     @OneToMany(mappedBy = "comment")
     @JsonBackReference
