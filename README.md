@@ -1,3 +1,5 @@
+## 할 것
+
 ## 표준 정의서
 ### 게시판
 - SPA web
@@ -213,7 +215,13 @@ insert into TB_LIKE_COMMENT values ('test-id2',2,'admin',now());
 insert into TB_FILE_ATTACHMENT values ('test-id',29,'test-origin-name','test-save-name','test-extension',0,now(),'admin');
 insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now(),now());
 ~~~
- 
+
+ ## Spring Security
+ ### Filter
+ |경로                    |예외경로            |Filter         | Provider                                  |success                             |fail                      |
+ |------------------------|-------------------|-------------|--------------------------------------------|-------------------------------------|-----------------------|
+ |/api/account/signIn     |                   |SignInFilter   | 로그인 성공 여부 판단                      | jwt토큰을 쿠키에 담아 반환           | Exception 발생        |
+ |/api/**                 |/api/account/signIn|JwtFilter      | 토큰 유효성 판단(토큰이 없는 경우는 success)| chain.doFilter()                    | Exception 발생        |
  
  ## 생각해볼 것
  - TB_ALARM에서 TB_CONTENT_ID 는 외래키로 설정하지 않았다.
@@ -224,4 +232,5 @@ insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now
  - TB_EMAIL 에서 기본키를 email로 하였는데, 이것이 인덱싱 관련해서 문제를 일으킬 수 있지 않을까?
     - MySQL은 기본키에 디폴트 인덱스를 거는 개념이 혹시 존재하나?
     
-## 할 것
+ - ResponseEntity를 사용하지 않고 응답을 구성하는법...
+    - 단순히 클래스 리턴이 아니라 에러, 응답코드 등의 정보를 부여
