@@ -14,7 +14,7 @@ public class AccountDTO {
     public static class SignUp{
         @NotBlank(message = "please, enter \"nickname\"")
         @Size(min=5,max=10,message = "Nickname must be at least 5 characters and at most 10 characters.")
-        @NicknameUnique(message = "This email is already exist.")
+        @NicknameUnique(message = "This nickname is already exist.")
         private String nickname;
 
         @NotBlank(message = "please, enter \"email\"")
