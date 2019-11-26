@@ -17,7 +17,7 @@
 ### TB_ACCOUNT
  |항목            | 설명                |key type    |data type              | unique   | nullable  |비고               |
  |----------------|--------------------|------------|-----------------------|----------|----------|-------------------|
- |EMAIL           |회원의 이메일        |primary     |varchar(100)             | unique   | not null |   이메일 패턴이여야 함|   
+ |EMAIL           |회원의 이메일        |primary     |varchar(100)             | unique   | not null |   이메일 패턴이여야 함, 최소 5자, 최대 40자|   
  |PASSWORD     	 |회원의 비밀번호		   |            | varchar(50)            |         | not null |숫자,영문,특문 8자이상 16이하|
  |NICKNAME     	 |회원의 별명		   |           | varchar(30)            | unique   |          |최소4자 이상, 10자이하      |
  |SIGNUP_DATE  	 |회원 가입일		   |           | DATETIME default now() |          | not null |                      |                       |
