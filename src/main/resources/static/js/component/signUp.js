@@ -2,18 +2,20 @@ import shareObject from "./shareObject.js";
 
 export default Vue.component('sign-up',{
     template:
-        `<div class="component-sign-up margin-auto-center">
-            <div>
-                <span> Please fill out these items </span>
-            </div>
-            <div class="margin-auto-center">
-                <input v-model="nickname" class="display-block" type="text" placeholder="nickname">
-                <input v-model="email" class="display-block" type="text" placeholder="email">
-                <input v-model="password" class="display-block" type="password" placeholder="password">
-                <input v-model="passwordCheck" class="display-block" type="password" placeholder="password-check">
-            </div>
-            <div>
-                <input type="button" value="sign up" @click="signUp()">
+        `<div class="cover-view">
+            <div class="component-sign-up margin-auto-center">
+                <div>
+                    <span> Please fill out these items </span>
+                </div>
+                <div class="margin-auto-center">
+                    <input v-model="nickname" class="display-block" type="text" placeholder="nickname">
+                    <input v-model="email" class="display-block" type="text" placeholder="email">
+                    <input v-model="password" class="display-block" type="password" placeholder="password">
+                    <input v-model="passwordCheck" class="display-block" type="password" placeholder="password-check">
+                </div>
+                <div>
+                    <input type="button" value="sign up" @click="signUp()">
+                </div>
             </div>
         </div>`,
     components: {
