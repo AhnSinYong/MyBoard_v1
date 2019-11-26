@@ -1,3 +1,5 @@
+import shareObject from "./shareObject.js";
+
 export default Vue.component('sign-up',{
     template:
         `<div class="component-sign-up margin-auto-center">
@@ -11,7 +13,7 @@ export default Vue.component('sign-up',{
                 <input v-model="passwordCheck" class="display-block" type="password" placeholder="password-check">
             </div>
             <div>
-                <input type="button" value="sign up">
+                <input type="button" value="sign up" @click="signUp()">
             </div>
         </div>`,
     components: {
@@ -19,6 +21,8 @@ export default Vue.component('sign-up',{
     },
     data(){
         return {
+            coverView:shareObject.coverView,
+
             nickname : '',
             email : '',
             password : '',
@@ -36,13 +40,14 @@ export default Vue.component('sign-up',{
                 password: this.password,
                 passwordCheck: this.passwordCheck
             }
-            axios.post('/api/member/signUp', data)
+            axios.post('/api/account', data)
                 .then(res=>{
-                    alert("응답 도착");
-                    console.log(res);
+                    console.log('/api/account : ', res);
+                    alert("회원가입이 완료되었습니다. \n 이메일 인증을 진행해주세요!");
+                    this.coverView.hideSignUpView();
                 })
                 .catch(err=>{
-                    alert("오류 발생");
+                    alert(err.data);
                     console.log(err);
                 })
         }

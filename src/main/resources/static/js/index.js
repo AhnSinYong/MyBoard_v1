@@ -1,3 +1,5 @@
+import shareObject from "./component/shareObject.js"
+
 import signUp from"./component/signUp.js"
 
 new Vue({
@@ -7,7 +9,7 @@ new Vue({
     },
     data(){
         return {
-
+            coverView: shareObject.coverView
         }
     },
     async created(){
@@ -16,7 +18,7 @@ new Vue({
 
     methods:{
         showSignUpView(){
-
+            this.coverView.showSignUpView();
         }
     }
 })
