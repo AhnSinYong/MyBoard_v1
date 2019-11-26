@@ -43,6 +43,12 @@ public class Account implements EntityDefaultValues {
     @Column(name="SOCIAL_ID")
     private String socialId;
 
+    @Column(name="AUTH_KEY")
+    private String authKey;
+
+    @Column(name="IS_AUTH")
+    private boolean isAuth;
+
     @OneToMany(mappedBy = "account")
     @JsonBackReference
     private List<Board> boardList;
