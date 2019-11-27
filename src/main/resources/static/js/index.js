@@ -9,7 +9,8 @@ new Vue({
     },
     data(){
         return {
-            coverView: shareObject.coverView
+            coverViewState:shareObject.coverView.state,
+            coverViewMethod : shareObject.coverView.method,
         }
     },
     async created(){
@@ -17,8 +18,5 @@ new Vue({
     },
 
     methods:{
-        showSignUpView(){
-            this.coverView.showSignUpView();
-        }
     }
 })

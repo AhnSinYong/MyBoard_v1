@@ -24,7 +24,7 @@
                 <input type="text" placeholder="email">
                 <input type="text" placeholder="password">
                 <input type="button" value="login">
-                <input type="button" value="sign up" @click="showSignUpView()">
+                <input type="button" value="sign up" @click="coverViewMethod.showSignUpView()">
             </div>
         </div>
     </div>
@@ -33,7 +33,7 @@
     </div>
     <div class="footer"></div>
     <div class="cover-view-wrapper">
-         <sign-up v-show="coverView.state.signUp"/>
+         <sign-up v-show="coverViewState.signUp"/>
         <!-- <post/>   -->
         <!-- <update/>   -->
     </div>

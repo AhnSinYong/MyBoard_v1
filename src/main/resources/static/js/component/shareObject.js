@@ -1,14 +1,17 @@
+const state = {
+    signUp : false,
+}
+
 export default {
     coverView:{
-        state:{
-            signUp : false,
-        },
-        showSignUpView(){
-            this.state.signUp = true;
-        },
-        hideSignUpView(){
-            this.state.signUp = false;
+        state : state,
+        method : {
+            showSignUpView: function() {
+                state.signUp = true;
+            },
+            hideSignUpView(){
+                state.signUp = false;
+            }
         }
-
     }
 }

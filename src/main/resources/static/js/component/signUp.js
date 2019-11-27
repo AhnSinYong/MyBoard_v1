@@ -4,6 +4,7 @@ export default Vue.component('sign-up',{
     template:
         `<div class="cover-view">
             <div class="component-sign-up margin-auto-center">
+                <div> <input type="button" value="x" @click="coverViewMethod.hideSignUpView()"> </div>
                 <div>
                     <span> Please fill out these items </span>
                 </div>
@@ -23,7 +24,8 @@ export default Vue.component('sign-up',{
     },
     data(){
         return {
-            coverView:shareObject.coverView,
+            coverViewState:shareObject.coverView.state,
+            coverViewMethod : shareObject.coverView.method,
 
             nickname : '',
             email : '',
@@ -46,13 +48,13 @@ export default Vue.component('sign-up',{
                 .then(res=>{
                     console.log('/api/account : ', res);
                     alert("회원가입이 완료되었습니다. \n 이메일 인증을 진행해주세요!");
-                    this.coverView.hideSignUpView();
+                    this.coverViewMethod.hideSignUpView();
                 })
                 .catch(err=>{
                     alert(err.data);
                     console.log(err);
                 })
-        }
+        },
 
     }
 
