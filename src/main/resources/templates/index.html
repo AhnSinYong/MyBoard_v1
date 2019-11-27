@@ -19,12 +19,10 @@
                 <span>
                     My Board
                 </span>
-            </div>
-            <div class="inline-block">
-                <input type="text" placeholder="email">
-                <input type="text" placeholder="password">
-                <input type="button" value="login">
-                <input type="button" value="sign up" @click="coverViewMethod.showSignUpView()">
+                <span>
+                    <input v-if="!loginInfo.isLogin" type="button" value="sign in" @click="coverViewMethod.showSignInView()">
+                    <input v-else type="button" value="logout" @click="loginMethod.logout()">
+                </span>
             </div>
         </div>
     </div>
@@ -33,7 +31,9 @@
     </div>
     <div class="footer"></div>
     <div class="cover-view-wrapper">
-         <sign-up v-show="coverViewState.signUp"/>
+        <div v-show="coverViewState.signUp"><sign-up/></div>
+        <div v-show="coverViewState.signIn"><sign-in/></div>
+
         <!-- <post/>   -->
         <!-- <update/>   -->
     </div>
