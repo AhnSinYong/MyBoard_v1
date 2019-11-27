@@ -234,3 +234,5 @@ insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now
     
  - ResponseEntity를 사용하지 않고 응답을 구성하는법...
     - 단순히 클래스 리턴이 아니라 에러, 응답코드 등의 정보를 부여
+ - axios를 export 하는 파일들 안에서 명시적으로 쓰는 것 고려
+    - 경고 밑줄이 그어짐, import 같은 것을 써야 할까?
