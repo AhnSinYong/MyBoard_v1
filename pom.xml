@@ -86,6 +86,12 @@
             <artifactId>modelmapper</artifactId>
             <version>2.3.0</version>
         </dependency>
+        <!-- Oauth-->
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>3.3.0</version>
+        </dependency>
     </dependencies>
 
     <build>
