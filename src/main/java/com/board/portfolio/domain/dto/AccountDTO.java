@@ -31,4 +31,10 @@ public class AccountDTO {
         @NotBlank(message = "please, enter \"password check \"")
         private String passwordCheck;
     }
+
+    @Data
+    public static class SignIn{
+        private String email;
+        private String password;
+    }
 }
