@@ -23,7 +23,7 @@ public class AccountController {
         return ResponseEntity.ok(Result.SUCCESS);
     }
 
-    @InitBinder
+    @InitBinder("validateRequest")
     protected void initBinder(WebDataBinder binder){
         binder.addValidators(new AccountSignUpValidator());
     }
