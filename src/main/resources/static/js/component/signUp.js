@@ -1,18 +1,18 @@
-import shareObject from "./shareObject.js";
+import shareObject from "./shareObject/shareObject.js";
 
 export default Vue.component('sign-up',{
     template:
         `<div class="cover-view">
             <div class="component-sign-up margin-auto-center">
-                <div> <input type="button" value="x" @click="coverViewMethod.hideSignUpView()"> </div>
+                <div> <input type="button" value="x" @click="inputMethod.closeView(input, coverViewMethod.hideSignUpView)"> </div>
                 <div>
                     <span> Please fill out these items </span>
                 </div>
                 <div class="margin-auto-center">
-                    <input v-model="nickname" class="display-block" type="text" placeholder="nickname">
-                    <input v-model="email" class="display-block" type="text" placeholder="email">
-                    <input v-model="password" class="display-block" type="password" placeholder="password">
-                    <input v-model="passwordCheck" class="display-block" type="password" placeholder="password-check">
+                    <input v-model="input.nickname" class="display-block" type="text" placeholder="nickname">
+                    <input v-model="input.email" class="display-block" type="text" placeholder="email">
+                    <input v-model="input.password" class="display-block" type="password" placeholder="password">
+                    <input v-model="input.passwordCheck" class="display-block" type="password" placeholder="password-check">
                 </div>
                 <div>
                     <input type="button" value="sign up" @click="signUp()">
@@ -26,11 +26,13 @@ export default Vue.component('sign-up',{
         return {
             coverViewState:shareObject.coverView.state,
             coverViewMethod : shareObject.coverView.method,
-
-            nickname : '',
-            email : '',
-            password : '',
-            passwordCheck : ''
+            inputMethod : shareObject.input.method,
+            input :{
+                nickname : '',
+                email : '',
+                password : '',
+                passwordCheck : ''
+            }
         }
     },
     async created(){
@@ -39,16 +41,17 @@ export default Vue.component('sign-up',{
     methods:{
         signUp(){
             const data = {
-                nickname : this.nickname,
-                email : this.email,
-                password: this.password,
-                passwordCheck: this.passwordCheck
+                nickname : this.input.nickname,
+                email : this.input.email,
+                password: this.input.password,
+                passwordCheck: this.input.passwordCheck
             }
             axios.post('/api/account', data)
                 .then(res=>{
                     console.log('/api/account : ', res);
                     alert("회원가입이 완료되었습니다. \n 이메일 인증을 진행해주세요!");
                     this.coverViewMethod.hideSignUpView();
+                    this.inputMethod.resetInput(this.input);
                 })
                 .catch(err=>{
                     alert(err.data);
