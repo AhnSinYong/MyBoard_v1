@@ -2,9 +2,13 @@ package com.board.portfolio.security.config;
 
 import com.board.portfolio.security.filter.FilterSkipMatcher;
 import com.board.portfolio.security.filter.JwtFilter;
+import com.board.portfolio.security.filter.SignInFilter;
 import com.board.portfolio.security.handler.JwtFilterFailureHandler;
 import com.board.portfolio.security.handler.JwtFilterSuccessHandler;
+import com.board.portfolio.security.handler.SignInFilterFailureHandler;
+import com.board.portfolio.security.handler.SignInFilterSuccessHandler;
 import com.board.portfolio.security.provider.JwtProvider;
+import com.board.portfolio.security.provider.SignInProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +28,12 @@ import java.util.Arrays;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    SignInProvider signInProvider;
+    @Autowired
+    SignInFilterSuccessHandler signInFilterSuccessHandler;
+    @Autowired
+    SignInFilterFailureHandler signInFilterFailureHandler;
 
     @Autowired
     JwtProvider jwtProvider;
@@ -31,6 +41,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     JwtFilterSuccessHandler jwtFilterSuccessHandler;
     @Autowired
     JwtFilterFailureHandler jwtFilterFailureHandler;
+
+
     //filter 생성 및 Manager에 등록
     @Bean
     public JwtFilter jwtFilter() throws Exception {
@@ -38,6 +50,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         JwtFilter jwtFilter = new JwtFilter(filterSkipMatcher, jwtFilterSuccessHandler, jwtFilterFailureHandler);
         jwtFilter.setAuthenticationManager(super.authenticationManagerBean());
         return jwtFilter;
+    }
+    @Bean
+    public SignInFilter signInFilter() throws Exception{
+        SignInFilter signInFilter = new SignInFilter("/api/account/signIn",signInFilterSuccessHandler, signInFilterFailureHandler);
+        signInFilter.setAuthenticationManager(super.authenticationManagerBean());
+        return signInFilter;
     }
 
     //Manager 등록
@@ -50,7 +68,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
-                .authenticationProvider(this.jwtProvider);
+                .authenticationProvider(this.jwtProvider)
+                .authenticationProvider(this.signInProvider);
     }
 
     //Filter 등록
@@ -67,6 +86,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .headers().frameOptions().disable();
 
         http
-                .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(signInFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 }
