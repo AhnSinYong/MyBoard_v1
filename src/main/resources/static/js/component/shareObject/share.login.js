@@ -16,6 +16,8 @@ export default {
                 this.deleteCookie('jwt-token');
                 this.setLogoutState();
 
+                axios.post('/api/account/signOut')
+
             }
         },
         getParsedJwt(){

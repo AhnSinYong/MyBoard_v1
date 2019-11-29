@@ -3,6 +3,7 @@ package com.board.portfolio.security.config;
 import com.board.portfolio.security.filter.FilterSkipMatcher;
 import com.board.portfolio.security.filter.JwtFilter;
 import com.board.portfolio.security.filter.SignInFilter;
+import com.board.portfolio.security.filter.SignOutFilter;
 import com.board.portfolio.security.handler.JwtFilterFailureHandler;
 import com.board.portfolio.security.handler.JwtFilterSuccessHandler;
 import com.board.portfolio.security.handler.SignInFilterFailureHandler;
@@ -46,7 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     //filter 생성 및 Manager에 등록
     @Bean
     public JwtFilter jwtFilter() throws Exception {
-        FilterSkipMatcher filterSkipMatcher = new FilterSkipMatcher(Arrays.asList("/api/account/signIn"), "/api/**");
+        FilterSkipMatcher filterSkipMatcher = new FilterSkipMatcher(Arrays.asList("/api/account/signIn","/api/account/signOut"), "/api/**");
         JwtFilter jwtFilter = new JwtFilter(filterSkipMatcher, jwtFilterSuccessHandler, jwtFilterFailureHandler);
         jwtFilter.setAuthenticationManager(super.authenticationManagerBean());
         return jwtFilter;
@@ -56,6 +57,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         SignInFilter signInFilter = new SignInFilter("/api/account/signIn",signInFilterSuccessHandler, signInFilterFailureHandler);
         signInFilter.setAuthenticationManager(super.authenticationManagerBean());
         return signInFilter;
+    }
+    @Bean
+    public SignOutFilter signOutFilter() throws Exception{
+        SignOutFilter signOutFilter = new SignOutFilter("/api/account/signOut");
+        signOutFilter.setAuthenticationManager(super.authenticationManagerBean());
+        return signOutFilter;
     }
 
     //Manager 등록
@@ -87,6 +94,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(signInFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(signInFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(signOutFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 }

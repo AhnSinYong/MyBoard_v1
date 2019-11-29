@@ -20,7 +20,12 @@ public class SignInPostToken extends UsernamePasswordAuthenticationToken {
         return (String)super.getCredentials();
     }
 
+
     public AccountSecurityDTO getAccountSecurityDTO() {
         return (AccountSecurityDTO) super.getPrincipal();
+    }
+
+    public AccountDetails getAccountDetails(){
+        return new AccountDetails(this.getEmail(), this.getPassword(), super.getAuthorities());
     }
 }

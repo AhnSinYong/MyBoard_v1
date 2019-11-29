@@ -35,30 +35,42 @@ public class AccountDetails extends User {
         detail.saveAccount(account);
         return detail;
     }
+    private static AccountRole parseAccountRole(String roleName){
+        return AccountRole.valueOf(roleName);
+    }
+    public static List<SimpleGrantedAuthority> parseAuthoritiesFromRoleName(String roleName){
+        return  parseAuthorities(parseAccountRole(roleName));
+    }
     private static List<SimpleGrantedAuthority> parseAuthorities(AccountRole role) {
         return Arrays.asList(role).stream().map(r -> new SimpleGrantedAuthority(r.getRoleName())).collect(Collectors.toList());
     }
 
-    public void validatePreToken(SignInPreToken token, PasswordEncoder passwordEncoder){
+    public void validatePreToken(SignInPreToken token,PasswordEncoder passwordEncoder){
         String email = token.getEmail();
         String password = token.getPassword();
-        validateSignIn(email,password);
+        validateSignIn(email,password,passwordEncoder);
     }
 
-    private void validateSignIn(String email, String password){
+    private void validateSignIn(String email, String password,PasswordEncoder passwordEncoder){
         if(email.equals("") || email == null){
             throw new BlankEmailException("please, enter \"email\"");
         }
         if(password.equals("") || password == null){
             throw new BlankPasswordException("please, enter \"password\"");
         }
-        if(isAbleSignIn(email, password)){
+        if(isAbleSignIn(email, password, passwordEncoder)){
             throw new NotFoundEmailException("please, check login info");
         }
     }
 
-    private boolean isAbleSignIn(String email, String password){
-        return !(email.equals(this.getEmail())&&password.equals(this.getPassword()));
+    private boolean isAbleSignIn(String email, String password, PasswordEncoder passwordEncoder){
+        return !(isSameEmail(email)&&isSamePassword(password,passwordEncoder));
+    }
+    private boolean isSameEmail(String email){
+        return email.equals(this.getEmail());
+    }
+    private boolean isSamePassword(String password, PasswordEncoder passwordEncoder){
+        return passwordEncoder.matches(password, this.getPassword());
     }
 
     public String getEmail(){
