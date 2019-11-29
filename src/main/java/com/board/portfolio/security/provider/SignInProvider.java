@@ -22,10 +22,9 @@ public class SignInProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         SignInPreToken token = (SignInPreToken) authentication;
-        AccountDetails detail = (AccountDetails) detailsService.loadUserByUsername(token.getEmail());
-        detail.checkSignInProcess(token, passwordEncoder);
-
-        return detail.getPostToken(detail);
+        AccountDetails details = (AccountDetails) detailsService.loadUserByUsername(token.getEmail());
+        details.validatePreToken(token,passwordEncoder);
+        return details.getPostToken(details);
     }
 
     @Override
