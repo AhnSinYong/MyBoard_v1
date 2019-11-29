@@ -2,6 +2,8 @@ package com.board.portfolio.security.account;
 
 import com.board.portfolio.domain.entity.Account;
 import com.board.portfolio.domain.entity.AccountRole;
+import com.board.portfolio.exception.BlankEmailException;
+import com.board.portfolio.exception.BlankPasswordException;
 import com.board.portfolio.exception.NotFoundEmailException;
 import com.board.portfolio.security.token.SignInPostToken;
 import com.board.portfolio.security.token.SignInPreToken;
@@ -37,18 +39,26 @@ public class AccountDetails extends User {
         return Arrays.asList(role).stream().map(r -> new SimpleGrantedAuthority(r.getRoleName())).collect(Collectors.toList());
     }
 
-    public SignInPostToken checkSignInProcess(SignInPreToken token, PasswordEncoder passwordEncoder){
+    public void validatePreToken(SignInPreToken token, PasswordEncoder passwordEncoder){
         String email = token.getEmail();
         String password = token.getPassword();
+        validateSignIn(email,password);
+    }
 
-        if(!isAbleSignIn(email, password)){
-            throw new NotFoundEmailException("로그인에 실패하였습니다.");
+    private void validateSignIn(String email, String password){
+        if(email.equals("") || email == null){
+            throw new BlankEmailException("please, enter \"email\"");
         }
-        return new SignInPostToken(email, password, super.getAuthorities());
+        if(password.equals("") || password == null){
+            throw new BlankPasswordException("please, enter \"password\"");
+        }
+        if(isAbleSignIn(email, password)){
+            throw new NotFoundEmailException("please, check login info");
+        }
     }
 
     private boolean isAbleSignIn(String email, String password){
-        return email.equals(this.getEmail())&&password.equals(this.getPassword());
+        return !(email.equals(this.getEmail())&&password.equals(this.getPassword()));
     }
 
     public String getEmail(){
