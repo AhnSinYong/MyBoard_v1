@@ -10,8 +10,8 @@ export default Vue.component('sign-in',{
                 </div>
                 <div class="margin-auto-center">
                     <div class="inline-block">
-                        <input v-model="input.email" type="text" placeholder="email"></br>
-                        <input v-model="input.password" type="password" placeholder="password">    
+                        <input v-model="input.email" type="text" placeholder="email" @keyup.enter="signIn(input.email, input.password)"></br>
+                        <input v-model="input.password" type="password" placeholder="password" @keyup.enter="signIn(input.email, input.password)">    
                     </div>
                 </div>
                 <div>
@@ -50,12 +50,13 @@ export default Vue.component('sign-in',{
         },
         successSignIn(res){
             console.log(res);
+            console.log(this.loginMethod.getCookie('jwt-token'));
             this.loginMethod.setLoginState();
             this.coverViewMethod.resetState();
             this.inputMethod.resetInput(this.input);
         },
         failSignIn(err){
-            alert(err.data);
+            alert(err.data.message);
             this.input.password='';
         }
 
