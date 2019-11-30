@@ -97,6 +97,9 @@
  
  ### SQL(DDL)
 ~~~
+CREATE DATABASE portfolio_board default CHARACTER SET UTF8;
+~~~
+~~~
 create table TB_ACCOUNT(
     EMAIL varchar(100),
     PASSWORD varchar(100) not null ,
