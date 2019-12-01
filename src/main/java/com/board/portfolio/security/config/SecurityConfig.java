@@ -47,7 +47,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     //filter 생성 및 Manager에 등록
     @Bean
     public JwtFilter jwtFilter() throws Exception {
-        FilterSkipMatcher filterSkipMatcher = new FilterSkipMatcher(Arrays.asList("/api/account/signIn","/api/account/signOut"), "/api/**");
+        FilterSkipMatcher filterSkipMatcher = new FilterSkipMatcher(
+                Arrays.asList(
+                        "/api/account/signIn",
+                        "/api/account/signOut",
+                        "/api/account/authenticate"), "/api/**");
         JwtFilter jwtFilter = new JwtFilter(filterSkipMatcher, jwtFilterSuccessHandler, jwtFilterFailureHandler);
         jwtFilter.setAuthenticationManager(super.authenticationManagerBean());
         return jwtFilter;
