@@ -15,6 +15,9 @@ public class JwtCookieUtil {
     }
     private static Optional<Cookie> findJwtCookie(Cookie[] cookies){
         Cookie jwtCookie=null;
+        if(cookies==null){
+            return Optional.ofNullable(jwtCookie);
+        }
         for(Cookie cookie : cookies){
             if(cookie.getName().equals(jwtTokenName)){
                 jwtCookie = cookie;
