@@ -4,6 +4,7 @@ import com.board.portfolio.domain.entity.Account;
 import com.board.portfolio.domain.entity.AccountRole;
 import com.board.portfolio.exception.BlankEmailException;
 import com.board.portfolio.exception.BlankPasswordException;
+import com.board.portfolio.exception.InvalidAuthAccountException;
 import com.board.portfolio.exception.NotFoundEmailException;
 import com.board.portfolio.security.token.SignInPostToken;
 import com.board.portfolio.security.token.SignInPreToken;
@@ -52,6 +53,9 @@ public class AccountDetails extends User {
     }
 
     private void validateSignIn(String email, String password,PasswordEncoder passwordEncoder){
+        if(!this.account.isAuth()){
+            throw new InvalidAuthAccountException("please, authenticate");
+        }
         if(email.equals("") || email == null){
             throw new BlankEmailException("please, enter \"email\"");
         }
