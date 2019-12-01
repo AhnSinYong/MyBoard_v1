@@ -21,7 +21,14 @@ export default {
             }
         },
         getParsedJwt(){
-            return JSON.parse(atob(getCookie('jwt-token')));
+            let token = getCookie('jwt-token').split('\.');
+            const header = JSON.parse(atob(token[0]));
+            const claim = JSON.parse(atob(token[1]));
+
+            return {
+                header : header,
+                claim : claim
+            }
         },
         isLogin(){
             let state = false;
