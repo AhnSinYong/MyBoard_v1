@@ -1,6 +1,8 @@
 ## 할 것
 - security의 exception 처리를 추가해야함
 - message관련, mail관련 exception 발생하면 클라이언트에 메일발송실패 뜨게하자, rollback도 되야하고
+- 메일인증 링크 클릭시 보일 화면 추가
+- 인증유효시간 30분이 지날경우를 적용
 ## 표준 정의서
 ### 게시판
 - SPA web
