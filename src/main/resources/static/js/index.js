@@ -19,7 +19,7 @@ new Vue({
         }
     },
     async created(){
-
+        this.loginMethod.checkLogin();
     },
 
     methods:{

@@ -50,7 +50,6 @@ export default Vue.component('sign-in',{
         },
         successSignIn(res){
             console.log(res);
-            console.log(this.loginMethod.getCookie('jwt-token'));
             this.loginMethod.setLoginState();
             this.coverViewMethod.resetState();
             this.inputMethod.resetInput(this.input);

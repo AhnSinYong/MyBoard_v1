@@ -23,7 +23,19 @@ export default {
         getParsedJwt(){
             return JSON.parse(atob(getCookie('jwt-token')));
         },
-
+        isLogin(){
+            let state = false;
+            if(this.getCookie('jwt-token'))
+                state = true;
+            return state;
+        },
+        checkLogin(){
+            if(this.isLogin()){
+                this.setLoginState()
+                return;
+            }
+            this.setLogoutState();
+        },
         getCookie: function (name) {
             let value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
             return value? value[2] : null;
