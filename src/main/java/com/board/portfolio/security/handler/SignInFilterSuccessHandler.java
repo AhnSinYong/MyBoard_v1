@@ -22,6 +22,7 @@ public class SignInFilterSuccessHandler implements AuthenticationSuccessHandler 
     public void onAuthenticationSuccess(HttpServletRequest req, HttpServletResponse res, Authentication auth) throws IOException, ServletException {
         String jwt = jwtFactory.generateToken(((SignInPostToken) auth).getAccountSecurityDTO());
         Cookie cookie = new Cookie("jwt-token", jwt);
+        cookie.setPath("/");
         cookie.setMaxAge(60*60);
         res.addCookie(cookie);
     }
