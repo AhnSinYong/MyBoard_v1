@@ -1,6 +1,7 @@
 package com.board.portfolio.security.account;
 
 import com.board.portfolio.domain.entity.Account;
+import com.board.portfolio.exception.NotFoundEmailException;
 import com.board.portfolio.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +16,7 @@ public class AccountDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Account account = accountRepository.findById(email).orElseThrow(()->new UsernameNotFoundException("Not found email"));
+        Account account = accountRepository.findById(email).orElseThrow(()->new NotFoundEmailException("Not found email"));
         return AccountDetails.transFromAccountWithSave(account);
     }
 }
