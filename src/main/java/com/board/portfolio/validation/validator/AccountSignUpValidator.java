@@ -2,9 +2,11 @@ package com.board.portfolio.validation.validator;
 
 import com.board.portfolio.domain.dto.AccountDTO;
 import com.board.portfolio.exception.NotSamePasswordException;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+@Component
 public class AccountSignUpValidator implements Validator {
     @Override
     public boolean supports(Class<?> aClass) {
