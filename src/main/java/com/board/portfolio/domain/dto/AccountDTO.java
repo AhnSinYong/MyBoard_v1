@@ -1,5 +1,7 @@
 package com.board.portfolio.domain.dto;
 
+import com.board.portfolio.validation.anotation.AuthKeyExist;
+import com.board.portfolio.validation.anotation.EmailExist;
 import com.board.portfolio.validation.anotation.EmailUnique;
 import com.board.portfolio.validation.anotation.NicknameUnique;
 import lombok.Data;
@@ -36,5 +38,14 @@ public class AccountDTO {
     public static class SignIn{
         private String email;
         private String password;
+    }
+    @Data
+    public static class Auth{
+        @NotBlank(message = "required email")
+        @EmailExist(message = "fail authenticate")
+        private String email;
+        @NotBlank(message = "required authKey")
+        @AuthKeyExist(message = "fail authenticate")
+        private String authKey;
     }
 }
