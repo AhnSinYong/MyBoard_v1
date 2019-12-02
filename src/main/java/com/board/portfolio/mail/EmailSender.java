@@ -39,7 +39,6 @@ public class EmailSender {
                 .append("email="+to)
                 .append("&authKey="+authKey)
                 .append("' target='_blenk'>이메일 인증 확인</a>")
-                .append("<script> alert('hi'); </script>")
                 .toString();
     }
 
