@@ -4,13 +4,15 @@ import com.board.portfolio.domain.dto.AccountDTO;
 import com.board.portfolio.domain.entity.Account;
 import com.board.portfolio.exception.NotFoundEmailException;
 import com.board.portfolio.mail.EmailSender;
+import com.board.portfolio.mail.manager.AuthMail;
 import com.board.portfolio.repository.AccountRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
 
 @Service
 public class AccountService {
@@ -27,8 +29,11 @@ public class AccountService {
     public void signUp(AccountDTO.SignUp dto){
         dto.setPassword(passwordEncoder.encode(dto.getPassword()));
         Account account = modelMapper.map(dto, Account.class);
-        String authKey = accountRepository.save(account).getAuthKey();
-        emailSender.sendAuthMail(dto.getEmail(), authKey);
+        account = accountRepository.save(account);
+        String authKey = account.getAuthKey();
+        Date signUpDate = account.getSignUpDate();
+        emailSender.sendAuthMail(new AuthMail(dto.getEmail(), signUpDate, authKey));
+
     }
     @Transactional
     public void authenticate(AccountDTO.Auth dto){

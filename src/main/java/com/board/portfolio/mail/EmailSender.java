@@ -1,5 +1,7 @@
 package com.board.portfolio.mail;
 
+import com.board.portfolio.mail.manager.AuthMail;
+import com.board.portfolio.mail.manager.AuthMailManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
@@ -14,10 +16,14 @@ import javax.mail.internet.MimeMessage;
 public class EmailSender {
     @Autowired
     JavaMailSender mailSender;
+    @Autowired
+    AuthMailManager manager;
     @Value("${mail.from}")
     String from;
 
-    public void sendAuthMail(String to, String authKey) {
+    public void sendAuthMail(AuthMail authMail) {
+        String to = authMail.getEmail();
+        String authKey = authMail.getAuthKey();
         MimeMessage message = mailSender.createMimeMessage();
         try {
             message.setSubject("[인증] 회원 가입 인증", "UTF-8");
@@ -25,6 +31,7 @@ public class EmailSender {
             message.setFrom(from);
             message.addRecipient(MimeMessage.RecipientType.TO, new InternetAddress(to));
             mailSender.send(message);
+            manager.startManage(authMail);
         } catch (MessagingException e) {
             e.printStackTrace();
         } catch (MailException e) {

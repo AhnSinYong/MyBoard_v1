@@ -3,6 +3,7 @@ package com.board.portfolio.repository;
 import com.board.portfolio.domain.entity.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface AccountRepository extends JpaRepository<Account,String> {
@@ -16,4 +17,6 @@ public interface AccountRepository extends JpaRepository<Account,String> {
     boolean existsByAuthKey(String authKey);
 
     boolean existsByEmailAndAuthKeyAndIsAuth(String email, String authKey, boolean isAuth);
+
+    List<Account> findAllByIsAuthOrderBySignUpDateAsc(boolean isAuth);
 }
