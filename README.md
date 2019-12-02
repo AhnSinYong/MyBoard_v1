@@ -1,9 +1,11 @@
+## 표준 정의서
 ## 할 것
+- security http 에러코드 설정필요
+- jwt 디코딩, 팩토리 hidden 문자열 외부파일로 빼기
 - security의 exception 처리를 추가해야함
 - message관련, mail관련 exception 발생하면 클라이언트에 메일발송실패 뜨게하자, rollback도 되야하고
 - 메일인증 링크 클릭시 보일 화면 추가
 - 인증유효시간 30분이 지날경우를 적용
-## 표준 정의서
 ### 게시판
 - SPA web
 - vue.js
@@ -99,9 +101,6 @@
  
  
  ### SQL(DDL)
-~~~
-CREATE DATABASE portfolio_board default CHARACTER SET UTF8;
-~~~
 ~~~
 create table TB_ACCOUNT(
     EMAIL varchar(100),
@@ -244,6 +243,9 @@ insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now
     - 경고 밑줄이 그어짐, import 같은 것을 써야 할까?
     
  - jwt 쿠키가 탈취 당할 경우를 고려해서 매 요청마다 새로운 토큰을 주는 게 나을까?
+ 
+ - contextHolder 안에 있는 authentication은 요청이 끝나면 사라지게 되는걸까???
  - jpa의 update를 하지 않고 findby 이후 setter를 이용해도 괜찮은걸까?
  - @initBinder에서 validator의 클래스비교가 false가 뜨면 에러가 발생하는데 이 에러를 캐치해주면 하나의 @initBinder에서 깔끔하게 처리 가능하지 않을까?
-        - @initBinder(name) 에서 name은 모델명, 클래스명을 타겟하는구나
+     - @initBinder(name) 에서 name은 모델명, 클래스명을 타겟하는구나
+ 
