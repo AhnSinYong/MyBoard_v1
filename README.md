@@ -1,13 +1,13 @@
 ## 표준 정의서
 ## 할 것
-- jwt 디코딩, 팩토리 hidden 문자열 외부파일로 빼기
 - security의 exception 처리를 추가해야함
-- message관련, mail관련 exception 발생하면 클라이언트에 "메일발송실패" 뜨게하자, rollback도 되야하고
+    - @initBinder로 처리하는 validator가 떨구는 예외도 처리해서 내보내야함
+    - message관련, mail관련 exception 발생하면 클라이언트에 "메일발송실패" 뜨게하자, rollback도 되야하고
 - 메일인증 링크 클릭시 보일 화면 추가
 - 인증유효시간 30분이 지날경우를 적용
-- @autowired 더 정확히 이해하자(메소드,생성자에 대한 쓰임)
-    - 스프링 빈 라이프 사이클에 대한 이해 필요
-    - @value가 JwtCookieUtil에서 왜 안되었던거지??
+    - AOP이용해보자
+    - AccountMailAuthManager를 생성해보자 : @Schedule 이용해서 하긴 싫잖아
+
 ### 게시판
 - SPA web
 - vue.js
@@ -255,6 +255,13 @@ insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now
     - jwtTokenName에 @Value를쓰기 위해서 클래스에 @Component를 사용
     - 그럼에도 불구하고 @Value가 null로 보여서 생성자에 @Autowired를 걸고 @Value를 씀
         - 안됬던 이유는 static 메소드와 관련이 있을까???
-        - 스프링 빈 라이프 사이클에 대한 이해 필요 
+        - 스프링 빈 라이프 사이클에 대한 이해 필요
+        - @autowired 더 정확히 이해하자(메소드,생성자에 대한 쓰임)
+        - 스프링 빈 라이프 사이클에 대한 이해 필요
+        - @value가 JwtCookieUtil에서 왜 안되었던거지??
+        - 참고  https://codeday.me/ko/qa/20190411/301654.html 
         
 - 커스텀 @Valid 만들어서 사용하는 거에 대한 의견이 궁금
+- @autowired를 생성자 주입으로 써야하는 이유
+    - https://yaboong.github.io/spring/2019/08/29/why-field-injection-is-bad/
+    - 꽤 생각해볼만한 이야기
