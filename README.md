@@ -6,6 +6,8 @@
 - 메일인증 링크 클릭시 보일 화면 추가
 - 인증유효시간 30분이 지날경우를 적용
 - @autowired 더 정확히 이해하자(메소드,생성자에 대한 쓰임)
+    - 스프링 빈 라이프 사이클에 대한 이해 필요
+    - @value가 JwtCookieUtil에서 왜 안되었던거지??
 ### 게시판
 - SPA web
 - vue.js
@@ -252,4 +254,5 @@ insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now
 - JwtCookieUtil을 제대로 구성한게 맞는걸까?
     - jwtTokenName에 @Value를쓰기 위해서 클래스에 @Component를 사용
     - 그럼에도 불구하고 @Value가 null로 보여서 생성자에 @Autowired를 걸고 @Value를 씀
-        - 안됬던 이유는 static 메소드와 관련이 있을까??? 
+        - 안됬던 이유는 static 메소드와 관련이 있을까???
+        - 스프링 빈 라이프 사이클에 대한 이해 필요 
