@@ -1,9 +1,8 @@
 ## 표준 정의서
 ## 할 것
-- security http 에러코드 설정필요
 - jwt 디코딩, 팩토리 hidden 문자열 외부파일로 빼기
 - security의 exception 처리를 추가해야함
-- message관련, mail관련 exception 발생하면 클라이언트에 메일발송실패 뜨게하자, rollback도 되야하고
+- message관련, mail관련 exception 발생하면 클라이언트에 "메일발송실패" 뜨게하자, rollback도 되야하고
 - 메일인증 링크 클릭시 보일 화면 추가
 - 인증유효시간 30분이 지날경우를 적용
 ### 게시판
@@ -248,4 +247,8 @@ insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now
  - jpa의 update를 하지 않고 findby 이후 setter를 이용해도 괜찮은걸까?
  - @initBinder에서 validator의 클래스비교가 false가 뜨면 에러가 발생하는데 이 에러를 캐치해주면 하나의 @initBinder에서 깔끔하게 처리 가능하지 않을까?
      - @initBinder(name) 에서 name은 모델명, 클래스명을 타겟하는구나
- 
+
+- JwtCookieUtil을 제대로 구성한게 맞는걸까?
+    - jwtTokenName에 @Value를쓰기 위해서 클래스에 @Component를 사용
+    - 그럼에도 불구하고 @Value가 null로 보여서 생성자에 @Autowired를 걸고 @Value를 씀
+        - 안됬던 이유는 static 메소드와 관련이 있을까??? 

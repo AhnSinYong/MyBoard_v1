@@ -8,6 +8,7 @@ import com.board.portfolio.exception.InvalidJwtException;
 import com.board.portfolio.security.account.AccountDetailsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -17,6 +18,8 @@ import java.util.Optional;
 public class JwtDecoder {
     @Autowired
     AccountDetailsService detailsService;
+    @Value("${jwt.secret}")
+    private String secret;
 
     public DecodedJWT decodeJwt(String token) {
         return isValidToken(token).orElseThrow(() -> new InvalidJwtException("유효한 토큰아 아닙니다."));
@@ -27,7 +30,7 @@ public class JwtDecoder {
         DecodedJWT jwt = null;
 
         try {
-            Algorithm algorithm = Algorithm.HMAC256("JWT");
+            Algorithm algorithm = Algorithm.HMAC256(secret);
             JWTVerifier verifier = JWT.require(algorithm).build();
 
             jwt = verifier.verify(token);

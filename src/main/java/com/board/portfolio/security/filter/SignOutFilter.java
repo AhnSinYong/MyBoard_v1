@@ -1,5 +1,6 @@
 package com.board.portfolio.security.filter;
 
+import com.board.portfolio.security.cookie.JwtCookieUtil;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,9 +20,7 @@ public class SignOutFilter extends AbstractAuthenticationProcessingFilter {
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res) throws AuthenticationException, IOException, ServletException {
-        Cookie cookie = new Cookie("jwt-token","");
-        cookie.setMaxAge(0);
-        res.addCookie(cookie);
+        res.addCookie(JwtCookieUtil.createSignOutCookie());
         SecurityContextHolder.clearContext();
         return null;
     }

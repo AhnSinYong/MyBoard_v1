@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.board.portfolio.security.account.AccountDetails;
 import com.board.portfolio.security.account.AccountSecurityDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
@@ -13,7 +14,8 @@ import java.util.Date;
 @Slf4j
 @Component
 public class JwtFactory {
-    private static String signingKey = "JWT";
+    @Value("${jwt.secret}")
+    private String secret;
 
     public String generateToken(AccountSecurityDTO dto) {
 
@@ -35,7 +37,7 @@ public class JwtFactory {
     }
 
     private Algorithm generateAlgorithm() throws UnsupportedEncodingException {
-        return Algorithm.HMAC256(signingKey);
+        return Algorithm.HMAC256(secret);
     }
 
 }
