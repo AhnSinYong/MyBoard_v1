@@ -256,3 +256,5 @@ insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now
     - 그럼에도 불구하고 @Value가 null로 보여서 생성자에 @Autowired를 걸고 @Value를 씀
         - 안됬던 이유는 static 메소드와 관련이 있을까???
         - 스프링 빈 라이프 사이클에 대한 이해 필요 
+        
+- 커스텀 @Valid 만들어서 사용하는 거에 대한 의견이 궁금
