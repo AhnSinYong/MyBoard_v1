@@ -5,8 +5,7 @@
     - message관련, mail관련 exception 발생하면 클라이언트에 "메일발송실패" 뜨게하자, rollback도 되야하고
 - 메일인증 링크 클릭시 보일 화면 추가
 - 인증유효시간 30분이 지날경우를 적용
-    - AOP이용해보자
-    - AccountMailAuthManager를 생성해보자 : @Schedule 이용해서 하긴 싫잖아
+    - 스레드세이프하게 다시 생각해보자(syncronized?)
 
 ### 게시판
 - SPA web
@@ -265,3 +264,5 @@ insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now
 - @autowired를 생성자 주입으로 써야하는 이유
     - https://yaboong.github.io/spring/2019/08/29/why-field-injection-is-bad/
     - 꽤 생각해볼만한 이야기
+    
+- new Thread에서 @Transactional이 안돼서 repository에 사용했음 개선점은 무엇이 있을까?
