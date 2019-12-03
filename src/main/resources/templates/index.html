@@ -2,12 +2,46 @@
 <html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>포트폴리오</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/common.css">
+
+    <link rel="stylesheet" type="text/css" href="/static/css/pc/index.css" media="screen and (min-width:801px)">
+    <link rel="stylesheet" type="text/css" href="/static/css/pc/signUp.css" media="screen and (min-width:801px)">
+
+    <link rel="stylesheet" type="text/css" href="/static/css/mobile/index.css" media="screen and (max-width:800px)">
+
+    <title>Portfolio</title>
 </head>
 <body>
-<h1 th:text="${new java.util.Date().toString()}"></h1>
+<div id="app">
+    <div class="header">
+        <div class="top-bar">
+            <div class="title inline-block">
+                <span>
+                    My Board
+                </span>
+                <span>
+                    <input v-if="!loginInfo.isLogin" type="button" value="sign in" @click="coverViewMethod.showSignInView()">
+                    <input v-else type="button" value="logout" @click="loginMethod.logout()">
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="body">
+        <!-- <board/>   -->
+    </div>
+    <div class="footer"></div>
+    <div class="cover-view-wrapper">
+        <div v-show="coverViewState.signUp"><sign-up/></div>
+        <div v-show="coverViewState.signIn"><sign-in/></div>
 
-<script>
-</script>
+        <!-- <post/>   -->
+        <!-- <update/>   -->
+    </div>
+</div>
+<script src="//kr.vuejs.org/js/vue.js"></script>
+<script src="/static/js/common/dateFormat.js"></script>
+<script src="//unpkg.com/axios@0.12.0/dist/axios.min.js"></script>
+<script src="/static/js/index.js" type="module"></script>
+<script type="application/javascript"></script>
 </body>
 </html>

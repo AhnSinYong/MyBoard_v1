@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Entity
 @Table(
@@ -82,6 +83,8 @@ public class Account implements EntityDefaultValues {
     public void setDefaultValues() {
         this.signUpDate = Optional.ofNullable(this.signUpDate).orElse(new Date());
         this.role = Optional.ofNullable(this.role).orElse(AccountRole.MEMBER);
+        this.authKey = Optional.ofNullable(this.authKey).orElse(UUID.randomUUID().toString());
+        this.isAuth = Optional.ofNullable(this.isAuth).orElse(false);
     }
 
 }

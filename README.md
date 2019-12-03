@@ -1,4 +1,12 @@
 ## 표준 정의서
+## 할 것
+- security의 exception 처리를 추가해야함
+    - @initBinder로 처리하는 validator가 떨구는 예외도 처리해서 내보내야함
+    - message관련, mail관련 exception 발생하면 클라이언트에 "메일발송실패" 뜨게하자, rollback도 되야하고
+- 메일인증 링크 클릭시 보일 화면 추가
+- 인증유효시간 30분이 지날경우를 적용
+    - 스레드세이프하게 다시 생각해보자(syncronized?)
+
 ### 게시판
 - SPA web
 - vue.js
@@ -10,13 +18,16 @@
 ### Git Branch
 - master/origin
 - dev
+##프로젝트 구성
+- 내용추가 필요
+
 
 ## DataBase
 ### TB_ACCOUNT
  |항목            | 설명                |key type    |data type              | unique   | nullable  |비고               |
  |----------------|--------------------|------------|-----------------------|----------|----------|-------------------|
- |EMAIL           |회원의 이메일        |primary     |varchar(100)             | unique   | not null |   이메일 패턴이여야 함|   
- |PASSWORD     	 |회원의 비밀번호		   |            | varchar(50)            |         | not null |숫자,영문,특문 8자이상 16이하|
+ |EMAIL           |회원의 이메일        |primary     |varchar(100)             | unique   | not null |   이메일 패턴이여야 함, 최소 5자, 최대 40자|   
+ |PASSWORD     	 |회원의 비밀번호		   |            | varchar(100)            |         | not null |숫자,영문,특문 8자이상 16이하 -> 암호화|
  |NICKNAME     	 |회원의 별명		   |           | varchar(30)            | unique   |          |최소4자 이상, 10자이하      |
  |SIGNUP_DATE  	 |회원 가입일		   |           | DATETIME default now() |          | not null |                      |                       |
  |ROLE       	 |회원의 권한		   |           | varchar(30) default 'MEMBER'|          | not null |MEMBER, ADMIN, SYSTEM 중 하나  |
@@ -97,7 +108,7 @@
 ~~~
 create table TB_ACCOUNT(
     EMAIL varchar(100),
-    PASSWORD varchar(50) not null ,
+    PASSWORD varchar(100) not null ,
     NICKNAME varchar(30) unique ,
     SIGNUP_DATE datetime default now(),
     ROLE varchar(30) default 'MEMBER',
@@ -213,7 +224,13 @@ insert into TB_LIKE_COMMENT values ('test-id2',2,'admin',now());
 insert into TB_FILE_ATTACHMENT values ('test-id',29,'test-origin-name','test-save-name','test-extension',0,now(),'admin');
 insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now(),now());
 ~~~
- 
+
+ ## Spring Security
+ ### Filter
+ |경로                    |예외경로            |Filter         | Provider                                  |success                             |fail                      |
+ |------------------------|-------------------|-------------|--------------------------------------------|-------------------------------------|-----------------------|
+ |/api/account/signIn     |                   |SignInFilter   | 로그인 성공 여부 판단                      | jwt토큰을 쿠키에 담아 반환           | Exception 발생        |
+ |/api/**                 |/api/account/signIn|JwtFilter      | 토큰 유효성 판단(토큰이 없는 경우는 success)| chain.doFilter()                    | Exception 발생        |
  
  ## 생각해볼 것
  - TB_ALARM에서 TB_CONTENT_ID 는 외래키로 설정하지 않았다.
@@ -224,4 +241,31 @@ insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now
  - TB_EMAIL 에서 기본키를 email로 하였는데, 이것이 인덱싱 관련해서 문제를 일으킬 수 있지 않을까?
     - MySQL은 기본키에 디폴트 인덱스를 거는 개념이 혹시 존재하나?
     
-## 할 것
+ - ResponseEntity를 사용하지 않고 응답을 구성하는법...
+    - 단순히 클래스 리턴이 아니라 에러, 응답코드 등의 정보를 부여
+ - axios를 export 하는 파일들 안에서 명시적으로 쓰는 것 고려
+    - 경고 밑줄이 그어짐, import 같은 것을 써야 할까?
+    
+ - jwt 쿠키가 탈취 당할 경우를 고려해서 매 요청마다 새로운 토큰을 주는 게 나을까?
+ 
+ - contextHolder 안에 있는 authentication은 요청이 끝나면 사라지게 되는걸까???
+ - jpa의 update를 하지 않고 findby 이후 setter를 이용해도 괜찮은걸까?
+ - @initBinder에서 validator의 클래스비교가 false가 뜨면 에러가 발생하는데 이 에러를 캐치해주면 하나의 @initBinder에서 깔끔하게 처리 가능하지 않을까?
+     - @initBinder(name) 에서 name은 모델명, 클래스명을 타겟하는구나
+
+- JwtCookieUtil을 제대로 구성한게 맞는걸까?
+    - jwtTokenName에 @Value를쓰기 위해서 클래스에 @Component를 사용
+    - 그럼에도 불구하고 @Value가 null로 보여서 생성자에 @Autowired를 걸고 @Value를 씀
+        - 안됬던 이유는 static 메소드와 관련이 있을까???
+        - 스프링 빈 라이프 사이클에 대한 이해 필요
+        - @autowired 더 정확히 이해하자(메소드,생성자에 대한 쓰임)
+        - 스프링 빈 라이프 사이클에 대한 이해 필요
+        - @value가 JwtCookieUtil에서 왜 안되었던거지??
+        - 참고  https://codeday.me/ko/qa/20190411/301654.html 
+        
+- 커스텀 @Valid 만들어서 사용하는 거에 대한 의견이 궁금
+- @autowired를 생성자 주입으로 써야하는 이유
+    - https://yaboong.github.io/spring/2019/08/29/why-field-injection-is-bad/
+    - 꽤 생각해볼만한 이야기
+    
+- new Thread에서 @Transactional이 안돼서 repository에 사용했음 개선점은 무엇이 있을까?
