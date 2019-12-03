@@ -49,4 +49,8 @@ public class EmailSender {
                 .toString();
     }
 
+    public void completeAuthMail(String email){
+        manager.removeAuthMailList(email);
+    }
+
 }
