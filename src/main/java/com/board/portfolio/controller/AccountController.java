@@ -18,11 +18,6 @@ public class AccountController {
     private AccountSignUpValidator accountSignUpValidator;
     private AccountAuthValidator accountAuthValidator;
 
-    @InitBinder("signUp")
-    protected void initBinderSignUp(WebDataBinder binder){ binder.addValidators(accountSignUpValidator); }
-    @InitBinder("auth")
-    protected void initBinderAuth(WebDataBinder binder){ binder.addValidators(accountAuthValidator); }
-
     @Autowired
     public AccountController(AccountService accountService,
                              AccountSignUpValidator accountSignUpValidator,
@@ -42,4 +37,9 @@ public class AccountController {
         accountService.authenticate(dto);
         return ResponseEntity.ok(Result.SUCCESS);
     }
+
+    @InitBinder("signUp")
+    protected void initBinderSignUp(WebDataBinder binder){ binder.addValidators(accountSignUpValidator); }
+    @InitBinder("auth")
+    protected void initBinderAuth(WebDataBinder binder){ binder.addValidators(accountAuthValidator); }
 }
