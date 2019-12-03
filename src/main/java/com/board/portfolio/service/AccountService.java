@@ -5,6 +5,7 @@ import com.board.portfolio.domain.entity.Account;
 import com.board.portfolio.exception.NotFoundEmailException;
 import com.board.portfolio.mail.EmailSender;
 import com.board.portfolio.mail.manager.AuthMail;
+import com.board.portfolio.mail.manager.AuthMailManager;
 import com.board.portfolio.repository.AccountRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +38,13 @@ public class AccountService {
     }
     @Transactional
     public void authenticate(AccountDTO.Auth dto){
+        String email = dto.getEmail();
+        String authKey = dto.getAuthKey();
         accountRepository
-                .findByEmailAndAuthKey(dto.getEmail(), dto.getAuthKey())
+                .findByEmailAndAuthKey(email, authKey)
                 .orElseThrow(()->new NotFoundEmailException("fail to find email for authenticate"))
                 .setAuth(true);
+        emailSender.completeAuthMail(email);
     }
 
 }
