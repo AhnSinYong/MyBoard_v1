@@ -51,15 +51,15 @@ public class Board implements EntityDefaultValues{
 
     @OneToMany(mappedBy = "board")
     @JsonBackReference
-    private List<Comment> commentList = new ArrayList<>();
+    private List<Comment> commentList;
 
     @OneToMany(mappedBy = "board")
     @JsonBackReference
-    private List<LikeBoard> likeBoardList = new ArrayList<>();
+    private List<LikeBoard> likeBoardList;
 
     @OneToMany(mappedBy = "board")
     @JsonBackReference
-    private List<FileAttachment> fileAttachmentList = new ArrayList<>();
+    private List<FileAttachment> fileAttachmentList;
 
 
     @PrePersist
