@@ -21,9 +21,7 @@ public class AuthMailManager implements Runnable{
     ModelMapper modelMapper;
 
     private Long limitTime;
-    @Getter
     private final List<AuthMail> authMailList = new ArrayList<>();
-    @Getter
     private boolean isWork;
 
     @Autowired
@@ -44,7 +42,8 @@ public class AuthMailManager implements Runnable{
     private boolean isHasItem(List list){
         return list.size()!=0;
     }
-    private void startNewThread(){
+
+    public void startNewThread(){
         Thread thread = new Thread(this);
         thread.start();
     }
@@ -57,8 +56,8 @@ public class AuthMailManager implements Runnable{
     }
 
     public void startManage(AuthMail authMail){
+        addAuthMailList(authMail);
         if(isWork){
-            addAuthMailList(authMail);
             return;
         }
         startNewThread();
@@ -69,6 +68,14 @@ public class AuthMailManager implements Runnable{
     private void addAuthMailList(AuthMail authMail){
         authMailList.add(authMail);
     }
+    public void removeAuthMailList(String email){
+        for(AuthMail authMail : authMailList){
+            if(authMail.getEmail().equals(email)){
+                authMailList.remove(authMail);
+                break;
+            }
+        }
+    }
 
     private AuthMail parseFromAccount(Account account){
         return AuthMail.builder()
@@ -78,17 +85,17 @@ public class AuthMailManager implements Runnable{
                 .build();
     }
 
+
     @Override
     public void run() {
         this.isWork = true;
         while(true){
-            int i=0;
-            AuthMail authMail = authMailList.get(i);
+            if(authMailList.size()==0)
+                break;
+            AuthMail authMail = authMailList.get(0);
             if(isExpire(authMail)){//인증메일 유효시간이 지났다면
-                accountRepository.deleteById(authMail.getEmail());
-                authMailList.remove(i);
-                if(authMailList.size()==0)
-                    break;
+                accountRepository.deleteByEmailAndIsAuth(authMail.getEmail(),false);
+                authMailList.remove(0);
                 continue;
             }
             try {//지나지 않았다면
