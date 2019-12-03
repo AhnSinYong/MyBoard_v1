@@ -6,7 +6,6 @@ import com.board.portfolio.validation.validator.AccountAuthValidator;
 import com.board.portfolio.validation.validator.AccountSignUpValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,19 +14,23 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api")
 public class AccountController {
-    @Autowired
     private AccountService accountService;
-    @Autowired
-    AccountSignUpValidator accountSignUpValidator;
-    @Autowired
-    AccountAuthValidator accountAuthValidator;
-    @InitBinder("accountDTO.SignUp")
-    protected void initBinderSignUp(WebDataBinder binder){ binder.addValidators(accountAuthValidator); }
-    @InitBinder("accountDTO.Auth")
+    private AccountSignUpValidator accountSignUpValidator;
+    private AccountAuthValidator accountAuthValidator;
+
+    @InitBinder("signUp")
+    protected void initBinderSignUp(WebDataBinder binder){ binder.addValidators(accountSignUpValidator); }
+    @InitBinder("auth")
     protected void initBinderAuth(WebDataBinder binder){ binder.addValidators(accountAuthValidator); }
 
-    private final String SUCCESS = "SUCCESS";
-
+    @Autowired
+    public AccountController(AccountService accountService,
+                             AccountSignUpValidator accountSignUpValidator,
+                             AccountAuthValidator accountAuthValidator){
+        this.accountService = accountService;
+        this.accountSignUpValidator = accountSignUpValidator;
+        this.accountAuthValidator = accountAuthValidator;
+    }
 
     @PostMapping("/account")
     public ResponseEntity signUp(@RequestBody @Valid AccountDTO.SignUp dto){
