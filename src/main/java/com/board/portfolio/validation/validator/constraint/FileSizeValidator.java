@@ -24,14 +24,18 @@ public class FileSizeValidator implements ConstraintValidator<FileSize, List<Mul
     }
     @Override
     public boolean isValid(List<MultipartFile> fileList, ConstraintValidatorContext cxt) {
-        boolean state = false;
-        for(MultipartFile file : fileList){
-            if(nullable==true)
-                state = validNullabeFile(file,cxt);
-            if(nullable==false)
-                state = validFile(file,cxt);
-            if(state==false)
-                break;
+        boolean state = true;
+        if(fileList==null&&nullable==false)
+            return false;
+        if(fileList!=null){
+            for(MultipartFile file : fileList){
+                if(nullable==true)
+                    state = validNullabeFile(file,cxt);
+                if(nullable==false)
+                    state = validFile(file,cxt);
+                if(state==false)
+                    break;
+            }
         }
         return state;
     }
