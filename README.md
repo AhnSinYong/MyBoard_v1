@@ -8,6 +8,7 @@
     - 스레드세이프하게 다시 생각해보자(syncronized?)
 - 페이징 관련 repository에서 start 값 -1하는거 좀더 보기좋게 고쳐야함
 - @FileSize , @FileExtension 대충 복붙한거 리팩토링필요함
+- 프로퍼티즈 이용해서 확장자 제한 관리를 하는 것 필요
 
 ### 게시판
 - SPA web
