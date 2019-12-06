@@ -46,6 +46,11 @@ export default Vue.component('board',{
                     <input type="button" value="search">
                 </div>
             </div>
+            <div>
+                <div>
+                    <input v-if="loginInfo.isLogin" type="button" value="write" @click="coverViewMethod.showWritePostView()">
+                </div>
+            </div>
         </div>`,
     components: {
 
@@ -54,6 +59,8 @@ export default Vue.component('board',{
         return {
             coverViewMethod : shareObject.coverView.method,
             inputMethod : shareObject.input.method,
+            loginInfo : shareObject.login.info,
+            loginMethod : shareObject.login.method,
             input:{
             },
             pagination:{
