@@ -271,6 +271,9 @@ insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now
     
 - new Thread에서 @Transactional이 안돼서 repository에 사용했음 개선점은 무엇이 있을까?
 
+- spa형식으로 만들때 url을 통한 접근성이 떨어질 수 있겠네 이에 대한 해결법이 있을까?
+    - 자바스크립트로 location을 정의해줄까?
+
 ### 메모
 - JPA 
     - findTop3ByBoardAndLikeGreaterThanOrderByLikeDesc
