@@ -17,20 +17,28 @@ export default Vue.component('board',{
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="board in boardList">
+                        <tr v-for="board in pagination.list">
                             <td>{{board.boardId}}</td>
                             <td>{{board.title}}</td>
                             <td>{{board.like}}</td>
                             <td>{{board.view}}</td>
-                            <td>{{board.regDate}}</td>
-                            <td>{{board.upDate}}</td>
+                            <td>{{new Date(board.regDate).format('yy-MM-dd a/p hh:mm:ss')}}</td>                            
+                            <td>{{new Date(board.upDate).format('yy-MM-dd a/p hh:mm:ss')}}</td>
                             <td>{{board.account.nickname}}</td>
                         </tr>                    
                     </tbody>
                 </table>
             </div>
             <div>
-                
+                <div>
+                    <input v-if="pagination.prevPage!=-1"type="button" value="prev" @click="getBoardList(pagination.prevPage)">
+                    <input v-for="page in (pagination.endPage-pagination.startPage+1)" 
+                           type="button" 
+                           :class="{focusPage:pagination.page==(page+pagination.startPage-1)}"                           
+                           :value="page+pagination.startPage-1" 
+                           @click="getBoardList(page+pagination.startPage-1)">
+                    <input v-if="pagination.nextPage!=-1"type="button" value="next" @click="getBoardList(pagination.nextPage)">
+                </div>                
             </div>
             <div>
                 <div>
@@ -48,28 +56,31 @@ export default Vue.component('board',{
             inputMethod : shareObject.input.method,
             input:{
             },
-            boardList:[]
+            pagination:{
+                list:[],
+                page:'',
+                startPage:1,
+                endPage:1,
+                prevPage:'',
+                nextPage:''
+            }
         }
     },
-    async created(){
-        this.getBoardList();
+    created(){
+        this.getBoardList(1);
     },
     methods:{
-        getBoardList(){
-            axios.get('/api/board')
+        getBoardList(page){
+            axios.get('/api/board/'+page)
                 .then(this.successSignIn)
                 .catch(this.failSignIn)
         },
         successSignIn(res){
             console.log(res);
-            this.boardList = res.data;
-            // this.loginMethod.setLoginState();
-            // this.coverViewMethod.resetState();
-            // this.inputMethod.resetInput(this.input);
+            this.pagination = res.data;
         },
         failSignIn(err){
             alert(err.data.message);
-            // this.input.password='';
         }
 
     }

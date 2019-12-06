@@ -23,7 +23,7 @@ public class BoardPagination extends Pagination {
 
         long total = boardRepository.count();
         long start = (page-1) * super.pageSize+1;
-        long totalPage = (total/pageSize)+1;
+        long totalPage = (long) Math.ceil((double)total/(double)pageSize);
         long startPage = (page/rangeSize)*rangeSize+1;
         long endPage = (startPage+rangeSize-1)>totalPage?totalPage:(startPage+rangeSize-1);
         long prevPage = (page-1)>0?(page-1):-1;
