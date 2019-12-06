@@ -44,7 +44,9 @@ export default Vue.component('write-Post',{
             const formData = new FormData();
             formData.append('title',title);
             formData.append('content', content);
-            formData.append('fileList', fileList);
+            for(let i=0; i<fileList.length; i++){
+                formData.append('fileList['+i+']', fileList[0]);
+            }
 
             axios.post('/api/board',formData,{
                 headers : {
@@ -61,7 +63,7 @@ export default Vue.component('write-Post',{
         },
         failSignIn(err){
             console.log(err);
-            alert(err.data.message);
+            alert(err.data);
         },
         addFile(){
             this.input.fileList.push(this.$refs.fileInput.files[0]);
