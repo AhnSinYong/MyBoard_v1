@@ -3,13 +3,15 @@ import shareObject from "./component/shareObject/shareObject.js"
 import signIn from "./component/signIn.js"
 import signUp from "./component/signUp.js"
 import board from "./component/board.js"
+import writePost from "./component/writePost.js";
 
 new Vue({
     el : '#app',
     components:{
         signIn,
         signUp,
-        board
+        board,
+        writePost
     },
     data(){
         return {
