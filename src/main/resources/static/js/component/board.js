@@ -59,8 +59,8 @@ export default Vue.component('board',{
             pagination:{
                 list:[],
                 page:'',
-                startPage:1,
-                endPage:1,
+                startPage:'',
+                endPage:'',
                 prevPage:'',
                 nextPage:''
             }
