@@ -6,6 +6,7 @@
 - 메일인증 링크 클릭시 보일 화면 추가
 - 인증유효시간 30분이 지날경우를 적용
     - 스레드세이프하게 다시 생각해보자(syncronized?)
+- 페이징 관련 repository에서 start 값 -1하는거 좀더 보기좋게 고쳐야함
 
 ### 게시판
 - SPA web
@@ -269,3 +270,18 @@ insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now
     - 꽤 생각해볼만한 이야기
     
 - new Thread에서 @Transactional이 안돼서 repository에 사용했음 개선점은 무엇이 있을까?
+
+### 메모
+- JPA 
+    - findTop3ByBoardAndLikeGreaterThanOrderByLikeDesc
+    
+- valid 
+    - message 정의하던 부분     
+    ~~~
+          if (isExistEmail) {
+              cxt.disableDefaultConstraintViolation();
+              cxt.buildConstraintViolationWithTemplate(
+                      MessageFormat.format("이미 존재하는 이메일 입니다. \n ({0})", email))
+                      .addConstraintViolation();
+          }
+    ~~~

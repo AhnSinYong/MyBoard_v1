@@ -9,7 +9,8 @@ import org.springframework.context.annotation.PropertySources;
 @PropertySources({
         @PropertySource("classpath:properties/private/database-config.properties"),
         @PropertySource("classpath:properties/private/mail-config.properties"),
-        @PropertySource("classpath:properties/private/jwt-config.properties")
+        @PropertySource("classpath:properties/private/jwt-config.properties"),
+        @PropertySource("classpath:properties/pagination-config.properties")
 })
 public class PortfolioApplication {
 

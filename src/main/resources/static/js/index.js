@@ -1,13 +1,15 @@
 import shareObject from "./component/shareObject/shareObject.js"
 
 import signIn from "./component/signIn.js"
-import signUp from"./component/signUp.js"
+import signUp from "./component/signUp.js"
+import board from "./component/board.js"
 
 new Vue({
     el : '#app',
     components:{
         signIn,
-        signUp
+        signUp,
+        board
     },
     data(){
         return {
