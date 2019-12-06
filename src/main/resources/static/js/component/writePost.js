@@ -45,7 +45,7 @@ export default Vue.component('write-Post',{
             formData.append('title',title);
             formData.append('content', content);
             for(let i=0; i<fileList.length; i++){
-                formData.append('fileList['+i+']', fileList[0]);
+                formData.append('fileList['+i+']', fileList[i]);
             }
 
             axios.post('/api/board',formData,{
