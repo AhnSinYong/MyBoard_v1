@@ -7,6 +7,7 @@
 - 인증유효시간 30분이 지날경우를 적용
     - 스레드세이프하게 다시 생각해보자(syncronized?)
 - 페이징 관련 repository에서 start 값 -1하는거 좀더 보기좋게 고쳐야함
+- @FileSize , @FileExtension 대충 복붙한거 리팩토링필요함
 
 ### 게시판
 - SPA web
@@ -273,6 +274,10 @@ insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now
 
 - spa형식으로 만들때 url을 통한 접근성이 떨어질 수 있겠네 이에 대한 해결법이 있을까?
     - 자바스크립트로 location을 정의해줄까?
+
+- 클라이언트에서 file을 리스트([])로 만들어서 formData에 담아 보냈지만 컨버터에서는 "[Object object]"라는 문자열로 인식했음
+    - 이를 해결하기 위해서 formData에 file[0], file[1] ... 이런식으로 여러개의 값을 추가해줫음
+    - List는 왜 안됬던걸까?
 
 ### 메모
 - JPA 
