@@ -24,7 +24,8 @@ export default Vue.component('board',{
                             <td>{{board.view}}</td>
                             <td>{{new Date(board.regDate).format('yy-MM-dd a/p hh:mm:ss')}}</td>                            
                             <td>{{new Date(board.upDate).format('yy-MM-dd a/p hh:mm:ss')}}</td>
-                            <td>{{board.account.nickname}}</td>
+                            <td v-if="board.account">{{board.account.nickname}}</td>
+                            <td v-else>알수없음</td>
                         </tr>                    
                     </tbody>
                 </table>
@@ -74,6 +75,7 @@ export default Vue.component('board',{
         }
     },
     created(){
+        shareObject.refreshManager.register(this.getBoardList,1);
         this.getBoardList(1);
     },
     methods:{
