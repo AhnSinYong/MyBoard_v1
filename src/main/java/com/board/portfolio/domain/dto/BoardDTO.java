@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.List;
+import java.util.Optional;
 
 
 public class BoardDTO {
@@ -22,5 +23,9 @@ public class BoardDTO {
         @FileSize(fileSize = 1024*1024, nullable = true, message = "The maximum file size is 1MB.")
         @FileExtension(fileExtension = {"txt","hwp","png","jpg"}, nullable = true, message = "not allow extension.")
         List<MultipartFile> fileList;
+
+        public boolean isNullFileList(){
+            return fileList==null;
+        }
     }
 }
