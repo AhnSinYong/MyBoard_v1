@@ -13,7 +13,10 @@
 - @AuthenticationPrincipal이 AccountDetails에 자동으로 주입이 안되네 
     - 내가 구성한 AccountDetails가 문제일까?? 고민이 필요함
 - @PreAuthorize 에 대한 예외처리가 필요함
-
+- JPA의 @Entity에 인터페이스로 덮어가지고 레파지토리 하나로 커버가능할까?("다읽어오는 board",  "컨텐트,첨부파일 리스트 같은건 빠진 board")
+- deliveryData()를 shareObject에 포함시켜서 재사용하게 만들자
+- Board @Entity에서 content를 분리해야함(상속받는 형태로 만들고, repository도 하나 더만드는게 맞는듯)
+    - contents가 덩치가 크면 배열이용해서 관리가 필요할수도 있을듯
 ### 게시판
 - SPA web
 - vue.js
