@@ -7,6 +7,12 @@
 - 인증유효시간 30분이 지날경우를 적용
     - 스레드세이프하게 다시 생각해보자(syncronized?)
 - 페이징 관련 repository에서 start 값 -1하는거 좀더 보기좋게 고쳐야함
+- @FileSize , @FileExtension 대충 복붙한거 리팩토링필요함
+    - extension 유효성 검사에서 . 으로 나누고 length 2아닐때 예외던지게 했는데 고쳐야함(ex: abc.def.hwp)
+- 프로퍼티즈 이용해서 확장자 제한 관리를 하는 것 필요
+- @AuthenticationPrincipal이 AccountDetails에 자동으로 주입이 안되네 
+    - 내가 구성한 AccountDetails가 문제일까?? 고민이 필요함
+- @PreAuthorize 에 대한 예외처리가 필요함
 
 ### 게시판
 - SPA web
@@ -270,6 +276,13 @@ insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now
     - 꽤 생각해볼만한 이야기
     
 - new Thread에서 @Transactional이 안돼서 repository에 사용했음 개선점은 무엇이 있을까?
+
+- spa형식으로 만들때 url을 통한 접근성이 떨어질 수 있겠네 이에 대한 해결법이 있을까?
+    - 자바스크립트로 location을 정의해줄까?
+
+- 클라이언트에서 file을 리스트([])로 만들어서 formData에 담아 보냈지만 컨버터에서는 "[Object object]"라는 문자열로 인식했음
+    - 이를 해결하기 위해서 formData에 file[0], file[1] ... 이런식으로 여러개의 값을 추가해줫음
+    - List는 왜 안됬던걸까?
 
 ### 메모
 - JPA 
