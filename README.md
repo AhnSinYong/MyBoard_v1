@@ -8,7 +8,11 @@
     - 스레드세이프하게 다시 생각해보자(syncronized?)
 - 페이징 관련 repository에서 start 값 -1하는거 좀더 보기좋게 고쳐야함
 - @FileSize , @FileExtension 대충 복붙한거 리팩토링필요함
+    - extension 유효성 검사에서 . 으로 나누고 length 2아닐때 예외던지게 했는데 고쳐야함(ex: abc.def.hwp)
 - 프로퍼티즈 이용해서 확장자 제한 관리를 하는 것 필요
+- @AuthenticationPrincipal이 AccountDetails에 자동으로 주입이 안되네 
+    - 내가 구성한 AccountDetails가 문제일까?? 고민이 필요함
+- @PreAuthorize 에 대한 예외처리가 필요함
 
 ### 게시판
 - SPA web
