@@ -60,6 +60,7 @@ export default Vue.component('write-Post',{
             console.log(res);
             this.coverViewMethod.resetState();
             this.inputMethod.resetInput(this.input);
+            shareObject.refreshManager.refresh();
         },
         failSignIn(err){
             console.log(err);
