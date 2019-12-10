@@ -62,7 +62,7 @@ public class Comment implements EntityDefaultValues{
 
     @OneToMany(mappedBy = "comment")
     @JsonBackReference
-    private List<LikeComment> commentList = new ArrayList<>();
+    private List<LikeComment> likeCommentList;
 
 
     @PrePersist
