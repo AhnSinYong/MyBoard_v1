@@ -24,7 +24,7 @@ public class FileAttachment implements EntityDefaultValues{
     @ManyToOne
     @JoinColumn(name = "BOARD_ID")
     @JsonManagedReference
-    private Board board;
+    private BoardDetail board;
 
     @Column(name = "ORIGIN_NAME")
     private String originName;
