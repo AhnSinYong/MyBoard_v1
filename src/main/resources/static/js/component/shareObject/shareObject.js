@@ -6,5 +6,8 @@ export default {
     login: login,
     coverView: coverView,
     input: input,
-    refreshManager : refreshManager
+    refreshManager : refreshManager,
+    deliveryData(eventName,name,data){
+        this.$emit(eventName,{name:name,content:data});
+    }
 }
