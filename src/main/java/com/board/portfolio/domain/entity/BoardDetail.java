@@ -1,23 +1,28 @@
 package com.board.portfolio.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.List;
-import java.util.Optional;
 
 @Entity
 @Table(name = "TB_BOARD")
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Getter
 @Setter
-public class Board extends BoardCore {
+public class BoardDetail extends BoardCore{
+
+    @Column(name = "CONTENT")
+    private String content;
+
     @OneToMany(mappedBy = "board")
     @JsonBackReference
     private List<Comment> commentList;
@@ -29,5 +34,4 @@ public class Board extends BoardCore {
     @OneToMany(mappedBy = "board")
     @JsonBackReference
     private List<FileAttachment> fileAttachmentList;
-
 }
