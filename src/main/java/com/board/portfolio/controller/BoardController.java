@@ -32,6 +32,10 @@ public class BoardController {
         boardService.writePost(dto, castAccountDTO(authentication));
         return ResponseEntity.ok(Result.SUCCESS);
     }
+    @GetMapping("/board/post/{boardId}")
+    public ResponseEntity readPost(@PathVariable long boardId){
+        return ResponseEntity.ok(boardService.readPost(boardId));
+    }
 
     private AccountSecurityDTO castAccountDTO(Authentication authentication){
         return (AccountSecurityDTO)authentication.getPrincipal();
