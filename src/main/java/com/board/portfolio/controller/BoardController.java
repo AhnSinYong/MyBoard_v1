@@ -28,16 +28,29 @@ public class BoardController {
     @PreAuthorize("hasRole('ROLE_MEMBER')")
     @PostMapping("/board")
     public ResponseEntity writePost(@Valid BoardDTO.Write dto,
-                                    Authentication authentication){
-        boardService.writePost(dto, castAccountDTO(authentication));
+                                    @ModelAttribute("accountDTO") AccountSecurityDTO accountDTO){
+        boardService.writePost(dto, accountDTO);
         return ResponseEntity.ok(Result.SUCCESS);
     }
     @GetMapping("/board/post/{boardId}")
-    public ResponseEntity readPost(@PathVariable long boardId){
-        return ResponseEntity.ok(boardService.readPost(boardId));
+    public ResponseEntity readPost(@PathVariable long boardId,
+                                   @ModelAttribute("accountDTO") AccountSecurityDTO accountDTO){
+        return ResponseEntity.ok(boardService.readPost(boardId,accountDTO));
     }
 
-    private AccountSecurityDTO castAccountDTO(Authentication authentication){
+    @PreAuthorize("hasRole('ROLE_MEMBER')")
+    @PostMapping("/board/like")
+    public ResponseEntity likePost(@RequestBody @Valid BoardDTO.Like dto,
+                                   @ModelAttribute("accountDTO") AccountSecurityDTO accountDTO){
+        return ResponseEntity.ok(boardService.likePost(dto,accountDTO));
+    }
+
+
+    @ModelAttribute("accountDTO")
+    private AccountSecurityDTO getAccountDTO(Authentication authentication){
+        if(authentication.getPrincipal().equals("")){
+            return new AccountSecurityDTO();
+        }
         return (AccountSecurityDTO)authentication.getPrincipal();
     }
 }
