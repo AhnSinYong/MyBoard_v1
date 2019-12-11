@@ -47,6 +47,9 @@ public class FileAttachment implements EntityDefaultValues{
     @JsonManagedReference
     private Account account;
 
+    public void increaseDown(){
+        this.down++;
+    }
 
     @PrePersist
     @Override
