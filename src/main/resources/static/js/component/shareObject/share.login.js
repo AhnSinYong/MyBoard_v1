@@ -31,10 +31,13 @@ export default {
             }
         },
         isLogin(){
-            let state = false;
-            if(this.getCookie('jwt-token'))
-                state = true;
-            return state;
+            if(this.getCookie('jwt-token')){
+                this.setLoginState();
+            }
+            else{
+                this.setLogoutState();
+            }
+            return loginInfo.isLogin;
         },
         checkLogin(){
             if(this.isLogin()){

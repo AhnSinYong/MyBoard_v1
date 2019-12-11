@@ -3,7 +3,8 @@ import shareObject from "./component/shareObject/shareObject.js"
 import signIn from "./component/signIn.js"
 import signUp from "./component/signUp.js"
 import board from "./component/board.js"
-import writePost from "./component/writePost.js";
+import writePost from "./component/writePost.js"
+import post from "./component/post.js"
 
 new Vue({
     el : '#app',
@@ -11,7 +12,8 @@ new Vue({
         signIn,
         signUp,
         board,
-        writePost
+        writePost,
+        post,
     },
     data(){
         return {
@@ -20,6 +22,12 @@ new Vue({
 
             loginInfo : shareObject.login.info,
             loginMethod: shareObject.login.method,
+
+            delivery:{
+                post:{
+                    boardId:''
+                }
+            },
         }
     },
     async created(){
@@ -27,5 +35,8 @@ new Vue({
     },
 
     methods:{
+        post(data){
+            this.delivery.post[data.name] = data.content;
+        }
     }
 })

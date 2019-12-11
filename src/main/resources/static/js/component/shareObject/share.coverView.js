@@ -2,6 +2,7 @@ const coverViewState = {
     signUp : false,
     signIn : false,
     writePost : false,
+    post : false,
 }
 
 function resetState(){
@@ -36,6 +37,22 @@ export default {
         hideWritePostView(){
             resetState();
             coverViewState.writePost = false;
+        },
+        showPostView(){
+            resetState();
+            coverViewState.post = true;
+        },
+        hidePostView(){
+            resetState();
+            coverViewState.post = false;
+        },
+        showUpdatePostView(){
+            resetState();
+            coverViewState.post = true;
+        },
+        hideUpdatePostView(){
+            resetState();
+            coverViewState.post = false;
         },
         resetState : resetState
     }

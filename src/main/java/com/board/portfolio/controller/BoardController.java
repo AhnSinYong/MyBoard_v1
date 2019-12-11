@@ -9,13 +9,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
 public class BoardController {
 
-    BoardService boardService;
+    private BoardService boardService;
 
     @Autowired
     public BoardController(BoardService boardService){
@@ -28,12 +29,42 @@ public class BoardController {
     @PreAuthorize("hasRole('ROLE_MEMBER')")
     @PostMapping("/board")
     public ResponseEntity writePost(@Valid BoardDTO.Write dto,
-                                    Authentication authentication){
-        boardService.writePost(dto, castAccountDTO(authentication));
+                                    @ModelAttribute("accountDTO") AccountSecurityDTO accountDTO){
+        boardService.writePost(dto, accountDTO);
+        return ResponseEntity.ok(Result.SUCCESS);
+    }
+    @GetMapping("/board/post/{boardId}")
+    public ResponseEntity readPost(@PathVariable Long boardId,
+                                   @ModelAttribute("accountDTO") AccountSecurityDTO accountDTO){
+        return ResponseEntity.ok(boardService.readPost(boardId,accountDTO));
+    }
+
+    @PreAuthorize("hasRole('ROLE_MEMBER')")
+    @PostMapping("/board/like")
+    public ResponseEntity likePost(@RequestBody @Valid BoardDTO.Like dto,
+                                   @ModelAttribute("accountDTO") AccountSecurityDTO accountDTO){
+        return ResponseEntity.ok(boardService.likePost(dto,accountDTO));
+    }
+
+    @GetMapping("/board/file/{fileId}")
+    public void download(@PathVariable String fileId, HttpServletResponse res){
+        boardService.download(res,fileId);
+    }
+
+    @PreAuthorize("hasRole('ROLE_MEMBER')")
+    @DeleteMapping("/board/{boardId}")
+    public ResponseEntity deletePost(@PathVariable Long boardId,
+                                     @ModelAttribute("accountDTO") AccountSecurityDTO accountDTO){
+        boardService.deletePost(boardId,accountDTO);
         return ResponseEntity.ok(Result.SUCCESS);
     }
 
-    private AccountSecurityDTO castAccountDTO(Authentication authentication){
+
+    @ModelAttribute("accountDTO")
+    private AccountSecurityDTO getAccountDTO(Authentication authentication){
+        if(authentication.getPrincipal().equals("")){
+            return new AccountSecurityDTO();
+        }
         return (AccountSecurityDTO)authentication.getPrincipal();
     }
 }

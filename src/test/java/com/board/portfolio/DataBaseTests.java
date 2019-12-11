@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.List;
 
 @SpringBootTest
 class DataBaseTests {
@@ -36,6 +37,9 @@ class DataBaseTests {
     FileAttachmentRepository fileAttachmentRepository;
     @Autowired
     AlarmRepository alarmRepository;
+    @Autowired
+    BoardDetailRepository boardDetailRepository;
+
 
     @Test
     void dbConnectionTest() throws ClassNotFoundException {
@@ -95,7 +99,11 @@ class DataBaseTests {
         Alarm alarm = alarmRepository.findById("test-id").orElse(null);
     }
 
+    @Test
+    void findAllBoard(){
+        List<BoardDetail> boardDetailList = boardDetailRepository.findAll();
 
+    }
 
 
 

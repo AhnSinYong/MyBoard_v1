@@ -1,39 +1,33 @@
 package com.board.portfolio.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
-@Entity
-@Table(name = "TB_COMMENT")
-@AllArgsConstructor
+@MappedSuperclass
 @NoArgsConstructor
-@Builder
 @Getter
 @Setter
-public class Comment implements EntityDefaultValues{
+public abstract class BoardCore implements EntityDefaultValues{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="COMMENT_ID")
-    private Long commentId;
+    @Column(name="BOARD_ID")
+    private Long boardId;
 
-    @ManyToOne
-    @JoinColumn(name = "BOARD_ID")
-    @JsonManagedReference
-    private Board board;
-
-    @Column(name = "CONTENT")
-    private String content;
+    @Column(name = "TITLE")
+    private String title;
 
     @Column(name="LIKE_")
     private Integer like;
+
+    @Column(name="VIEW")
+    private Integer view;
 
     @Column(name = "REG_DATE")
     @Temporal(TemporalType.TIMESTAMP)
@@ -48,34 +42,26 @@ public class Comment implements EntityDefaultValues{
     @JsonManagedReference
     private Account account;
 
-    @Column(name="GROUP_")
-    private Long group;
 
-    @ManyToOne
-    @JoinColumn(name="PARENT_ID")
-    @JsonManagedReference
-    private Comment parentComment;
-
-    @Column(name="TYPE")
-    @Enumerated(value = EnumType.STRING)
-    private CommentType type;
-
-    @OneToMany(mappedBy = "comment")
-    @JsonBackReference
-    private List<LikeComment> likeCommentList;
+    public BoardCore(Long boardId) {
+        this.boardId = boardId;
+    }
 
     public void increaseLike(){
         this.like++;
     }
-
     public void decreaseLike(){
         this.like--;
+    }
+    public void increaseView(){
+        this.view++;
     }
 
     @PrePersist
     @Override
     public void setDefaultValues() {
         this.like = Optional.ofNullable(this.like).orElse(0);
+        this.view = Optional.ofNullable(this.view).orElse(0);
         this.regDate = Optional.ofNullable(this.regDate).orElse(new Date());
     }
 }

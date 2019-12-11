@@ -17,7 +17,9 @@ export default Vue.component('board',{
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="board in pagination.list">
+                        <tr v-for="board in pagination.list" 
+                            @click="coverViewMethod.showPostView();
+                                    deliveryData('post','boardId',board.boardId);">
                             <td>{{board.boardId}}</td>
                             <td>{{board.title}}</td>
                             <td>{{board.like}}</td>
@@ -58,6 +60,7 @@ export default Vue.component('board',{
     },
     data(){
         return {
+            deliveryData : shareObject.deliveryData,
             coverViewMethod : shareObject.coverView.method,
             inputMethod : shareObject.input.method,
             loginInfo : shareObject.login.info,
@@ -81,17 +84,15 @@ export default Vue.component('board',{
     methods:{
         getBoardList(page){
             axios.get('/api/board/'+page)
-                .then(this.successSignIn)
-                .catch(this.failSignIn)
+                .then(this.success)
+                .catch(this.fail)
         },
-        successSignIn(res){
+        success(res){
             console.log(res);
             this.pagination = res.data;
         },
-        failSignIn(err){
+        fail(err){
             alert(err.data.message);
-        }
-
+        },
     }
-
 });
