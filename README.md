@@ -287,6 +287,7 @@ insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now
 ### 메모
 - JPA 
     - findTop3ByBoardAndLikeGreaterThanOrderByLikeDesc
+    - @Transactional이 끝나는 순간 엔티티의 setter로 설정한게 db에 반영되는구나
     
 - valid 
     - message 정의하던 부분     
