@@ -30,4 +30,7 @@ public class Board extends BoardCore {
     @JsonBackReference
     private List<FileAttachment> fileAttachmentList;
 
+    public Board(Long boardId) {
+        super(boardId);
+    }
 }
