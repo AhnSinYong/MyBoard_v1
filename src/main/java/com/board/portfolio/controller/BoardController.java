@@ -16,7 +16,7 @@ import javax.validation.Valid;
 @RequestMapping("/api")
 public class BoardController {
 
-    BoardService boardService;
+    private BoardService boardService;
 
     @Autowired
     public BoardController(BoardService boardService){
@@ -34,7 +34,7 @@ public class BoardController {
         return ResponseEntity.ok(Result.SUCCESS);
     }
     @GetMapping("/board/post/{boardId}")
-    public ResponseEntity readPost(@PathVariable long boardId,
+    public ResponseEntity readPost(@PathVariable Long boardId,
                                    @ModelAttribute("accountDTO") AccountSecurityDTO accountDTO){
         return ResponseEntity.ok(boardService.readPost(boardId,accountDTO));
     }
@@ -47,9 +47,16 @@ public class BoardController {
     }
 
     @GetMapping("/board/file/{fileId}")
-    public void download(@PathVariable String fileId,
-                                   HttpServletResponse res){
+    public void download(@PathVariable String fileId, HttpServletResponse res){
         boardService.download(res,fileId);
+    }
+
+    @PreAuthorize("hasRole('ROLE_MEMBER')")
+    @DeleteMapping("/board/{boardId}")
+    public ResponseEntity deletePost(@PathVariable Long boardId,
+                                     @ModelAttribute("accountDTO") AccountSecurityDTO accountDTO){
+        boardService.deletePost(boardId,accountDTO);
+        return ResponseEntity.ok(Result.SUCCESS);
     }
 
 

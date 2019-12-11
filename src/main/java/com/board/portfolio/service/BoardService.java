@@ -2,10 +2,7 @@ package com.board.portfolio.service;
 
 import com.board.portfolio.domain.dto.BoardDTO;
 import com.board.portfolio.domain.entity.*;
-import com.board.portfolio.exception.FailDownLoadFileException;
-import com.board.portfolio.exception.FailSaveFileException;
-import com.board.portfolio.exception.NotFoundFileException;
-import com.board.portfolio.exception.NotFoundPostException;
+import com.board.portfolio.exception.*;
 import com.board.portfolio.paging.BoardPagination;
 import com.board.portfolio.paging.PageDTO;
 import com.board.portfolio.repository.BoardDetailRepository;
@@ -177,7 +174,7 @@ public class BoardService {
                     "attachment;filename="+docName+";");
         }
         catch (IOException e){
-            throw new FailDownLoadFileException("다운로드를 위한 header 및 contentType 설정에 실패하였습니다.");
+            throw new FailDownLoadFileException("fail set config at header, contentType");
         }
     }
 
@@ -194,8 +191,25 @@ public class BoardService {
             file.increaseDown();
         }
         catch (IOException e){
-            throw new FailDownLoadFileException("다운로드에 실패하였습니다.");
+            throw new FailDownLoadFileException("fail download");
         }
 
+    }
+
+    @Transactional
+    public void deletePost(Long boardId, AccountSecurityDTO accountDTO) {
+
+        Board board = boardRepository.findById(boardId).orElseThrow(()->new NotFoundPostException("post isn't exist"));
+        if(!board.getAccount().getEmail().equals(accountDTO.getEmail())){
+            throw new NotAllowAccessException("not allow access");
+        }
+
+        List<FileAttachment> fileAttachmentList = board.getFileAttachmentList();
+        for(FileAttachment fileAttachment : fileAttachmentList){
+            File file = new File(FILE_COMMON_PATH+fileAttachment.getSaveName());
+            if(file.exists())
+                file.delete();
+        }
+        boardRepository.delete(board);
     }
 }
