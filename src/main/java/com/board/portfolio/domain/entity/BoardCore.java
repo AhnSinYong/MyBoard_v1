@@ -43,6 +43,9 @@ public abstract class BoardCore implements EntityDefaultValues{
     public void increaseLike(){
         this.like++;
     }
+    public void decreaseLike(){
+        this.like--;
+    }
     public void increaseView(){
         this.view++;
     }
