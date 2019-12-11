@@ -6,6 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 
 @Entity
 @Table(name = "TB_LIKE_COMMENT")
@@ -37,6 +38,7 @@ public class LikeComment implements EntityDefaultValues{
     @PrePersist
     @Override
     public void setDefaultValues() {
+        this.likeCommentId = UUID.randomUUID().toString();
         this.regDate = Optional.ofNullable(this.regDate).orElse(new Date());
     }
 }
