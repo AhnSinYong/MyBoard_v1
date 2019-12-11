@@ -40,6 +40,13 @@ public abstract class BoardCore implements EntityDefaultValues{
     @JsonManagedReference
     private Account account;
 
+    public void increaseLike(){
+        this.like++;
+    }
+    public void increaseView(){
+        this.view++;
+    }
+
     @PrePersist
     @Override
     public void setDefaultValues() {
