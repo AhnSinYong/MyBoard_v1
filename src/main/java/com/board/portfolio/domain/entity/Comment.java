@@ -64,6 +64,13 @@ public class Comment implements EntityDefaultValues{
     @JsonBackReference
     private List<LikeComment> likeCommentList;
 
+    public void increaseLike(){
+        this.like++;
+    }
+
+    public void decreaseLike(){
+        this.like--;
+    }
 
     @PrePersist
     @Override
