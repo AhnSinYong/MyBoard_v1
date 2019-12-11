@@ -2,7 +2,9 @@ package com.board.portfolio.service;
 
 import com.board.portfolio.domain.dto.BoardDTO;
 import com.board.portfolio.domain.entity.*;
+import com.board.portfolio.exception.FailDownLoadFileException;
 import com.board.portfolio.exception.FailSaveFileException;
+import com.board.portfolio.exception.NotFoundFileException;
 import com.board.portfolio.exception.NotFoundPostException;
 import com.board.portfolio.paging.BoardPagination;
 import com.board.portfolio.paging.PageDTO;
@@ -17,7 +19,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -32,6 +39,8 @@ public class BoardService {
     private FileAttachmentRepository fileAttachmentRepository;
     private BoardPagination boardPagination;
     private ModelMapper modelMapper;
+
+    private final String FILE_COMMON_PATH = "./src/main/resources/attachment/";
 
     @Autowired
     public BoardService(BoardRepository boardRepository,
@@ -72,11 +81,11 @@ public class BoardService {
     private void saveFileAttachment(BoardDetail board, List<MultipartFile> multipartFileList, Account account) throws IOException{
         for(MultipartFile file : multipartFileList){
             String originName = file.getOriginalFilename();
-            String saveName = UUID.randomUUID().toString();
             String extension = Arrays.stream(originName.split("\\.")).reduce((x,y)->y).get().toLowerCase();
+            String saveName = UUID.randomUUID().toString()+"."+extension;
 
             byte[] bytes = file.getBytes();
-            Path path = Paths.get("./src/main/resources/attachment/" + saveName +"."+extension);
+            Path path = Paths.get(FILE_COMMON_PATH + saveName);
             Files.write(path, bytes);
 
             FileAttachment fileAttachment = FileAttachment.builder()
@@ -149,6 +158,44 @@ public class BoardService {
         Map data = new HashMap<String,Object>();
         data.put("like",board.getLike());
         return data;
+
+    }
+
+    @Transactional
+    public void download(HttpServletResponse res, String fileId) {
+        FileAttachment file = fileAttachmentRepository.findById(fileId).orElseThrow(()->new NotFoundFileException());
+
+        setDownloadHeader(res,file);
+        executeDownload(res,file);
+
+    }
+    private void setDownloadHeader(HttpServletResponse res, FileAttachment file){
+        try{
+            String docName = URLEncoder.encode(file.getOriginName(),"UTF-8").replaceAll("\\+", "%20"); //한글파일명 깨지지 않도록
+            res.setContentType("application/octet-stream");
+            res.setHeader("Content-Disposition",
+                    "attachment;filename="+docName+";");
+        }
+        catch (IOException e){
+            throw new FailDownLoadFileException("다운로드를 위한 header 및 contentType 설정에 실패하였습니다.");
+        }
+    }
+
+    private void executeDownload(HttpServletResponse res, FileAttachment file){
+        File down_file = new File(FILE_COMMON_PATH+file.getSaveName());
+        try(FileInputStream fileIn = new FileInputStream(down_file);
+            ServletOutputStream out = res.getOutputStream();){
+            byte[] outputByte = new byte[4096];
+            while(fileIn.read(outputByte, 0, 4096) != -1)
+            {
+                out.write(outputByte, 0, 4096);
+            }
+            out.flush();
+            file.increaseDown();
+        }
+        catch (IOException e){
+            throw new FailDownLoadFileException("다운로드에 실패하였습니다.");
+        }
 
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @RestController
@@ -43,6 +44,12 @@ public class BoardController {
     public ResponseEntity likePost(@RequestBody @Valid BoardDTO.Like dto,
                                    @ModelAttribute("accountDTO") AccountSecurityDTO accountDTO){
         return ResponseEntity.ok(boardService.likePost(dto,accountDTO));
+    }
+
+    @GetMapping("/board/file/{fileId}")
+    public void download(@PathVariable String fileId,
+                                   HttpServletResponse res){
+        boardService.download(res,fileId);
     }
 
 

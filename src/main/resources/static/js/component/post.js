@@ -26,7 +26,7 @@ export default Vue.component('post',{
                     <div>
                         <div v-for="file in fileList">
                             <span>{{file.originName}}</span>
-                            <input type="button" value="download" @click="download(file.originName)">
+                            <input type="button" value="download" @click="download(file.fileId)">
                         </div>
                     </div>
                     <div>
@@ -128,8 +128,8 @@ export default Vue.component('post',{
             alert(err.data);
         },
 
-        download(fileName){
-
+        download(fileId){
+            window.location.href = '/api/board/file/'+fileId;
         }
     }
 
