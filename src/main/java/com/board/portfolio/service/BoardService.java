@@ -7,7 +7,9 @@ import com.board.portfolio.exception.NotFoundPostException;
 import com.board.portfolio.paging.BoardPagination;
 import com.board.portfolio.paging.PageDTO;
 import com.board.portfolio.repository.BoardDetailRepository;
+import com.board.portfolio.repository.BoardRepository;
 import com.board.portfolio.repository.FileAttachmentRepository;
+import com.board.portfolio.repository.LikeBoardRepository;
 import com.board.portfolio.security.account.AccountSecurityDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,17 +26,23 @@ import java.util.*;
 @Service
 public class BoardService {
 
+    private BoardRepository boardRepository;
     private BoardDetailRepository boardDetailRepository;
+    private LikeBoardRepository likeBoardRepository;
     private FileAttachmentRepository fileAttachmentRepository;
     private BoardPagination boardPagination;
     private ModelMapper modelMapper;
 
     @Autowired
-    public BoardService(BoardDetailRepository boardDetailRepository,
+    public BoardService(BoardRepository boardRepository,
+                        BoardDetailRepository boardDetailRepository,
+                        LikeBoardRepository likeBoardRepository,
                         FileAttachmentRepository fileAttachmentRepository,
                         BoardPagination boardPagination,
                         ModelMapper modelMapper){
+        this.boardRepository = boardRepository;
         this.boardDetailRepository = boardDetailRepository;
+        this.likeBoardRepository = likeBoardRepository;
         this.fileAttachmentRepository = fileAttachmentRepository;
         this.boardPagination = boardPagination;
         this.modelMapper = modelMapper;
@@ -84,15 +92,63 @@ public class BoardService {
     }
 
     @Transactional
-    public Map readPost(long boardId) {
+    public Map readPost(long boardId, AccountSecurityDTO accountDTO) {
         BoardDetail boardDetail = boardDetailRepository.findById(boardId).orElseThrow(()->new NotFoundPostException());
         List<FileAttachment> fileAttachmentList = boardDetail.getFileAttachmentList();
         List<Comment> commentList = boardDetail.getCommentList();
+
+        boardDetail.increaseView();
 
         Map data = new HashMap<String,Object>();
         data.put("post",boardDetail);
         data.put("fileList", fileAttachmentList);
         data.put("commentList",commentList);
+
+        String email = accountDTO.getEmail();
+
+
+        boolean isLikedPost = isLikedPost(boardDetail.getLikeBoardList(), email);
+        data.put("isLikedPost",isLikedPost);
+
+
         return data;
+    }
+    private boolean isLikedPost(List<LikeBoard> likeBoardList, String email){
+        if(email==null){
+            return false;
+        }
+
+        boolean isLikedBoard = false;
+
+        for(LikeBoard likeBoard : likeBoardList){
+            String likeEmail = likeBoard.getAccount().getEmail();
+            if(likeEmail.equals(email)){
+                isLikedBoard = true;
+                break;
+            }
+        }
+        return isLikedBoard;
+    }
+
+    @Transactional
+    public Map likePost(BoardDTO.Like dto, AccountSecurityDTO accountDTO) {
+        Board board = boardRepository.findById(dto.getBoardId()).orElseThrow(()->new NotFoundPostException());
+        Account account = modelMapper.map(accountDTO, Account.class);
+
+        Optional<LikeBoard> opLikeBoard =  likeBoardRepository.findByBoardAndAccount(board,account);
+
+        if(opLikeBoard.isPresent()){//이미 "좋아요"를 누름
+            likeBoardRepository.delete(opLikeBoard.get());
+            board.decreaseLike();
+        }
+        else{
+            likeBoardRepository.save(new LikeBoard(board,account));
+            board.increaseLike();
+        }
+
+        Map data = new HashMap<String,Object>();
+        data.put("like",board.getLike());
+        return data;
+
     }
 }
