@@ -15,6 +15,7 @@
 - @PreAuthorize 에 대한 예외처리가 필요함
 - post.js에서 board_id값 초기화처리를 해보자(지금은 초기화로 값바뀌면 한번더 호출해서 오류남)
 - boardService의 파일다운로드에서 byte[4096]인거 설정파일에서 읽게 수정해야함
+- deletePost()에서 검증관력 로직을 분리하고 싶어
 ### 게시판
 - SPA web
 - vue.js
@@ -284,6 +285,8 @@ insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now
 - 클라이언트에서 file을 리스트([])로 만들어서 formData에 담아 보냈지만 컨버터에서는 "[Object object]"라는 문자열로 인식했음
     - 이를 해결하기 위해서 formData에 file[0], file[1] ... 이런식으로 여러개의 값을 추가해줫음
     - List는 왜 안됬던걸까?
+    
+- 컨트롤러에서 원시타입을 @Valid 할 방법은 무엇이 있을까???
 
 ### 메모
 - JPA 
