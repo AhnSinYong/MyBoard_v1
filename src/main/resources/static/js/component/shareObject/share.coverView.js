@@ -46,6 +46,14 @@ export default {
             resetState();
             coverViewState.post = false;
         },
+        showUpdatePostView(){
+            resetState();
+            coverViewState.post = true;
+        },
+        hideUpdatePostView(){
+            resetState();
+            coverViewState.post = false;
+        },
         resetState : resetState
     }
 }
