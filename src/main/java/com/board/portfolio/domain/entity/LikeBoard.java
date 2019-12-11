@@ -6,6 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 
 @Entity
 @Table(name = "TB_LIKE_BOARD")
@@ -34,9 +35,15 @@ public class LikeBoard implements EntityDefaultValues{
     @Temporal(TemporalType.TIMESTAMP)
     private Date regDate;
 
+    public LikeBoard(Board board, Account account){
+        this.board = board;
+        this.account = account;
+    }
+
     @PrePersist
     @Override
     public void setDefaultValues() {
+        this.likeBoardId = UUID.randomUUID().toString();
         this.regDate = Optional.ofNullable(this.regDate).orElse(new Date());
     }
 }
