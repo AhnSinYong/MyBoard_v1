@@ -2,6 +2,7 @@ package com.board.portfolio.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -9,6 +10,7 @@ import java.util.Date;
 import java.util.Optional;
 
 @MappedSuperclass
+@NoArgsConstructor
 @Getter
 @Setter
 public abstract class BoardCore implements EntityDefaultValues{
@@ -39,6 +41,11 @@ public abstract class BoardCore implements EntityDefaultValues{
     @JoinColumn(name="EMAIL")
     @JsonManagedReference
     private Account account;
+
+
+    public BoardCore(Long boardId) {
+        this.boardId = boardId;
+    }
 
     public void increaseLike(){
         this.like++;
