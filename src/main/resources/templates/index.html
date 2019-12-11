@@ -36,8 +36,8 @@
         <div v-show="coverViewState.signUp"><sign-up/></div>
         <div v-show="coverViewState.signIn"><sign-in/></div>
         <div v-show="coverViewState.writePost"><write-post/></div>
-        <div v-show="coverViewState.post"><post :board_id="delivery.post.boardId" /></div>
-        <!-- <update/>   -->
+        <div v-show="coverViewState.post"><post :board_id="delivery.post.boardId" @update_post="updatePost"/></div>
+        <div v-show="coverViewState.updatePost"><update-post :board="delivery.updatePost.board"/></div>
     </div>
 </div>
 <script src="//kr.vuejs.org/js/vue.js"></script>
