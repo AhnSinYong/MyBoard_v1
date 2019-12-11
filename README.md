@@ -14,6 +14,7 @@
     - 내가 구성한 AccountDetails가 문제일까?? 고민이 필요함
 - @PreAuthorize 에 대한 예외처리가 필요함
 - post.js에서 board_id값 초기화처리를 해보자(지금은 초기화로 값바뀌면 한번더 호출해서 오류남)
+- boardService의 파일다운로드에서 byte[4096]인거 설정파일에서 읽게 수정해야함
 ### 게시판
 - SPA web
 - vue.js
