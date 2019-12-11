@@ -30,7 +30,7 @@ export default Vue.component('post',{
                         </div>
                     </div>
                     <div>
-                        <input v-if="loginInfo.isLogin" type="button" value="modify">
+                        <input v-if="loginInfo.isLogin" type="button" value="modify" @click="showUpdatePostView()">
                         <input v-if="loginInfo.isLogin" type="button" value="delete" @click="deletePost(post.boardId)">
                     </div>
                 </div>
@@ -69,6 +69,7 @@ export default Vue.component('post',{
             inputMethod : shareObject.input.method,
             loginInfo : shareObject.login.info,
             loginMethod : shareObject.login.method,
+            deliveryData : shareObject.deliveryData,
             input:{
                 inputComment:'',
             },
@@ -143,8 +144,9 @@ export default Vue.component('post',{
             this.coverViewMethod.hidePostView();
             shareObject.refreshManager.refresh();
         },
-        updatePost(){
-
+        showUpdatePostView(){
+            this.deliveryData('update_post','board',{'post':this.post, 'fileList':this.fileList})
+            this.coverViewMethod.showUpdatePostView();
         }
     }
 
