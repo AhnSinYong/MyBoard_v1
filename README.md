@@ -19,6 +19,7 @@
 - postView boardId 이슈 ----> vue router를 써야 근본적인 해결이 가능할듯
 - axios통해서 파일다운로드를 구현하고, down 값이 실시간으로 반영되게 만들자
 - 쿠키유효시간이 다되서 소멸할때 로그인 정보도 갱신되게 만들자
+
 ### 게시판
 - SPA web
 - vue.js
@@ -294,6 +295,7 @@ insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now
 - vue 에서 :key 값을 통해서 랜더링을 관리하는 구나, 그런데 updatePost.js에서 왜 deleteFile()했을때 업데이트가 안됬지????
     - 이를 해결하기 위한 방법으로 :key의 값을 바꿔주는법
     - this.$forceUpdate() 를 실행하는 법이 있다고함
+- @Valid를 클래스 안에 클래스에서 사용하기도 했는데 이에 대한 생각...좋은 패턴?(BoardDTO.Update)
 
 ### 메모
 - JPA 
