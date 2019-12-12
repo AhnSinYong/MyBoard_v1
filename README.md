@@ -288,6 +288,10 @@ insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now
     - List는 왜 안됬던걸까?
     
 - 컨트롤러에서 원시타입을 @Valid 할 방법은 무엇이 있을까???
+- 뭔가 boardId, fileId 이런거에서 느낀건데, @Valid로 구지 확인안해도 로직상에서 어쩔수 없이 orElsethrow로 걸러지는거 같아 앞으로는 고려해보자
+- vue 에서 :key 값을 통해서 랜더링을 관리하는 구나, 그런데 updatePost.js에서 왜 deleteFile()했을때 업데이트가 안됬지????
+    - 이를 해결하기 위한 방법으로 :key의 값을 바꿔주는법
+    - this.$forceUpdate() 를 실행하는 법이 있다고함
 
 ### 메모
 - JPA 
