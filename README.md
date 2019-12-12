@@ -17,6 +17,8 @@
 - boardService의 파일다운로드에서 byte[4096]인거 설정파일에서 읽게 수정해야함
 - deletePost()에서 검증관력 로직을 분리하고 싶어
 - postView boardId 이슈 ----> vue router를 써야 근본적인 해결이 가능할듯
+- axios통해서 파일다운로드를 구현하고, down 값이 실시간으로 반영되게 만들자
+- 쿠키유효시간이 다되서 소멸할때 로그인 정보도 갱신되게 만들자
 ### 게시판
 - SPA web
 - vue.js
@@ -308,3 +310,6 @@ insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now
                       .addConstraintViolation();
           }
     ~~~
+    - @valid 를 사용하는 여러가지 사례 
+            - https://www.logicbig.com/how-to/code-snippets/jcode-bean-validation-valid.html
+            - 이거 말고도 다양한 쓰임이 가능할듯 @Valid + a 느낌으로 사용
