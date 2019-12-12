@@ -164,7 +164,6 @@ public class BoardService {
 
         setDownloadHeader(res,file);
         executeDownload(res,file);
-
     }
     private void setDownloadHeader(HttpServletResponse res, FileAttachment file){
         try{
@@ -205,11 +204,44 @@ public class BoardService {
         }
 
         List<FileAttachment> fileAttachmentList = board.getFileAttachmentList();
+        deleteFilePhysic(fileAttachmentList);
+        boardRepository.delete(board);
+    }
+    private void deleteFilePhysic(List<FileAttachment> fileAttachmentList){
         for(FileAttachment fileAttachment : fileAttachmentList){
             File file = new File(FILE_COMMON_PATH+fileAttachment.getSaveName());
             if(file.exists())
                 file.delete();
         }
-        boardRepository.delete(board);
+    }
+
+    @Transactional
+    public void updatePost(Long boardId, BoardDTO.Update dto, AccountSecurityDTO accountDTO) {
+        Account account = modelMapper.map(accountDTO, Account.class);
+        BoardDetail board = boardDetailRepository.findById(boardId).orElseThrow(()->new NotFoundPostException("post isn't exist"));
+        board.setTitle(dto.getTitle());
+        board.setContent(dto.getContent());
+        board.setUpDate(new Date());
+
+        List<FileAttachment> fileAttachmentList = board.getFileAttachmentList();
+
+
+        for(FileAttachment file : fileAttachmentList){
+            if(!dto.isExistFileId(file.getFileId())){
+                deleteFilePhysic(Arrays.asList(file));
+                fileAttachmentRepository.delete(file);
+            }
+        }
+
+        try {
+            if(!dto.isNullFileList()){
+                saveFileAttachment(board, dto.getInputFileList(), account);
+            }
+        }
+        catch (IOException e){
+            throw new FailSaveFileException("fail to save file");
+        }
+
+
     }
 }
