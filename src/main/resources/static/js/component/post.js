@@ -27,6 +27,7 @@ export default Vue.component('post',{
                         <div v-for="file in fileList">
                             <span>{{file.originName}}</span>
                             <input type="button" value="download" @click="download(file.fileId)">
+                            <span>down :<span> {{file.down}} </span> </span>
                         </div>
                     </div>
                     <div>
@@ -147,7 +148,11 @@ export default Vue.component('post',{
         showUpdatePostView(){
             this.deliveryData('update_post','board',{'post':this.post, 'fileList':this.fileList})
             this.coverViewMethod.showUpdatePostView();
-        }
+        },
+        changeBoardId(boardId){
+            this.boardId= boardId;
+
+        },
     }
 
 });
