@@ -16,6 +16,7 @@
 - post.js에서 board_id값 초기화처리를 해보자(지금은 초기화로 값바뀌면 한번더 호출해서 오류남)
 - boardService의 파일다운로드에서 byte[4096]인거 설정파일에서 읽게 수정해야함
 - deletePost()에서 검증관력 로직을 분리하고 싶어
+- postView boardId 이슈 ----> vue router를 써야 근본적인 해결이 가능할듯
 ### 게시판
 - SPA web
 - vue.js
