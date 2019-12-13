@@ -54,7 +54,7 @@ export default Vue.component('post',{
                                 <span>삭제된 댓글 입니다.</span>
                             </div>
                             <div>
-                            
+                                <input v-if="loginInfo.isLogin" type="button" value="reply">                            
                             </div>
                         </div>
                         <div :class="{childComment:comment.type=='CHILD'}">
@@ -82,6 +82,9 @@ export default Vue.component('post',{
                                         <input type="button" value="delete" @click="deleteComment(comment.board.boardId, comment.commentId)">
                                     </div>                        
                                 </div>                            
+                                <div>
+                                    <input v-if="loginInfo.isLogin" type="button" value="reply">
+                                </div>
                             </div>
                             <div v-else>
                                 <div>                            
