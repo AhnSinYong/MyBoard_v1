@@ -6,7 +6,6 @@ import com.board.portfolio.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -66,14 +65,5 @@ public class BoardController {
                                      @ModelAttribute("accountDTO") AccountSecurityDTO accountDTO){
         boardService.updatePost(boardId, dto, accountDTO);
         return ResponseEntity.ok(Result.SUCCESS);
-    }
-
-
-    @ModelAttribute("accountDTO")
-    private AccountSecurityDTO getAccountDTO(Authentication authentication){
-        if(authentication.getPrincipal().equals("")){
-            return new AccountSecurityDTO();
-        }
-        return (AccountSecurityDTO)authentication.getPrincipal();
     }
 }

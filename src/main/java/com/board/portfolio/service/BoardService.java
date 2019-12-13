@@ -101,14 +101,12 @@ public class BoardService {
     public Map readPost(long boardId, AccountSecurityDTO accountDTO) {
         BoardDetail boardDetail = boardDetailRepository.findById(boardId).orElseThrow(()->new NotFoundPostException());
         List<FileAttachment> fileAttachmentList = boardDetail.getFileAttachmentList();
-        List<Comment> commentList = boardDetail.getCommentList();
 
         boardDetail.increaseView();
 
         Map data = new HashMap<String,Object>();
         data.put("post",boardDetail);
         data.put("fileList", fileAttachmentList);
-        data.put("commentList",commentList);
 
         String email = accountDTO.getEmail();
 
