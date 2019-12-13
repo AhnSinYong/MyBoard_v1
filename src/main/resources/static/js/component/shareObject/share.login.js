@@ -1,5 +1,6 @@
 const loginInfo ={
-    isLogin : false
+    isLogin : false,
+    email : '',
 }
 
 export default {
@@ -7,9 +8,11 @@ export default {
     method : {
         setLoginState(){
             loginInfo.isLogin = true;
+            loginInfo.email = this.getEmail();
         },
         setLogoutState(){
             loginInfo.isLogin = false;
+            loginInfo.email = '';
         },
         logout(){
             if(confirm("Do you want logout?")){
@@ -21,7 +24,7 @@ export default {
             }
         },
         getParsedJwt(){
-            let token = getCookie('jwt-token').split('\.');
+            let token = this.getCookie('jwt-token').split('\.');
             const header = JSON.parse(atob(token[0]));
             const claim = JSON.parse(atob(token[1]));
 
@@ -38,6 +41,13 @@ export default {
                 this.setLogoutState();
             }
             return loginInfo.isLogin;
+        },
+        getEmail(){
+            const jwt = this.getParsedJwt();
+            if(jwt){
+                return jwt.claim.email;
+            }
+            return '';
         },
         checkLogin(){
             if(this.isLogin()){
