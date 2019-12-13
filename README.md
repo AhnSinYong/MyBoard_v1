@@ -318,3 +318,12 @@ insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now
     - @valid 를 사용하는 여러가지 사례 
             - https://www.logicbig.com/how-to/code-snippets/jcode-bean-validation-valid.html
             - 이거 말고도 다양한 쓰임이 가능할듯 @Valid + a 느낌으로 사용
+            
+- db 테스트 했던 코드
+~~~
+insert into TB_COMMENT values (1,81,'test-content1',0,now(),now(),'etea583@naver.com',1,null,'PARENT');
+insert into TB_COMMENT values (2,81,'test-content2',0,now(),now(),'etea583@naver.com',1,1,'CHILD');
+insert into TB_COMMENT values (3,81,'test-content3',0,now(),now(),'etea583@naver.com',2,null,'PARENT');
+insert into TB_COMMENT values (4,81,'test-content4',0,now(),now(),'etea583@naver.com',2,3,'CHILD');
+insert into TB_COMMENT values (5,81,'test-content5',0,now(),now(),'etea583@naver.com',2,4,'CHILD');
+~~~
