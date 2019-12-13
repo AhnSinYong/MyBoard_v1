@@ -6,6 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 
 @Entity
 @Table(name = "TB_FILE_ATTACHMENT")
@@ -18,12 +19,12 @@ public class FileAttachment implements EntityDefaultValues{
 
     @Id
     @Column(name="FILE_ID")
-    private String cId;
+    private String fileId;
 
     @ManyToOne
     @JoinColumn(name = "BOARD_ID")
     @JsonManagedReference
-    private Board board;
+    private BoardDetail board;
 
     @Column(name = "ORIGIN_NAME")
     private String originName;
@@ -46,10 +47,14 @@ public class FileAttachment implements EntityDefaultValues{
     @JsonManagedReference
     private Account account;
 
+    public void increaseDown(){
+        this.down++;
+    }
 
     @PrePersist
     @Override
     public void setDefaultValues() {
+        this.fileId = UUID.randomUUID().toString();
         this.saveDate = Optional.ofNullable(this.saveDate).orElse(new Date());
         this.down = Optional.ofNullable(this.down).orElse(0);
     }

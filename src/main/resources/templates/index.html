@@ -6,6 +6,8 @@
 
     <link rel="stylesheet" type="text/css" href="/static/css/pc/index.css" media="screen and (min-width:801px)">
     <link rel="stylesheet" type="text/css" href="/static/css/pc/signUp.css" media="screen and (min-width:801px)">
+    <link rel="stylesheet" type="text/css" href="/static/css/pc/signIn.css" media="screen and (min-width:801px)">
+    <link rel="stylesheet" type="text/css" href="/static/css/pc/writePost.css" media="screen and (min-width:801px)">
 
     <link rel="stylesheet" type="text/css" href="/static/css/mobile/index.css" media="screen and (max-width:800px)">
 
@@ -27,15 +29,15 @@
         </div>
     </div>
     <div class="body">
-        <!-- <board/>   -->
+         <board @post="post"/>
     </div>
     <div class="footer"></div>
     <div class="cover-view-wrapper">
         <div v-show="coverViewState.signUp"><sign-up/></div>
         <div v-show="coverViewState.signIn"><sign-in/></div>
-
-        <!-- <post/>   -->
-        <!-- <update/>   -->
+        <div v-show="coverViewState.writePost"><write-post/></div>
+        <div v-show="coverViewState.post"><post :board_id="delivery.post.boardId" @update_post="updatePost"/></div>
+        <div v-show="coverViewState.updatePost"><update-post :board="delivery.updatePost.board"/></div>
     </div>
 </div>
 <script src="//kr.vuejs.org/js/vue.js"></script>
