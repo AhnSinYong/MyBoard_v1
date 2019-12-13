@@ -1,11 +1,14 @@
 package com.board.portfolio.controller.advice;
 
 import com.board.portfolio.exception.CustomRuntimeException;
+import com.board.portfolio.security.account.AccountSecurityDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 
@@ -13,6 +16,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 public class WebControllerAdvice {
+    @ModelAttribute("accountDTO")
+    private AccountSecurityDTO getAccountDTO(Authentication authentication){
+        if(authentication==null)
+            return null;
+        if(authentication.getPrincipal().equals("")){
+            return new AccountSecurityDTO();
+        }
+        return (AccountSecurityDTO)authentication.getPrincipal();
+    }
 
     @ExceptionHandler(BindException.class)
     public ResponseEntity validBindException(BindException e) {
