@@ -78,6 +78,10 @@ public class Account implements EntityDefaultValues {
     @JsonBackReference
     private List<Alarm> triggerAlarmList;
 
+    public Account(String email) {
+        this.email = email;
+    }
+
     @PrePersist
     @Override
     public void setDefaultValues() {

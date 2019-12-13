@@ -43,7 +43,7 @@ export default Vue.component('post',{
                             <textarea v-model="input.inputComment"></textarea>
                         </div>
                         <div>
-                            <input type="button" value="write" @click="writeComment(input.inputComment)">
+                            <input type="button" value="write" @click="writeComment(post.boardId,input.inputComment)">
                         </div>                    
                     </div>
                     
@@ -108,7 +108,7 @@ export default Vue.component('post',{
                                 </div>                                
                                 <div>
                                     <input type="button" value="complete" @click="modifyComment(input.modifyComment)">
-                                    <input type="button" value="cancle" @click="cancleModifyComment(index)">
+                                    <input type="button" value="cancle" @click="cancleModifyComment()">
                                 </div>                                
                             </div>                            
                         </div>                        
@@ -227,14 +227,45 @@ export default Vue.component('post',{
             this.invisibleCommentIndex = index;
             this.input.modifyComment = this.commentList[index];
         },
-        cancleModifyComment(index){
+        cancleModifyComment(){
             this.invisibleCommentIndex = -1;
         },
         deleteComment(boardId, commentId){
+            axios.delete('/api/comment/'+commentId)
+                .then(this.successDeleteComment)
+                .catch(this.fail)
+
+        },
+        successDeleteComment(res){
+            const boardId = res.data.boardId;
             this.getCommentList(boardId);
         },
         modifyComment(comment){
+            const data={
+                content : this.input.modifyComment.content
+            }
+            axios.put('/api/comment/'+comment.commentId,data)
+                .then(this.successModifyComment)
+                .catch(this.fail)
+        },
+        successModifyComment(res){
+            const boardId = res.data.boardId;
+            this.getCommentList(boardId);
+            this.cancleModifyComment();
+        },
+        writeComment(boardId, content){
+            const data = {
+                content : content
+            }
 
+            axios.post('/api/comment/'+ boardId,data)
+                .then(this.successwriteComment)
+                .catch(this.fail)
+        },
+        successwriteComment(res){
+            const boardId = res.data.boardId;
+            this.getCommentList(boardId);
+            this.input.inputComment='';
         }
     }
 
