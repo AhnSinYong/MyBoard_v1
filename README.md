@@ -1,5 +1,6 @@
 ## 표준 정의서
 ## 할 것
+- 커스텀한 예외를 못던지는 경우들을 해결해야해
 - security의 exception 처리를 추가해야함
     - @initBinder로 처리하는 validator가 떨구는 예외도 처리해서 내보내야함
     - message관련, mail관련 exception 발생하면 클라이언트에 "메일발송실패" 뜨게하자, rollback도 되야하고
@@ -19,6 +20,7 @@
 - postView boardId 이슈 ----> vue router를 써야 근본적인 해결이 가능할듯
 - axios통해서 파일다운로드를 구현하고, down 값이 실시간으로 반영되게 만들자
 - 쿠키유효시간이 다되서 소멸할때 로그인 정보도 갱신되게 만들자
+- 삭제된 댓글처리가 시원치않음....db설계 변경이 필요할듯함
 
 ### 게시판
 - SPA web
@@ -296,6 +298,7 @@ insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now
     - 이를 해결하기 위한 방법으로 :key의 값을 바꿔주는법
     - this.$forceUpdate() 를 실행하는 법이 있다고함
 - @Valid를 클래스 안에 클래스에서 사용하기도 했는데 이에 대한 생각...좋은 패턴?(BoardDTO.Update)
+- controllerAdvice에 @ModelAttribute를 추가 했는데 이게 좋은 패턴일까???
 
 ### 메모
 - JPA 
