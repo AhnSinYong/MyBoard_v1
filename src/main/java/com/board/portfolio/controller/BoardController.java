@@ -59,6 +59,15 @@ public class BoardController {
         return ResponseEntity.ok(Result.SUCCESS);
     }
 
+    @PreAuthorize("hasRole('ROLE_MEMBER')")
+    @PutMapping("/board/{boardId}")
+    public ResponseEntity updatePost(@PathVariable Long boardId,
+                                     @Valid BoardDTO.Update dto,
+                                     @ModelAttribute("accountDTO") AccountSecurityDTO accountDTO){
+        boardService.updatePost(boardId, dto, accountDTO);
+        return ResponseEntity.ok(Result.SUCCESS);
+    }
+
 
     @ModelAttribute("accountDTO")
     private AccountSecurityDTO getAccountDTO(Authentication authentication){

@@ -16,6 +16,10 @@
 - post.js에서 board_id값 초기화처리를 해보자(지금은 초기화로 값바뀌면 한번더 호출해서 오류남)
 - boardService의 파일다운로드에서 byte[4096]인거 설정파일에서 읽게 수정해야함
 - deletePost()에서 검증관력 로직을 분리하고 싶어
+- postView boardId 이슈 ----> vue router를 써야 근본적인 해결이 가능할듯
+- axios통해서 파일다운로드를 구현하고, down 값이 실시간으로 반영되게 만들자
+- 쿠키유효시간이 다되서 소멸할때 로그인 정보도 갱신되게 만들자
+
 ### 게시판
 - SPA web
 - vue.js
@@ -287,6 +291,11 @@ insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now
     - List는 왜 안됬던걸까?
     
 - 컨트롤러에서 원시타입을 @Valid 할 방법은 무엇이 있을까???
+- 뭔가 boardId, fileId 이런거에서 느낀건데, @Valid로 구지 확인안해도 로직상에서 어쩔수 없이 orElsethrow로 걸러지는거 같아 앞으로는 고려해보자
+- vue 에서 :key 값을 통해서 랜더링을 관리하는 구나, 그런데 updatePost.js에서 왜 deleteFile()했을때 업데이트가 안됬지????
+    - 이를 해결하기 위한 방법으로 :key의 값을 바꿔주는법
+    - this.$forceUpdate() 를 실행하는 법이 있다고함
+- @Valid를 클래스 안에 클래스에서 사용하기도 했는데 이에 대한 생각...좋은 패턴?(BoardDTO.Update)
 
 ### 메모
 - JPA 
@@ -303,3 +312,6 @@ insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now
                       .addConstraintViolation();
           }
     ~~~
+    - @valid 를 사용하는 여러가지 사례 
+            - https://www.logicbig.com/how-to/code-snippets/jcode-bean-validation-valid.html
+            - 이거 말고도 다양한 쓰임이 가능할듯 @Valid + a 느낌으로 사용

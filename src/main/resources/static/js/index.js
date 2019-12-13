@@ -5,6 +5,7 @@ import signUp from "./component/signUp.js"
 import board from "./component/board.js"
 import writePost from "./component/writePost.js"
 import post from "./component/post.js"
+import updatePost from "./component/updatePost.js"
 
 new Vue({
     el : '#app',
@@ -14,6 +15,8 @@ new Vue({
         board,
         writePost,
         post,
+        updatePost
+
     },
     data(){
         return {
@@ -26,6 +29,9 @@ new Vue({
             delivery:{
                 post:{
                     boardId:''
+                },
+                updatePost:{
+                    board:{}
                 }
             },
         }
@@ -37,6 +43,9 @@ new Vue({
     methods:{
         post(data){
             this.delivery.post[data.name] = data.content;
+        },
+        updatePost(data){
+            this.delivery.updatePost[data.name] = data.content;
         }
     }
 })

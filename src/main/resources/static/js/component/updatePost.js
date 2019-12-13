@@ -1,37 +1,30 @@
 import shareObject from "./shareObject/shareObject.js";
 
 export default Vue.component('update-post',{
-    props:['board_id'],
+    props:['board'],
     template:
         `<div class="cover-view">
             <div class="component-update-post margin-auto-center">
                 <div>
                     <div> <input type="button" value="x" @click="inputMethod.closeView(input,coverViewMethod.hideUpdatePostView)"> </div>
-                    <div><span>{{post.title}}</span></div>
-                    <div v-html="post.content.replace(/(?:\\r\\n|\\r|\\n)/g, '<br/>')"></div>
+                    <div><input v-model="post.title"type="text"></div>
+                    <div><textarea v-model="post.content"></textarea></div>
                     <div>
-                        <span>nickname : 
-                            <span v-if="post.account!=null">{{post.account.nickname}}</span>
-                            <span v-else> unknown </span>
-                        </span>
-                        <span>view : <span> {{post.view}} </span></span>
-                        <span><input :class="{focusLike:post.isLiked}"type="button" value="like" @click="likePost(board_id)">{{post.like}}</span>
-                    </div>
-                    <div>
-                        <span>regDate : <span>{{new Date(post.regDate).format('yy-MM-dd a/p hh:mm:ss')}}</span> </span>
-                    </div>
-                    <div>
-                        <span>upDate : <span>{{new Date(post.upDate).format('yy-MM-dd a/p hh:mm:ss')}}</span> </span>
-                    </div>
-                    <div>
-                        <div v-for="file in fileList">
+                        <div v-for="(file,index) in post.fileList">
                             <span>{{file.originName}}</span>
-                            <input type="button" value="download" @click="download(file.fileId)">
+                            <input type="button" value="x" @click="deleteFile(index)">
+                        </div>                        
+                        <div v-for="(file,index) in input.fileList">
+                            <span> name : {{file.name}}, size : {{file.size}}</span>
+                            <input type="button" value="x" @click="removeFile(index)">
+                        </div>
+                        <div>
+                            <input type="file" ref="fileInput" @change="addFile()" ><span>upload file</span>
                         </div>
                     </div>
                     <div>
-                        <input v-if="loginInfo.isLogin" type="button" value="modify">
-                        <input v-if="loginInfo.isLogin" type="button" value="delete" @click="deletePost(post.boardId)">
+                        <input type="button" value="complete" @click="updatePost(post, input.fileList)">
+                        <input type="button" value="cancel" @click="returnPost()">
                     </div>
                 </div>                
             </div>
@@ -45,82 +38,77 @@ export default Vue.component('update-post',{
             inputMethod : shareObject.input.method,
             loginInfo : shareObject.login.info,
             loginMethod : shareObject.login.method,
-            input:{
-                inputComment:'',
-            },
 
             post:{
+                title:'',
                 content:'',
-                like:'',
-                isLiked:false,
             },
-            fileList:[],
-            commentList:[],
 
+            input:{
+                fileList:[]
+            },
         }
     },
     async created(){
     },
     watch:{
-        board_id(boardId, oldVal){
-            this.getPost(boardId);
+        board(board, oldVal){
+            this.post = board.post;
+            this.post.fileList = board.fileList;
         }
     },
     methods:{
-        getPost(boardId){
-            axios.get('/api/board/post/'+boardId)
-                .then(this.successGetPost)
-                .catch(this.fail)
-        },
-        successGetPost(res){
-            const data = res.data;
+        updatePost(post,fileList){
+            const formData = new FormData();
+            formData.append('title',post.title);
+            formData.append('content', post.content);
 
-            this.post = data.post;
-            this.post.isLiked = data.isLikedPost;
-            this.commentList = data.commentList;
-            this.fileList = data.fileList;
-
-            this.inputMethod.resetInput(this.input);
-            shareObject.refreshManager.refresh();
-        },
-        likePost(boardId){
-            if(!this.loginMethod.isLogin()){
-                alert("please, sign in");
-                return;
+            for(let i=0; i<post.fileList.length; i++){
+                const file = post.fileList[i];
+                const email = file.account.email;
+                const boardId = file.board.boardId;
+                const fileId = file.fileId;
+                formData.append('existFileInfoList['+i+'].email', email);
+                formData.append('existFileInfoList['+i+'].boardId', boardId);
+                formData.append('existFileInfoList['+i+'].fileId', fileId);
             }
 
-            axios.post('/api/board/like',{boardId:boardId})
-                .then(this.successLikePost)
-                .catch(this.fail)
+            for(let i=0; i<fileList.length; i++){
+                formData.append('inputFileList['+i+']', fileList[i]);
+            }
 
+            axios.put('/api/board/'+post.boardId,formData,{
+                headers : {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+                .then(this.successUpdatePost)
+                .catch(this.fail)
         },
-        successLikePost(res){
-            this.post.like = res.data.like;
-            this.post.isLiked = !this.post.isLiked;
+        successUpdatePost(res){
+            const data = res.data;
+
+            this.coverViewMethod.showPostView();
+            this.inputMethod.resetInput(this.input);
             shareObject.refreshManager.refresh();
         },
         fail(err){
             console.log(err);
             alert(err.data);
         },
-
-        download(fileId){
-            window.location.href = '/api/board/file/'+fileId;
+        deleteFile(index){
+            this.post.fileList.splice(index,1);
+            this.$forceUpdate();
         },
-
-        deletePost(boardId){
-            if(confirm("do you really want delete this post?")){
-                axios.delete('/api/board/'+boardId)
-                    .then(this.successDeltePost)
-                    .catch(this.fail)
-            }
+        removeFile(index){
+            this.input.fileList.splice(index,1);
         },
-        successDeltePost(res){
-            this.coverViewMethod.hidePostView();
-            shareObject.refreshManager.refresh();
+        addFile(){
+            this.input.fileList.push(this.$refs.fileInput.files[0]);
+            this.$refs.fileInput.value='';
         },
-        updatePost(){
-
+        returnPost(){
+            this.coverViewMethod.showPostView();
         }
     }
 
