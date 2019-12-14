@@ -52,7 +52,7 @@ public class Comment implements EntityDefaultValues{
     private Long group;
 
     @Column(name="DEL_PARENT_CNT")
-    private Long delParentCnt;
+    private Integer delParentCnt;
 
     @Column(name="TYPE")
     @Enumerated(value = EnumType.STRING)
@@ -75,5 +75,6 @@ public class Comment implements EntityDefaultValues{
     public void setDefaultValues() {
         this.like = Optional.ofNullable(this.like).orElse(0);
         this.regDate = Optional.ofNullable(this.regDate).orElse(new Date());
+        this.delParentCnt = Optional.ofNullable(this.delParentCnt).orElse(0);
     }
 }
