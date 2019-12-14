@@ -65,7 +65,9 @@ export default Vue.component('post',{
                                         <span v-if="comment.account!=null">{{comment.account.nickname}}</span>
                                         <span v-else>unknown</span>
                                     </span>
-                                    <span><input  type="button" value="like" @click="likeComment(index,comment.commentId)"> {{comment.like}}</span>
+                                    <span><input  type="button" value="like"
+                                                  :class="{focusLike:comment.isLiked}" 
+                                                  @click="likeComment(index,comment.commentId)"> {{comment.like}}</span>
                                 </div>
                                 <div> {{comment.content}}</div>
                                 <div>
@@ -222,6 +224,12 @@ export default Vue.component('post',{
         successGetCommentList(res){
             const data = res.data;
             this.commentList = data.commentList;
+            const isLikedList = data.isLikedList;
+
+            for(let i=0; i<isLikedList.length; i++){
+                this.commentList[i].isLiked = isLikedList[i];
+            }
+
         },
         showModifyCommentView(index){
             this.invisibleCommentIndex = index;
@@ -275,6 +283,7 @@ export default Vue.component('post',{
                 .then((res)=>{
                     const data = res.data;
                     this.commentList[index].like = data.like;
+                    this.commentList[index].isLiked = !this.commentList[index].isLiked;
                 })
                 .catch(this.fail)
         },
