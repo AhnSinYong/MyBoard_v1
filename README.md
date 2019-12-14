@@ -313,4 +313,5 @@ drop table TB_ACCOUNT;
     - @valid 를 사용하는 여러가지 사례 
             - https://www.logicbig.com/how-to/code-snippets/jcode-bean-validation-valid.html
             - 이거 말고도 다양한 쓰임이 가능할듯 @Valid + a 느낌으로 사용
+    - @NotBlank는 String에 대해서만 정상동작함, Long, Integer는 NotNull 정도로 사용하자
            
