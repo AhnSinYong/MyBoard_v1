@@ -6,9 +6,13 @@ export default {
                 if(Array.isArray(obj[prop])){
                     obj[prop]=[];
                 }
-                else{
+                else if(typeof obj[prop] == 'object'){
+                    this.resetInput(obj[prop]);
+                }
+                else if(typeof obj[prop] == 'string'){
                     obj[prop] = '';
                 }
+
             }
         },
         closeView(obj, callback){

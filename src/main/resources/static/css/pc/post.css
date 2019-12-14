@@ -1,0 +1,8 @@
+.component-post{
+    margin-top : 200px;
+    width : 1000px;
+}
+
+.component-post .childComment{
+    margin-left: 60px;
+}

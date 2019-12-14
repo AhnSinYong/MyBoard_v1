@@ -1,5 +1,6 @@
 ## 표준 정의서
 ## 할 것
+- 커스텀한 예외를 못던지는 경우들을 해결해야해
 - security의 exception 처리를 추가해야함
     - @initBinder로 처리하는 validator가 떨구는 예외도 처리해서 내보내야함
     - message관련, mail관련 exception 발생하면 클라이언트에 "메일발송실패" 뜨게하자, rollback도 되야하고
@@ -19,6 +20,8 @@
 - postView boardId 이슈 ----> vue router를 써야 근본적인 해결이 가능할듯
 - axios통해서 파일다운로드를 구현하고, down 값이 실시간으로 반영되게 만들자
 - 쿠키유효시간이 다되서 소멸할때 로그인 정보도 갱신되게 만들자
+- 삭제된 댓글처리가 시원치않음....db설계 변경이 필요할듯함
+- ERD 이미지 파일 수정해야함
 
 ### 게시판
 - SPA web
@@ -71,7 +74,8 @@
  |UP_DATE       |댓글의 수정 날짜        |                                  |datetime|                      | null |                              |
  |EMAIL         |댓글의 작성자           | foreign(TB_ACCOUNT) on delete set null| varchar(100)     |         |   null |이메일 패턴이여야 함            |
  |GROUP_        |댓글의 그룹 번호(COMMNET_ID)|                              |int                  |           |not null      |대댓글 관계를 구분하기 위함|
- |PARENT_ID     |댓글의 부모 ID(COMMENT_ID) | foreign(TB_COMMENT) on delete set null | int |      |          | 댓글의 부모를 나타냄 |
+ |DEL_PARENT_CNT|삭제된 부모댓글의 개수    |                                | int default 0        |           |not null||
+ |HAS_DEL_TYPE_PARENT |삭제된 부모댓글들 중 타입 PARENT가 있는지 |           | boolean             |            |          |                       |
  |TYPE          |댓글이 부모인지, 자식인지 구분|                               |varchar(30)        |           |not null|              |
  
  ### TB_LIKE_BOARD
@@ -156,11 +160,11 @@ create table TB_COMMENT(
     UP_DATE datetime,
     EMAIL varchar(100),
     GROUP_ int not null, ##COMMENT_ID 값이 들어감
-    PARENT_ID int,
+    DEL_PARENT_CNT int default 0,
+    HAS_DEL_TYPE_PARENT boolean,
     TYPE varchar(30) not null, ##PARENT_ID가 NULL 인데 TYPE이 CHILD면 알수없음 댓글 만들면 됨
     primary key (COMMENT_ID),
     foreign key (BOARD_ID) REFERENCES  TB_BOARD(BOARD_ID) on delete cascade ,
-    foreign key (PARENT_ID) REFERENCES TB_COMMENT(COMMENT_ID) on delete set null,
     foreign key (EMAIL) REFERENCES TB_ACCOUNT(EMAIL) on delete set null
 );
 ~~~
@@ -225,17 +229,6 @@ drop table TB_LIKE_COMMENT;
 drop table TB_COMMENT;
 drop table TB_BOARD;
 drop table TB_ACCOUNT;
-
-## test 데이터
-insert into TB_ACCOUNT values('admin','1234','admin',now(),'ADMIN','test-id','test-id',1);
-insert into TB_BOARD values(29,'test-title','test-content',0,0,now(),now(),'admin');
-insert into TB_COMMENT values (1,29,'test-content',0,now(),now(),'admin',1,null,'parent');
-insert into TB_COMMENT values (2,29,'test-content',0,now(),now(),'admin',1,1,'child');
-insert into TB_LIKE_BOARD values ('test-id',29,'admin',now());
-insert into TB_LIKE_COMMENT values ('test-id',1,'admin',now());
-insert into TB_LIKE_COMMENT values ('test-id2',2,'admin',now());
-insert into TB_FILE_ATTACHMENT values ('test-id',29,'test-origin-name','test-save-name','test-extension',0,now(),'admin');
-insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now(),now());
 ~~~
 
  ## Spring Security
@@ -296,6 +289,11 @@ insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now
     - 이를 해결하기 위한 방법으로 :key의 값을 바꿔주는법
     - this.$forceUpdate() 를 실행하는 법이 있다고함
 - @Valid를 클래스 안에 클래스에서 사용하기도 했는데 이에 대한 생각...좋은 패턴?(BoardDTO.Update)
+- controllerAdvice에 @ModelAttribute를 추가 했는데 이게 좋은 패턴일까???
+- 커스텀한 느낌이 나는 검증로직은 @initBinder의 validator같은 느낌으로 처리할수 없을까???
+    - 비밀번호 비교로직은 가능(회원가입)
+    - deleteComment같은 경우는 모르겠어.....억지로 객체하나에 다 담아서 클라이언트에서 쏴줘야하나???
+- commentDelete에서 Transactional의 설정이 필요하지않을까? 락을 건다거나....(delete의 경우는 락을걸어도 사양에 큰 문제는 없을거같아)    
 
 ### 메모
 - JPA 
@@ -315,3 +313,5 @@ insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now
     - @valid 를 사용하는 여러가지 사례 
             - https://www.logicbig.com/how-to/code-snippets/jcode-bean-validation-valid.html
             - 이거 말고도 다양한 쓰임이 가능할듯 @Valid + a 느낌으로 사용
+    - @NotBlank는 String에 대해서만 정상동작함, Long, Integer는 NotNull 정도로 사용하자
+           
