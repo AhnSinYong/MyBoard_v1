@@ -302,6 +302,7 @@ insert into TB_ALARM values ('test-id','admin','admin','test-board-event',29,now
 - 커스텀한 느낌이 나는 검증로직은 @initBinder의 validator같은 느낌으로 처리할수 없을까???
     - 비밀번호 비교로직은 가능(회원가입)
     - deleteComment같은 경우는 모르겠어.....억지로 객체하나에 다 담아서 클라이언트에서 쏴줘야하나???
+- commentDelete에서 Transactional의 설정이 필요하지않을까? 락을 건다거나....(delete의 경우는 락을걸어도 사양에 큰 문제는 없을거같아)    
 
 ### 메모
 - JPA 
