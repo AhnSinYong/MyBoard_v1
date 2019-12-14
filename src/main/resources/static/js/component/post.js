@@ -48,14 +48,15 @@ export default Vue.component('post',{
                     </div>
                     
                     <div v-for="(comment,index) in commentList">
-                        <div v-if="comment.parentComment==null&&comment.type=='CHILD'"
-                            :class="{childComment:comment.type=='CHILD'}" >
-                            <div>
-                                <span>삭제된 댓글 입니다.</span>
-                            </div>
-                            <div>
-                                <input v-if="loginInfo.isLogin" type="button" value="reply">                            
-                            </div>
+                        <div v-for="index in comment.delParentCnt">
+                            <div :class="{childComment: comment.hasDelTypeParent?(index!=1):true}">
+                                <div>
+                                    <span>삭제된 댓글 입니다.</span>
+                                </div>
+                                <div>
+                                    <input v-if="loginInfo.isLogin&&comment.hasDelTypeParent?(index!=1):true" type="button" value="reply">                            
+                                </div>                             
+                            </div>                                                                                                               
                         </div>
                         <div :class="{childComment:comment.type=='CHILD'}">
                             <div v-if="index!=invisibleCommentIndex">
