@@ -65,7 +65,7 @@ export default Vue.component('post',{
                                         <span v-if="comment.account!=null">{{comment.account.nickname}}</span>
                                         <span v-else>unknown</span>
                                     </span>
-                                    <span><input  type="button" value="like"> {{comment.like}}</span>
+                                    <span><input  type="button" value="like" @click="likeComment(index,comment.commentId)"> {{comment.like}}</span>
                                 </div>
                                 <div> {{comment.content}}</div>
                                 <div>
@@ -93,7 +93,7 @@ export default Vue.component('post',{
                                         <span v-if="comment.account!=null">{{input.modifyComment.account.nickname}}</span>
                                         <span v-else>unknown</span>
                                     </span>
-                                    <span><input  type="button" value="like"> {{input.modifyComment.like}}</span>
+                                    <span><input  type="button" value="like" @click="likeComment(index, comment.commentId)"> {{input.modifyComment.like}}</span>
                                 </div>
                                 <div>
                                     <textarea v-model="input.modifyComment.content"></textarea>
@@ -269,7 +269,15 @@ export default Vue.component('post',{
         },
         writeReplyComment(group){
 
-        }
+        },
+        likeComment(index,commentId){
+            axios.put('/api/comment/like/'+commentId)
+                .then((res)=>{
+                    const data = res.data;
+                    this.commentList[index].like = data.like;
+                })
+                .catch(this.fail)
+        },
     }
 
 });
