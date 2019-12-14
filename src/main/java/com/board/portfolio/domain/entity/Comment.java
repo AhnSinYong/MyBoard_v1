@@ -51,10 +51,8 @@ public class Comment implements EntityDefaultValues{
     @Column(name="GROUP_")
     private Long group;
 
-    @ManyToOne
-    @JoinColumn(name="PARENT_ID")
-    @JsonManagedReference
-    private Comment parentComment;
+    @Column(name="DEL_PARENT_CNT")
+    private Long delParentCnt;
 
     @Column(name="TYPE")
     @Enumerated(value = EnumType.STRING)
