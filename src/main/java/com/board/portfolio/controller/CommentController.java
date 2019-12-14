@@ -23,7 +23,7 @@ public class CommentController {
     @GetMapping("/comment/{boardId}")
     public ResponseEntity getCommentList(@PathVariable Long boardId,
                                          @ModelAttribute("accountDTO") AccountSecurityDTO accountDTO){
-        return ResponseEntity.ok(commentService.getCommentList(boardId));
+        return ResponseEntity.ok(commentService.getCommentList(boardId,accountDTO));
     }
 
     @PreAuthorize("hasRole('ROLE_MEMBER')")

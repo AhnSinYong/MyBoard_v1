@@ -30,11 +30,33 @@ public class CommentService {
     }
 
     @Transactional
-    public Map getCommentList(Long boardId) {
+    public Map getCommentList(Long boardId,AccountSecurityDTO accountDTO) {
         List<Comment> commentList = commentRepository.findAllByBoardOrderByGroupAscRegDateAsc(new Board(boardId));
         Map data = new HashMap();
         data.put("commentList", commentList);
+        List isLikedList = new ArrayList();
+
+        String email = accountDTO.getEmail();
+        if(commentList!=null){
+
+            for(Comment comment: commentList){
+                boolean isLiked  = isLikedComment(comment.getLikeCommentList(), email);
+                isLikedList.add(isLiked);
+            }
+        }
+        data.put("isLikedList",isLikedList);
         return data;
+    }
+    private boolean isLikedComment(List<LikeComment> likeCommentList, String email){
+        if(email==null){
+            return false;
+        }
+        for(LikeComment likeComment : likeCommentList){
+            if(likeComment.getAccount().getEmail().equals(email)){
+                return true;
+            }
+        }
+        return false;
     }
 
 
