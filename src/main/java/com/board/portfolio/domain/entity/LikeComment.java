@@ -35,6 +35,11 @@ public class LikeComment implements EntityDefaultValues{
     @Temporal(TemporalType.TIMESTAMP)
     private Date regDate;
 
+    public LikeComment(Comment comment, Account account) {
+        this.comment = comment;
+        this.account = account;
+    }
+
     @PrePersist
     @Override
     public void setDefaultValues() {

@@ -49,5 +49,13 @@ public class CommentController {
         return ResponseEntity.ok(commentService.deleteComment(commentId, accountDTO));
     }
 
+    @PreAuthorize("hasRole('ROLE_MEMBER')")
+    @PutMapping("/comment/like/{commentId}")
+    public ResponseEntity likeComment(@PathVariable Long commentId,
+                                      @ModelAttribute("accountDTO") AccountSecurityDTO accountDTO){
+
+        return ResponseEntity.ok(commentService.likeComment(commentId, accountDTO));
+    }
+
 
 }
