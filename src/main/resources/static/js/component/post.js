@@ -83,7 +83,7 @@ export default Vue.component('post',{
                                     </div>                        
                                 </div>                            
                                 <div>
-                                    <input v-if="loginInfo.isLogin" type="button" value="reply">
+                                    <input v-if="loginInfo.isLogin" type="button" value="reply" @click="writeReplyComment(comment.group)">
                                 </div>
                             </div>
                             <div v-else>
@@ -266,6 +266,9 @@ export default Vue.component('post',{
             const boardId = res.data.boardId;
             this.getCommentList(boardId);
             this.input.inputComment='';
+        },
+        writeReplyComment(group){
+
         }
     }
 
