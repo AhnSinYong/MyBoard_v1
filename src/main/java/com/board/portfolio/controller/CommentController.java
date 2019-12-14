@@ -33,6 +33,14 @@ public class CommentController {
                                        @ModelAttribute("accountDTO") AccountSecurityDTO accountDTO){
         return ResponseEntity.ok(commentService.writeComment(boardId,dto,accountDTO));
     }
+
+    @PreAuthorize("hasRole('ROLE_MEMBER')")
+    @PostMapping("/comment/reply")
+    public ResponseEntity replyWriteComment(@RequestBody @Valid CommentDTO.Reply dto,
+                                            @ModelAttribute("accountDTO") AccountSecurityDTO accountDTO){
+        return ResponseEntity.ok(commentService.replyWriteComment(dto,accountDTO));
+    }
+
     @PreAuthorize("hasRole('ROLE_MEMBER')")
     @PutMapping("/comment/{commentId}")
     public ResponseEntity modifyComment(@PathVariable Long commentId,
