@@ -21,6 +21,7 @@
 - axios통해서 파일다운로드를 구현하고, down 값이 실시간으로 반영되게 만들자
 - 쿠키유효시간이 다되서 소멸할때 로그인 정보도 갱신되게 만들자
 - 삭제된 댓글처리가 시원치않음....db설계 변경이 필요할듯함
+- ERD 이미지 파일 수정해야함
 
 ### 게시판
 - SPA web
@@ -312,4 +313,5 @@ drop table TB_ACCOUNT;
     - @valid 를 사용하는 여러가지 사례 
             - https://www.logicbig.com/how-to/code-snippets/jcode-bean-validation-valid.html
             - 이거 말고도 다양한 쓰임이 가능할듯 @Valid + a 느낌으로 사용
+    - @NotBlank는 String에 대해서만 정상동작함, Long, Integer는 NotNull 정도로 사용하자
            

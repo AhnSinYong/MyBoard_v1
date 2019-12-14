@@ -54,7 +54,18 @@ export default Vue.component('post',{
                                     <span>삭제된 댓글 입니다.</span>
                                 </div>
                                 <div>
-                                    <input v-if="loginInfo.isLogin&&comment.hasDelTypeParent?(index!=1):true" type="button" value="reply">                            
+                                    <input v-if="loginInfo.isLogin&&!(comment.hasDelTypeParent?(index!=1):true)" 
+                                           type="button" value="reply"
+                                           @click="showReplyCommentView(index)">                            
+                                </div>
+                                <div v-if="index==visibleReplyCommentFormIndex">
+                                    <div>
+                                        <textarea></textarea>
+                                    </div>
+                                    <div>
+                                        <input type="button" value="complete" @click="writeReplyComment(comment.commentId,comment.board.boardId, input.replyComment.content)">
+                                        <input type="button" value="cancle" @click="hideReplyComment()">
+                                    </div>
                                 </div>                             
                             </div>                                                                                                               
                         </div>
@@ -86,8 +97,18 @@ export default Vue.component('post',{
                                     </div>                        
                                 </div>                            
                                 <div>
-                                    <input v-if="loginInfo.isLogin" type="button" value="reply" @click="writeReplyComment(comment.group)">
+                                    <input v-if="loginInfo.isLogin&&comment.type=='PARENT'" type="button" value="reply" 
+                                           @click="showReplyCommentView(index)">
                                 </div>
+                                <div v-if="index==visibleReplyCommentFormIndex">
+                                    <div>
+                                        <textarea v-model="input.replyComment.content"></textarea>
+                                    </div>
+                                    <div>
+                                        <input type="button" value="complete" @click="writeReplyComment(comment.commentId,comment.board.boardId,input.replyComment.content)">
+                                        <input type="button" value="cancle" @click="hideReplyComment()">
+                                    </div>
+                                </div>                             
                             </div>
                             <div v-else>
                                 <div>                            
@@ -133,10 +154,14 @@ export default Vue.component('post',{
                 inputComment:'',
                 modifyComment: {
                     content:''
+                },
+                replyComment:{
+                    content:''
                 }
             },
             visibleModifyCommentFormIndex:-1,
             invisibleCommentIndex:-1,
+            visibleReplyCommentFormIndex:-1,
             post:{
                 content:'',
                 like:'',
@@ -276,8 +301,26 @@ export default Vue.component('post',{
             this.getCommentList(boardId);
             this.input.inputComment='';
         },
-        writeReplyComment(group){
-
+        writeReplyComment(commentId, boardId, content){
+            const data = {
+                boardId: boardId,
+                commentId : commentId,
+                content : content
+            }
+            axios.post('/api/comment/reply',data)
+                .then(this.successReplyComment)
+                .catch(this.fail)
+        },
+        showReplyCommentView(index){
+            this.visibleReplyCommentFormIndex = index;
+        },
+        hideReplyComment(){
+          this.visibleReplyCommentFormIndex = -1;
+        },
+        successReplyComment(res){
+            this.getCommentList(res.data.boardId);
+            this.input.replyComment.content='';
+            this.visibleReplyCommentFormIndex = -1;
         },
         likeComment(index,commentId){
             axios.put('/api/comment/like/'+commentId)

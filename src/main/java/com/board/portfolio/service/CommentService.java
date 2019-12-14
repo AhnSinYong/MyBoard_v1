@@ -131,4 +131,22 @@ public class CommentService {
         data.put("like",comment.getLike());
         return data;
     }
+
+    @Transactional
+    public Map replyWriteComment(CommentDTO.Reply dto, AccountSecurityDTO accountDTO) {
+        Comment parentComment = commentRepository.findById(dto.getCommentId()).orElseThrow(()->new NotFoundCommentException("comment isn't exist"));
+        Comment comment = Comment.builder()
+                .board(new Board(dto.getBoardId()))
+                .content(dto.getContent())
+                .account(new Account(accountDTO.getEmail()))
+                .type(CommentType.CHILD)
+                .group(parentComment.getGroup())
+                .hasDelTypeParent(false)
+                .build();
+        comment = commentRepository.save(comment);
+
+        Map data = new HashMap();
+        data.put("boardId",dto.getBoardId());
+        return data;
+    }
 }
