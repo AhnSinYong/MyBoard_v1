@@ -51,10 +51,11 @@ public class Comment implements EntityDefaultValues{
     @Column(name="GROUP_")
     private Long group;
 
-    @ManyToOne
-    @JoinColumn(name="PARENT_ID")
-    @JsonManagedReference
-    private Comment parentComment;
+    @Column(name="DEL_PARENT_CNT")
+    private Integer delParentCnt;
+
+    @Column(name="HAS_DEL_TYPE_PARENT")
+    private boolean hasDelTypeParent;
 
     @Column(name="TYPE")
     @Enumerated(value = EnumType.STRING)
@@ -71,11 +72,17 @@ public class Comment implements EntityDefaultValues{
     public void decreaseLike(){
         this.like--;
     }
-
+    public void increaseDelParentCnt(){
+        this.delParentCnt++;
+    }
+    public void increaseDelParentCnt(int cnt){
+        this.delParentCnt += cnt;
+    }
     @PrePersist
     @Override
     public void setDefaultValues() {
         this.like = Optional.ofNullable(this.like).orElse(0);
         this.regDate = Optional.ofNullable(this.regDate).orElse(new Date());
+        this.delParentCnt = Optional.ofNullable(this.delParentCnt).orElse(0);
     }
 }

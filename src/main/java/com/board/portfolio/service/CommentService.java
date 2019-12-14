@@ -80,6 +80,13 @@ public class CommentService {
         if(!comment.getAccount().getEmail().equals(accountDTO.getEmail())){
             throw new NotAllowAccessException("not allow access");
         }
+
+        Optional<Comment> opChildCommnet =commentRepository.findTopByBoardAndGroupAndCommentIdGreaterThanOrderByRegDateAsc(comment.getBoard(),comment.getGroup(),commentId);
+        if(opChildCommnet.isPresent()){
+            Comment childComment = opChildCommnet.get();
+            childComment.increaseDelParentCnt(comment.getDelParentCnt()+1);
+            childComment.setHasDelTypeParent(comment.isHasDelTypeParent());
+        }
         commentRepository.delete(comment);
 
         Map data = new HashMap();
@@ -95,6 +102,7 @@ public class CommentService {
                 .account(new Account(accountDTO.getEmail()))
                 .type(CommentType.PARENT)
                 .group((long)-1)
+                .hasDelTypeParent(true)
                 .build();
         comment = commentRepository.save(comment);
         comment.setGroup(comment.getCommentId());
