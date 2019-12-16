@@ -6,6 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 
 @Entity
 @Table(name = "TB_ALARM")
@@ -30,7 +31,6 @@ public class Alarm implements EntityDefaultValues{
     @JsonManagedReference
     private Account triggerAccount;
 
-    //TODO https://lng1982.tistory.com/279   @Converter를 이용하는 방법 고려
     @Column(name = "EVENT_TYPE")
     @Enumerated(value = EnumType.STRING)
     private AlarmEventType eventType;
@@ -50,6 +50,7 @@ public class Alarm implements EntityDefaultValues{
     @PrePersist
     @Override
     public void setDefaultValues() {
+        this.alarmId = Optional.ofNullable(this.alarmId).orElse(UUID.randomUUID().toString());
         this.recieveDate = Optional.ofNullable(this.recieveDate).orElse(new Date());
     }
 }
