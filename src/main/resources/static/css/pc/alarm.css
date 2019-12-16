@@ -1,0 +1,9 @@
+.component-alarm{
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+}
+.component-alarm img{
+    float: right;
+    width : 50px;
+}
