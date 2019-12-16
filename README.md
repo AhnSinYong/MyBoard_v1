@@ -323,4 +323,8 @@ drop table TB_ACCOUNT;
         - https://cnpnote.tistory.com/entry/SPRING-Spring-MVC-PathVariable-%EA%B0%92%EC%9D%84-%EA%B2%80%EC%A6%9D%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95%EC%9D%80-%EB%AC%B4%EC%97%87%EC%9E%85%EB%8B%88%EA%B9%8C
         - Controller 파라미터에 사용하기 위해서 @CustomValidator에 ElementType.PARMETER 를 추가하였음
 - socket
-    - Websocket은 IE10이상부터인데 SocketJS는 IE6이상부터 지원한다고함           
+    - Websocket은 IE10이상부터인데 SocketJS는 IE6이상부터 지원한다고함
+    
+- enum 
+    - @converter를 사용하는 방법 고려
+        - https://lng1982.tistory.com/279   @Converter를 이용하는 방법 고려
