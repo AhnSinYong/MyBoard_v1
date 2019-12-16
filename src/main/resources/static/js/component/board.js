@@ -3,20 +3,20 @@ import shareObject from "./shareObject/shareObject.js";
 export default Vue.component('board',{
     template:
         `<div class="board">
-            <div>
-                <table>
+            <div class="board-table">
+                <table class="table table-hover table-striped">
                     <thead>
                         <tr>
-                            <td>NUMBER</td>
-                            <td>TITLE</td>
-                            <td>LIKE</td>
-                            <td>VIEW</td>
-                            <td>REGDATE</td>
-                            <td>UPDATE</td>
-                            <td>NICKNAME</td>                        
+                            <td name="number">NUM</td>
+                            <td name="title">TITLE</td>
+                            <td name="like">LIKE</td>
+                            <td name="view">VIEW</td>
+                            <td name="regdate">REGDATE</td>
+                            <td name="update">UPDATE</td>
+                            <td name="nickname">NICKNAME</td>                        
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody >
                         <tr v-for="board in pagination.list" 
                             @click="coverViewMethod.showPostView();
                                     deliveryData('post','boardId',board.boardId);">
@@ -34,13 +34,18 @@ export default Vue.component('board',{
             </div>
             <div>
                 <div>
-                    <input v-if="pagination.prevPage!=-1"type="button" value="prev" @click="getBoardList(pagination.prevPage)">
+                    <input v-if="pagination.prevPage!=-1"type="button" value="prev"
+                           class="btn btn-outline-dark" 
+                           @click="getBoardList(pagination.prevPage)">
                     <input v-for="page in (pagination.endPage-pagination.startPage+1)" 
                            type="button" 
-                           :class="{focusPage:pagination.page==(page+pagination.startPage-1)}"                           
+                           :class="{focusPage:pagination.page==(page+pagination.startPage-1)}"
+                           class="btn btn-outline-dark page-item"                           
                            :value="page+pagination.startPage-1" 
                            @click="getBoardList(page+pagination.startPage-1)">
-                    <input v-if="pagination.nextPage!=-1"type="button" value="next" @click="getBoardList(pagination.nextPage)">
+                    <input v-if="pagination.nextPage!=-1"type="button" value="next"
+                           class="btn btn-outline-dark" 
+                           @click="getBoardList(pagination.nextPage)">
                 </div>                
             </div>
             <div>
@@ -51,7 +56,9 @@ export default Vue.component('board',{
             </div>
             <div>
                 <div>
-                    <input v-if="loginInfo.isLogin" type="button" value="write" @click="coverViewMethod.showWritePostView()">
+                    <input v-if="loginInfo.isLogin" type="button" value="write"
+                           class="btn btn-outline-dark" 
+                           @click="coverViewMethod.showWritePostView()">
                 </div>
             </div>
         </div>`,

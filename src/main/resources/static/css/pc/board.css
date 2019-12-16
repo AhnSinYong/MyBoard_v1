@@ -1,0 +1,20 @@
+.board{
+
+}
+
+.board .board-table{
+    margin-bottom: 5px;
+    margin-top : 20px;
+}
+
+.board .page-item{
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+.board .table thead{
+    font-weight: bold;
+}
+.board .table td[name=number]{
+    width: 50px;
+}

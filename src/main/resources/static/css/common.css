@@ -32,4 +32,9 @@
 .focusLike{
     background-color: skyblue;
 }
-
+.right{
+    float: right;
+}
+.left{
+    float: left;
+}
