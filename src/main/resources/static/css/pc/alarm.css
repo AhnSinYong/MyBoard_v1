@@ -7,3 +7,16 @@
     float: right;
     width : 50px;
 }
+
+.component-alarm .checkedAlarm {
+    background-color: gray;
+}
+.component-alarm .flag{
+    float:right;
+    position : relative;
+    right : 50px;
+    background-color: red;
+    width: 12px;
+    height : 12px;
+    border-radius: 12px;
+}
