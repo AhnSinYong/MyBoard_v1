@@ -12,7 +12,7 @@ export default {
     onmessage(callback){
         this.socket.onmessage=function(event){
             console.log("ReceiveMessage:", event.data +'\n');
-            callback(event);
+            callback(JSON.parse(event.data));
         }
     },
     onclose(callback){
