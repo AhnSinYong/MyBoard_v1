@@ -4,9 +4,10 @@ export default Vue.component('sign-up',{
     template:
         `<div class="cover-view">
             <div class="component-sign-up margin-auto-center">
-                <div> <input type="button" value="x" @click="inputMethod.closeView(input, coverViewMethod.hideSignUpView)"> </div>
+                <div> <input type="button" value="x" @click="inputMethod.closeView(input, coverViewMethod.hideSignUpView)"
+                             class="btn btn-outline-dark right"> </div>
                 <div>
-                    <span> Please fill out these items </span>
+                    <span> Please, fill out these items </span>
                 </div>
                 <div class="margin-auto-center">
                     <input v-model="input.nickname" class="display-block" type="text" placeholder="nickname">
@@ -15,7 +16,7 @@ export default Vue.component('sign-up',{
                     <input v-model="input.passwordCheck" class="display-block" type="password" placeholder="password-check">
                 </div>
                 <div>
-                    <input type="button" value="sign up" @click="signUp()">
+                    <input class="btn btn-outline-dark" type="button" value="sign up" @click="signUp()">
                 </div>
             </div>
         </div>`,
