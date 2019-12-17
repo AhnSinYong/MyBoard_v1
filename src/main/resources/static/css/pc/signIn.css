@@ -1,4 +1,19 @@
 .component-sign-in{
-    margin-top : 200px;
-    width : 1000px;
+    margin-top : 100px;
+    width : 300px;
+    height : 250px;
+    background-color: white;
+    padding: 50px;
+
+    border-radius: 25px;
+}
+
+.component-sign-in .title{
+    font-size: 2.0em;
+    border-bottom : 2px solid gray;
+    margin-bottom: 15px;
+}
+
+.component-sign-in input {
+    margin-top: 5px;
 }
