@@ -12,12 +12,15 @@ export default Vue.component('alarm',{
                              :class="{checkedAlarm:alarm.isChecked}"
                              @click="checkAlarm(alarm)">
                             <div>
-                                <span>{{new Date(alarm.recieveDate).format('yy-MM-dd a/p hh:mm:ss')}}</span>
-                                <input type="button" value="x" @click="deleteAlarm(alarm)">
-                            </div>
-                            <div>
-                                <span>{{alarm.message}} </span>
-                            </div>
+                                <div>
+                                    <span>{{new Date(alarm.recieveDate).format('yy-MM-dd a/p hh:mm:ss')}}</span>
+                                    <input type="button" value="go post" @click="showPost(alarm.eventContentId)">
+                                    <input type="button" value="x" @click="deleteAlarm(alarm)">
+                                </div>
+                                <div>
+                                    <span>{{alarm.message}} </span>
+                                </div>
+                            </div>                            
                         </div>
                     </div>    
                 </div>
@@ -36,6 +39,7 @@ export default Vue.component('alarm',{
             inputMethod : shareObject.input.method,
             loginMethod : shareObject.login.method,
             loginInfo : shareObject.login.info,
+            deliveryData : shareObject.deliveryData,
             socket : shareObject.socket,
 
             alarmList:[],
@@ -50,25 +54,14 @@ export default Vue.component('alarm',{
     },
     async created(){
         if(this.is_login){
-            this.socket.create('/ws/alarm');
+            this.setSocket();
             this.getAlarmList();
         }
     },
     watch:{
         is_login(isLogin, old){
             if(isLogin){
-                this.socket.create('/ws/alarm');
-
-                this.socket.onmessage((data)=>{
-                    this.getAlarmList();
-                })
-                this.socket.onclose((event)=>{
-
-                })
-                this.socket.onerror((event)=>{
-
-                })
-
+                this.setSocket();
                 this.getAlarmList()
                 return;
             }
@@ -106,8 +99,9 @@ export default Vue.component('alarm',{
         setIsHasNew(alarmList){
             let state= false;
             for(let i=0; i<alarmList.length; i++){
-                if(!alarmList[i].checked){
+                if(!alarmList[i].isChecked){
                     state = true;
+                    break;
                 }
             }
             this.isHasNew = state;
@@ -115,8 +109,14 @@ export default Vue.component('alarm',{
         setMessage(alarm){
             if(alarm.eventType == "WRITE_COMMENT"){
                 alarm.message = alarm.eventContentId +' 게시물에 '
-                    + alarm.triggerAccount.nickname +'님이'
+                    + alarm.triggerAccount.nickname +'님이 '
                     + '댓글을 작성하였습니다.'
+                return;
+            }
+            if(alarm.eventType == "REPLY_COMMENT"){
+                alarm.message = alarm.eventContentId +' 게시물에 작성한 댓글에 '
+                    + alarm.triggerAccount.nickname +'님이 '
+                    + '대댓글을 작성하였습니다.'
             }
         },
         switchAlarmList(){
@@ -142,6 +142,23 @@ export default Vue.component('alarm',{
                     this.getAlarmList();
                 })
                 .catch(this.fail)
+        },
+        setSocket(){
+            this.socket.create('/ws/alarm');
+
+            this.socket.onmessage((data)=>{
+                this.getAlarmList();
+            })
+            this.socket.onclose((event)=>{
+
+            })
+            this.socket.onerror((event)=>{
+
+            })
+        },
+        showPost(boardId){
+            this.deliveryData('post','boardId',boardId)
+            this.coverViewMethod.showPostView();
         }
 
     }
