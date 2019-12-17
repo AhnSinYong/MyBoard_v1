@@ -5,17 +5,21 @@ export default Vue.component('alarm',{
     template:
         `<div>
             <div class="component-alarm margin-auto-center">
-                <div v-if="alarmListVisibleState">
-                    <div> <input type="button" value="x" @click="hideAlarmList()"> </div>
-                    <div> 
+                <div v-if="alarmListVisibleState" class="close"> <input type="button" value="x" @click="hideAlarmList()"
+                    class="btn btn-outline-dark right"> </div>
+                <div> 
+                <div class="alarm-list"v-if="alarmListVisibleState">                    
                         <div v-for="(alarm,index) in alarmList"
                              :class="{checkedAlarm:alarm.isChecked}"
+                             class="alarm"
                              @click="checkAlarm(alarm)">
                             <div>
                                 <div>
                                     <span>{{new Date(alarm.recieveDate).format('yy-MM-dd a/p hh:mm:ss')}}</span>
-                                    <input type="button" value="go post" @click="showPost(alarm.eventContentId)">
-                                    <input type="button" value="x" @click="deleteAlarm(alarm)">
+                                    <input type="button" value="go post" @click="showPost(alarm.eventContentId)"
+                                           class="btn btn-outline-dark">
+                                    <input type="button" value="x" @click="deleteAlarm(alarm)"
+                                           class="btn btn-outline-dark">
                                 </div>
                                 <div>
                                     <span>{{alarm.message}} </span>
