@@ -45,7 +45,8 @@
         <div v-show="coverViewState.updatePost"><update-post :board="delivery.updatePost.board"/></div>
     </div>
     <div v-show="loginInfo.isLogin">
-        <alarm :is_login="loginInfo.isLogin"/>
+        <alarm :is_login="loginInfo.isLogin"
+                @post="post"/>
     </div>
 </div>
 <!--<script  src="http://code.jquery.com/jquery-latest.min.js"></script>-->
