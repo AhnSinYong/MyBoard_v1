@@ -6,6 +6,7 @@
 .component-alarm img{
     float: right;
     width : 50px;
+    border-radius: 30px;
 }
 .component-alarm .alarm{
 
@@ -29,6 +30,7 @@
     background-color: white;
 
     width: 400px;
+    margin-bottom: 7px;
 }
 .component-alarm .alarm-list input[name=goPost]{
     margin-left: 15px;
