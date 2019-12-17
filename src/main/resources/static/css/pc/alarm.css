@@ -28,7 +28,11 @@
     overflow-y: scroll;
     background-color: white;
 
-    max-width: 400px;
+    width: 400px;
+}
+.component-alarm .alarm-list input[name=goPost]{
+    margin-left: 15px;
+    margin-right : 5px;
 }
 .component-alarm .alarm-list .alarm{
     border-bottom : 2px solid gray;
