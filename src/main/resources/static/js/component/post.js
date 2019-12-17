@@ -67,7 +67,7 @@ export default Vue.component('post',{
                         </div>                    
                     </div>
                     
-                    <div v-for="(comment,index) in commentList">
+                    <div class="comment-list-item" v-for="(comment,index) in commentList">
                         <div v-for="index in comment.delParentCnt">
                             <div :class="{childComment: comment.hasDelTypeParent?(index!=1):true}">
                                 <div class="delete-comment">
@@ -76,6 +76,7 @@ export default Vue.component('post',{
                                 <div class="reply-btn">
                                     <input v-if="loginInfo.isLogin&&!(comment.hasDelTypeParent?(index!=1):true)" 
                                            type="button" value="reply"
+                                           class="btn btn-outline-dark"
                                            @click="showReplyCommentView(index)">                            
                                 </div>
                                 <div v-if="index==visibleReplyCommentFormIndex">
@@ -83,8 +84,10 @@ export default Vue.component('post',{
                                         <textarea placeholder="reply comment"></textarea>
                                     </div>
                                     <div>
-                                        <input type="button" value="complete" @click="writeReplyComment(comment.commentId,comment.board.boardId, input.replyComment.content)">
-                                        <input type="button" value="cancle" @click="hideReplyComment()">
+                                        <input type="button" value="complete" @click="writeReplyComment(comment.commentId,comment.board.boardId, input.replyComment.content)"
+                                               class="btn btn-outline-dark">
+                                        <input type="button" value="cancle" @click="hideReplyComment()"
+                                               class="btn btn-outline-dark">
                                     </div>
                                 </div>                             
                             </div>                                                                                                               
@@ -103,7 +106,8 @@ export default Vue.component('post',{
                                 </div>
                                 <div class="content" v-html="comment.content.replace(/(?:\\r\\n|\\r|\\n)/g, '<br/>')"></div>
                                 <div class="reply-btn">
-                                    <input v-if="loginInfo.isLogin&&comment.type=='PARENT'" type="button" value="reply" 
+                                    <input v-if="loginInfo.isLogin&&comment.type=='PARENT'" type="button" value="reply"
+                                           class="btn btn-outline-dark" 
                                            @click="showReplyCommentView(index)">
                                 </div>
                                 <div class="date">
@@ -116,8 +120,10 @@ export default Vue.component('post',{
                                 </div>
                                 <div v-if="comment.account!=null">
                                     <div v-if="comment.account.email==loginInfo.email">
-                                        <input type="button" value="modify" @click="showModifyCommentView(index)">
-                                        <input type="button" value="delete" @click="deleteComment(comment.board.boardId, comment.commentId)">
+                                        <input type="button" value="modify" @click="showModifyCommentView(index)"
+                                               class="btn btn-outline-dark">
+                                        <input type="button" value="delete" @click="deleteComment(comment.board.boardId, comment.commentId)"
+                                               class="btn btn-outline-dark">
                                     </div>                        
                                 </div>                                                            
                                 <div v-if="index==visibleReplyCommentFormIndex">
@@ -125,8 +131,10 @@ export default Vue.component('post',{
                                         <textarea v-model="input.replyComment.content" placeholder="reply comment"></textarea>
                                     </div>
                                     <div>
-                                        <input type="button" value="complete" @click="writeReplyComment(comment.commentId,comment.board.boardId,input.replyComment.content)">
-                                        <input type="button" value="cancle" @click="hideReplyComment()">
+                                        <input type="button" value="complete" @click="writeReplyComment(comment.commentId,comment.board.boardId,input.replyComment.content)"
+                                               class="btn btn-outline-dark">
+                                        <input type="button" value="cancle" @click="hideReplyComment()"
+                                               class="btn btn-outline-dark">
                                     </div>
                                 </div>                             
                             </div>
@@ -151,8 +159,10 @@ export default Vue.component('post',{
                                     </div>  
                                 </div>                                
                                 <div>
-                                    <input type="button" value="complete" @click="modifyComment(input.modifyComment)">
-                                    <input type="button" value="cancle" @click="cancleModifyComment()">
+                                    <input type="button" value="complete" @click="modifyComment(input.modifyComment)"
+                                           class="btn btn-outline-dark">
+                                    <input type="button" value="cancle" @click="cancleModifyComment()"
+                                           class="btn btn-outline-dark">
                                 </div>                                
                             </div>                            
                         </div>                        
@@ -235,6 +245,7 @@ export default Vue.component('post',{
         fail(err){
             console.log(err);
             alert(err.data);
+            this.coverViewMethod.resetState();
         },
 
         download(fileId){
