@@ -53,7 +53,7 @@
 }
 .component-post .detail{
     position: relative;
-    right: -150px;
+    right: 0px;
 }
 .component-post .edit{
     position: relative;
