@@ -2,6 +2,8 @@
 <html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
     <link rel="stylesheet" type="text/css" href="/static/css/common.css">
 
     <link rel="stylesheet" type="text/css" href="/static/css/pc/index.css" media="screen and (min-width:801px)">
@@ -9,6 +11,9 @@
     <link rel="stylesheet" type="text/css" href="/static/css/pc/signIn.css" media="screen and (min-width:801px)">
     <link rel="stylesheet" type="text/css" href="/static/css/pc/writePost.css" media="screen and (min-width:801px)">
     <link rel="stylesheet" type="text/css" href="/static/css/pc/post.css" media="screen and (min-width:801px)">
+    <link rel="stylesheet" type="text/css" href="/static/css/pc/board.css" media="screen and (min-width:801px)">
+    <link rel="stylesheet" type="text/css" href="/static/css/pc/updatePost.css" media="screen and (min-width:801px)">
+    <link rel="stylesheet" type="text/css" href="/static/css/pc/alarm.css" media="screen and (min-width:801px)">
 
     <link rel="stylesheet" type="text/css" href="/static/css/mobile/index.css" media="screen and (max-width:800px)">
 
@@ -18,13 +23,13 @@
 <div id="app">
     <div class="header">
         <div class="top-bar">
-            <div class="title inline-block">
-                <span>
+            <div class="title">
+                <span class="main inline-block left">
                     My Board
                 </span>
-                <span>
-                    <input v-if="!loginInfo.isLogin" type="button" value="sign in" @click="coverViewMethod.showSignInView()">
-                    <input v-else type="button" value="logout" @click="loginMethod.logout()">
+                <span class="inline-block right">
+                    <input v-if="!loginInfo.isLogin" type="button" class="btn btn-outline-dark" value="sign in" @click="coverViewMethod.showSignInView()">
+                    <input v-else type="button" class="btn btn-outline-dark" value="logout" @click="loginMethod.logout()">
                 </span>
             </div>
         </div>
@@ -40,7 +45,15 @@
         <div v-show="coverViewState.post"><post :board_id="delivery.post.boardId" @update_post="updatePost"/></div>
         <div v-show="coverViewState.updatePost"><update-post :board="delivery.updatePost.board"/></div>
     </div>
+    <div v-show="loginInfo.isLogin">
+        <alarm :is_login="loginInfo.isLogin"
+                @post="post"/>
+    </div>
 </div>
+<!--<script  src="http://code.jquery.com/jquery-latest.min.js"></script>-->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 <script src="//kr.vuejs.org/js/vue.js"></script>
 <script src="/static/js/common/dateFormat.js"></script>
 <script src="//unpkg.com/axios@0.12.0/dist/axios.min.js"></script>

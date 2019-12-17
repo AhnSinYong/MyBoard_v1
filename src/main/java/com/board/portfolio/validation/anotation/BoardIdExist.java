@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 
 @Documented
 @Constraint(validatedBy = BoardIdExistValidator.class)
-@Target({ElementType.METHOD, ElementType.FIELD})
+@Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface BoardIdExist {
     String message() default "BoardId isn't exist";

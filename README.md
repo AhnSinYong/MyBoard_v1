@@ -22,6 +22,8 @@
 - 쿠키유효시간이 다되서 소멸할때 로그인 정보도 갱신되게 만들자
 - 삭제된 댓글처리가 시원치않음....db설계 변경이 필요할듯함
 - ERD 이미지 파일 수정해야함
+- 패키지, 클래스 관계도 그려보자 순환참조라던가 양방향참조가 존재하는지...
+- Controller에 @PathVariable, @RequestParam 에 대한 @CustomValidator 사용을 고려하자
 
 ### 게시판
 - SPA web
@@ -39,6 +41,8 @@
 
 
 ## DataBase
+### ERD
+![portfolio_erd_v3](./README_RESOURCES/portfolio_erd_v3.png)
 ### TB_ACCOUNT
  |항목            | 설명                |key type    |data type              | unique   | nullable  |비고               |
  |----------------|--------------------|------------|-----------------------|----------|----------|-------------------|
@@ -236,7 +240,8 @@ drop table TB_ACCOUNT;
  |경로                    |예외경로            |Filter         | Provider                                  |success                             |fail                      |
  |------------------------|-------------------|-------------|--------------------------------------------|-------------------------------------|-----------------------|
  |/api/account/signIn     |                   |SignInFilter   | 로그인 성공 여부 판단                      | jwt토큰을 쿠키에 담아 반환           | Exception 발생        |
- |/api/**                 |/api/account/signIn|JwtFilter      | 토큰 유효성 판단(토큰이 없는 경우는 success)| chain.doFilter()                    | Exception 발생        |
+ |/api/account/signOut     |                   |SignOutFilter   | 없음                      | contextholder를 비우고 쿠키제거           |         |
+ |/api/**                 |/api/account/signIn,signOut|JwtFilter      | 토큰 유효성 판단(토큰이 없는 경우는 success)| chain.doFilter()                    | Exception 발생        |
  
  ## 생각해볼 것
  - TB_ALARM에서 TB_CONTENT_ID 는 외래키로 설정하지 않았다.
@@ -294,6 +299,7 @@ drop table TB_ACCOUNT;
     - 비밀번호 비교로직은 가능(회원가입)
     - deleteComment같은 경우는 모르겠어.....억지로 객체하나에 다 담아서 클라이언트에서 쏴줘야하나???
 - commentDelete에서 Transactional의 설정이 필요하지않을까? 락을 건다거나....(delete의 경우는 락을걸어도 사양에 큰 문제는 없을거같아)    
+- 나는 db를 잘 설계한걸까??(성능적인면에서?)
 
 ### 메모
 - JPA 
@@ -314,4 +320,16 @@ drop table TB_ACCOUNT;
             - https://www.logicbig.com/how-to/code-snippets/jcode-bean-validation-valid.html
             - 이거 말고도 다양한 쓰임이 가능할듯 @Valid + a 느낌으로 사용
     - @NotBlank는 String에 대해서만 정상동작함, Long, Integer는 NotNull 정도로 사용하자
-           
+    - @PathVariable과 @RequestParam에서 @Valid를 사용하는 방법
+        - https://www.baeldung.com/spring-validate-requestparam-pathvariable
+            - Spring의 경우 @Bean을 설정해줘야하는데 Boot에서 해보니깐 예외가 발생한다 왜그런거지???
+        - https://cnpnote.tistory.com/entry/SPRING-Spring-MVC-PathVariable-%EA%B0%92%EC%9D%84-%EA%B2%80%EC%A6%9D%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95%EC%9D%80-%EB%AC%B4%EC%97%87%EC%9E%85%EB%8B%88%EA%B9%8C
+        - Controller 파라미터에 사용하기 위해서 @CustomValidator에 ElementType.PARMETER 를 추가하였음
+    - @Valid를 사용하는 여러가지 방법
+        - https://medium.com/@gaemi/java-%EC%99%80-spring-%EC%9D%98-validation-b5191a113f5c 
+- socket
+    - Websocket은 IE10이상부터인데 SocketJS는 IE6이상부터 지원한다고함
+    
+- enum 
+    - @converter를 사용하는 방법 고려
+        - https://lng1982.tistory.com/279   @Converter를 이용하는 방법 고려

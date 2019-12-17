@@ -4,20 +4,21 @@ export default Vue.component('write-Post',{
     template:
         `<div class="cover-view">
             <div class="component-write-post margin-auto-center">
-                <div> <input type="button" value="x" @click="inputMethod.closeView(input,coverViewMethod.hideWritePostView)"> </div>
-                <div><input v-model="input.title" type="text" placeholder="title"></div>
-                <div><textarea v-model="input.content" placeholder="content"></textarea></div>
+                <div> <input type="button" value="x" 
+                             class="btn btn-outline-dark right"
+                             @click="inputMethod.closeView(input,coverViewMethod.hideWritePostView)"> </div>
+                <div ><input class="title" v-model="input.title" type="text" placeholder="title"></div>
+                <div><textarea class="content" v-model="input.content" placeholder="content"></textarea></div>
                 <div>
                     <div v-for="(file,index) in input.fileList">
-                        <span> name : {{file.name}}, size : {{file.size}}</span>
-                        <input type="button" value="x" @click="removeFile(index)">
+                        <span class="file-name"> name : {{file.name}}, size : {{file.size}}</span>
+                        <input class="btn btn-outline-dark" type="button" value="x" @click="removeFile(index)">
                     </div>
                     <div><input type="file" ref="fileInput"@change="addFile()"></div>
                 </div>
-            </div>
-            <div>
                 <div>
-                    <input type="button" value="post" @click="writePost(input.title, input.content, input.fileList)">
+                    <input type="button" value="post" @click="writePost(input.title, input.content, input.fileList)"
+                           class="btn btn-outline-dark right">
                 </div>
             </div>
         </div>`,

@@ -4,9 +4,10 @@ export default Vue.component('sign-in',{
     template:
         `<div class="cover-view">
             <div class="component-sign-in margin-auto-center">
-                <div> <input type="button" value="x" @click="inputMethod.closeView(input,coverViewMethod.hideSignInView)"> </div>
+                <div> <input type="button" value="x" @click="inputMethod.closeView(input,coverViewMethod.hideSignInView)"
+                             class="btn btn-outline-dark right"> </div>
                 <div>
-                    <span> Sign In </span>
+                    <span class="title"> Sign In </span>
                 </div>
                 <div class="margin-auto-center">
                     <div class="inline-block">
@@ -15,8 +16,10 @@ export default Vue.component('sign-in',{
                     </div>
                 </div>
                 <div>
-                    <input type="button" value="sign in" @click="signIn(input.email, input.password)">
-                    <input type="button" value="sign up" @click="coverViewMethod.showSignUpView()">
+                    <input type="button" value="sign in" @click="signIn(input.email, input.password)"
+                           class="btn btn-outline-dark">
+                    <input type="button" value="sign up" @click="coverViewMethod.showSignUpView()"
+                           class="btn btn-outline-dark">
                 </div>
             </div>
         </div>`,

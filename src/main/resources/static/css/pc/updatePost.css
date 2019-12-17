@@ -1,4 +1,4 @@
-.component-write-post{
+.component-update-post{
     margin-top : 100px;
     width : 1000px;
     height : 700px;
@@ -10,14 +10,14 @@
 }
 
 
-.component-write-post .title{
+.component-update-post .title{
     margin-top : 14px;
     font-size: 2.4em;
     width: 100%;
     border-bottom : 2px solid gray;
 }
 
-.component-write-post .content{
+.component-update-post .content{
     margin-top : 14px;
     font-size: 1.8em;
     width: 100%;
@@ -25,8 +25,10 @@
     padding: 25px;
     border-bottom : 2px solid gray;
 }
-
-.component-write-post .file-name{
+.component-update-post .btn{
+    margin-left : 5px;
+}
+.component-update-post .file-name{
     max-width: 400px;
     min-width: 250px;
     font-size: 1.1em;

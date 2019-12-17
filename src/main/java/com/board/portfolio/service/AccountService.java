@@ -5,7 +5,6 @@ import com.board.portfolio.domain.entity.Account;
 import com.board.portfolio.exception.NotFoundEmailException;
 import com.board.portfolio.mail.EmailSender;
 import com.board.portfolio.mail.manager.AuthMail;
-import com.board.portfolio.mail.manager.AuthMailManager;
 import com.board.portfolio.repository.AccountRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

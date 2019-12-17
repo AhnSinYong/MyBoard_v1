@@ -2,7 +2,6 @@ package com.board.portfolio.mail.manager;
 
 import com.board.portfolio.domain.entity.Account;
 import com.board.portfolio.repository.AccountRepository;
-import lombok.Getter;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

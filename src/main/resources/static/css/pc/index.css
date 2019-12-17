@@ -3,5 +3,11 @@
     margin : 0px auto;
 }
 
-
+#app .title *{
+    margin-bottom: 15px;
+}
+#app .title .main{
+    font-size: 2.2em;
+    font-weight: bold;
+}
 
