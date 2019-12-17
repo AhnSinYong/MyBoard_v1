@@ -50,7 +50,9 @@ export default Vue.component('post',{
                                    class="btn btn-outline-dark right" 
                                    @click="download(file.fileId)">
                             </span>                            
-                            <span>cnt <span> {{file.down}} </span> </span>
+                            <span> 
+<!--                            cnt <span> {{file.down}} </span> -->
+                            </span>
                         </div>
                     </div>
                     
