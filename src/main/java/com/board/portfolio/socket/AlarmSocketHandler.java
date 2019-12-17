@@ -1,9 +1,6 @@
 package com.board.portfolio.socket;
 
-import com.board.portfolio.domain.entity.Account;
-import com.board.portfolio.domain.entity.Alarm;
-import com.board.portfolio.domain.entity.AlarmEventType;
-import com.board.portfolio.domain.entity.Board;
+import com.board.portfolio.domain.entity.*;
 import com.board.portfolio.exception.NotAllowAccessException;
 import com.board.portfolio.exception.NotFoundPostException;
 import com.board.portfolio.repository.AlarmRepository;
@@ -13,6 +10,7 @@ import org.json.simple.JSONObject;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketMessage;
@@ -74,14 +72,13 @@ public class AlarmSocketHandler extends TextWebSocketHandler {
         httpSessions.remove(email);
     }
 
+    @Transactional
     public void commentAlarmProcess(Long boardId, Account triggerAccount){
         Board board = boardRepository.findById(boardId).orElseThrow(()->new NotFoundPostException());
         Account targetAccount = board.getAccount();
+        if(targetAccount==null)
+            return;
 
-        WebSocketSession session = (WebSocketSession)httpSessions.get(targetAccount.getEmail());
-        if(session == null){
-            throw new NotAllowAccessException("socket is lost");
-        }
         Alarm alarm = Alarm.builder()
                 .targetAccount(targetAccount)
                 .triggerAccount(triggerAccount)
@@ -90,14 +87,62 @@ public class AlarmSocketHandler extends TextWebSocketHandler {
                 .build();
         alarmRepository.save(alarm);
 
+        JSONObject jsonObject = buildCommentJObject(boardId , triggerAccount.getNickname());
+        WebSocketSession session = (WebSocketSession)httpSessions.get(targetAccount.getEmail());
+        if(session == null){
+            return;
+        }
+        sendAlarm(jsonObject,session);
+    }
+    private JSONObject buildCommentJObject(Long boardId, String nickname){
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("boardId", boardId);
-        jsonObject.put("trigger", triggerAccount.getNickname());
+        jsonObject.put("trigger", nickname);
         jsonObject.put("eventType", AlarmEventType.WRITE_COMMENT.toString());
+        return jsonObject;
+    }
+
+    @Transactional
+    public void replyCommentAlarmProcess(Comment comment, Account triggerAccount){
+        Account targetAccount = comment.getAccount();
+        if(targetAccount==null)
+            return;
+
+
+        Alarm alarm = Alarm.builder()
+                .targetAccount(targetAccount)
+                .triggerAccount(triggerAccount)
+                .eventType(AlarmEventType.REPLY_COMMENT)
+                .eventContentId(comment.getBoard().getBoardId().toString())
+                .build();
+        alarmRepository.save(alarm);
+
+        Long boardId = comment.getBoard().getBoardId();
+        String nickname = triggerAccount.getNickname();
+        JSONObject jsonObject = buildReplyCommentJObject(boardId, nickname);
+
+        WebSocketSession session = (WebSocketSession)httpSessions.get(targetAccount.getEmail());
+        if(session == null){
+            return;
+        }
+        sendAlarm(jsonObject,session);
+
+    }
+    private JSONObject buildReplyCommentJObject(Long boardId, String nickname){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("boardId", boardId);
+        jsonObject.put("trigger", nickname);
+        jsonObject.put("eventType", AlarmEventType.REPLY_COMMENT.toString());
+        return jsonObject;
+    }
+
+    private void sendAlarm(JSONObject jsonObject, WebSocketSession session){
         try {
             session.sendMessage(new TextMessage(jsonObject.toJSONString()));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+
 }
