@@ -6,25 +6,29 @@ export default Vue.component('update-post',{
         `<div class="cover-view">
             <div class="component-update-post margin-auto-center">
                 <div>
-                    <div> <input type="button" value="x" @click="inputMethod.closeView(input,coverViewMethod.hideUpdatePostView)"> </div>
-                    <div><input v-model="post.title"type="text"></div>
-                    <div><textarea v-model="post.content"></textarea></div>
+                    <div> <input type="button" value="x"
+                                 class="btn btn-outline-dark right"
+                                 @click="inputMethod.closeView(input,coverViewMethod.hideUpdatePostView)"> </div>
+                    <div><input class="title" v-model="post.title"type="text"></div>
+                    <div><textarea class="content" v-model="post.content"></textarea></div>
                     <div>
                         <div v-for="(file,index) in post.fileList">
-                            <span>{{file.originName}}</span>
-                            <input type="button" value="x" @click="deleteFile(index)">
+                            <span class="file-name">{{file.originName}}</span>
+                            <input class="btn btn-outline-dark" type="button" value="x" @click="deleteFile(index)">
                         </div>                        
                         <div v-for="(file,index) in input.fileList">
-                            <span> name : {{file.name}}, size : {{file.size}}</span>
-                            <input type="button" value="x" @click="removeFile(index)">
+                            <span class="file-name"> name : {{file.name}}, size : {{file.size}}</span>
+                            <input class="btn btn-outline-dark" type="button" value="x" @click="removeFile(index)">
                         </div>
                         <div>
-                            <input type="file" ref="fileInput" @change="addFile()" ><span>upload file</span>
+                            <input type="file" ref="fileInput" @change="addFile()" >
                         </div>
                     </div>
                     <div>
-                        <input type="button" value="complete" @click="updatePost(post, input.fileList)">
-                        <input type="button" value="cancel" @click="returnPost()">
+                        <input type="button" value="cancel" @click="returnPost()"
+                                   class="btn btn-outline-dark right">
+                        <input type="button" value="complete" @click="updatePost(post, input.fileList)"
+                               class="btn btn-outline-dark right">                        
                     </div>
                 </div>                
             </div>
