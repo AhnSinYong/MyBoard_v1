@@ -152,6 +152,8 @@ public class CommentService {
                 .build();
         comment = commentRepository.save(comment);
 
+        alarmSocketHandler.replyCommentAlarmProcess(comment,modelMapper.map(accountDTO, Account.class ) );
+
         Map data = new HashMap();
         data.put("boardId",dto.getBoardId());
         return data;
