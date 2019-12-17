@@ -41,6 +41,8 @@
 
 
 ## DataBase
+### ERD
+![portfolio_erd_v3](./README_RESOURCES/portfolio_erd_v3.png)
 ### TB_ACCOUNT
  |항목            | 설명                |key type    |data type              | unique   | nullable  |비고               |
  |----------------|--------------------|------------|-----------------------|----------|----------|-------------------|
