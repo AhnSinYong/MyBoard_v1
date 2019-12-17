@@ -240,7 +240,8 @@ drop table TB_ACCOUNT;
  |경로                    |예외경로            |Filter         | Provider                                  |success                             |fail                      |
  |------------------------|-------------------|-------------|--------------------------------------------|-------------------------------------|-----------------------|
  |/api/account/signIn     |                   |SignInFilter   | 로그인 성공 여부 판단                      | jwt토큰을 쿠키에 담아 반환           | Exception 발생        |
- |/api/**                 |/api/account/signIn|JwtFilter      | 토큰 유효성 판단(토큰이 없는 경우는 success)| chain.doFilter()                    | Exception 발생        |
+ |/api/account/signOut     |                   |SignOutFilter   | 없음                      | contextholder를 비우고 쿠키제거           |         |
+ |/api/**                 |/api/account/signIn,signOut|JwtFilter      | 토큰 유효성 판단(토큰이 없는 경우는 success)| chain.doFilter()                    | Exception 발생        |
  
  ## 생각해볼 것
  - TB_ALARM에서 TB_CONTENT_ID 는 외래키로 설정하지 않았다.
