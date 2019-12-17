@@ -50,12 +50,6 @@ export default Vue.component('board',{
             </div>
             <div>
                 <div>
-                    <input type="text">
-                    <input type="button" value="search">
-                </div>
-            </div>
-            <div>
-                <div>
                     <input v-if="loginInfo.isLogin" type="button" value="write"
                            class="btn btn-outline-dark" 
                            @click="coverViewMethod.showWritePostView()">
