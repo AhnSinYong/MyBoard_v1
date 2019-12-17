@@ -7,6 +7,8 @@ import com.board.portfolio.exception.NotFoundCommentException;
 import com.board.portfolio.repository.CommentRepository;
 import com.board.portfolio.repository.LikeCommentRepository;
 import com.board.portfolio.security.account.AccountSecurityDTO;
+import com.board.portfolio.socket.AlarmSocketHandler;
+import com.board.portfolio.socket.SocketAccount;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,13 +21,16 @@ public class CommentService {
 
     private CommentRepository commentRepository;
     private LikeCommentRepository likeCommentRepository;
+    private AlarmSocketHandler alarmSocketHandler;
     private ModelMapper modelMapper;
     @Autowired
     public CommentService(CommentRepository commentRepository,
                           LikeCommentRepository likeCommentRepository,
+                          AlarmSocketHandler alarmSocketHandler,
                           ModelMapper modelMapper){
         this.commentRepository = commentRepository;
         this.likeCommentRepository = likeCommentRepository;
+        this.alarmSocketHandler = alarmSocketHandler;
         this.modelMapper = modelMapper;
     }
 
@@ -107,6 +112,8 @@ public class CommentService {
         comment = commentRepository.save(comment);
         comment.setGroup(comment.getCommentId());
 
+        alarmSocketHandler.commentAlarmProcess(boardId,modelMapper.map(accountDTO, Account.class ) );
+
         Map data = new HashMap();
         data.put("boardId", comment.getBoard().getBoardId());
         return data;
@@ -144,6 +151,8 @@ public class CommentService {
                 .hasDelTypeParent(false)
                 .build();
         comment = commentRepository.save(comment);
+
+        alarmSocketHandler.replyCommentAlarmProcess(comment,modelMapper.map(accountDTO, Account.class ) );
 
         Map data = new HashMap();
         data.put("boardId",dto.getBoardId());

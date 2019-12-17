@@ -6,6 +6,7 @@ import board from "./component/board.js"
 import writePost from "./component/writePost.js"
 import post from "./component/post.js"
 import updatePost from "./component/updatePost.js"
+import alarm from "./component/alarm.js";
 
 new Vue({
     el : '#app',
@@ -15,7 +16,8 @@ new Vue({
         board,
         writePost,
         post,
-        updatePost
+        updatePost,
+        alarm,
 
     },
     data(){
