@@ -325,6 +325,8 @@ drop table TB_ACCOUNT;
             - Spring의 경우 @Bean을 설정해줘야하는데 Boot에서 해보니깐 예외가 발생한다 왜그런거지???
         - https://cnpnote.tistory.com/entry/SPRING-Spring-MVC-PathVariable-%EA%B0%92%EC%9D%84-%EA%B2%80%EC%A6%9D%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95%EC%9D%80-%EB%AC%B4%EC%97%87%EC%9E%85%EB%8B%88%EA%B9%8C
         - Controller 파라미터에 사용하기 위해서 @CustomValidator에 ElementType.PARMETER 를 추가하였음
+    - @Valid를 사용하는 여러가지 방법
+        - https://medium.com/@gaemi/java-%EC%99%80-spring-%EC%9D%98-validation-b5191a113f5c 
 - socket
     - Websocket은 IE10이상부터인데 SocketJS는 IE6이상부터 지원한다고함
     
