@@ -1,30 +1,4 @@
 ## 표준 정의서
-## 할 것
-- 커스텀한 예외를 못던지는 경우들을 해결해야해
-- security의 exception 처리를 추가해야함
-    - @initBinder로 처리하는 validator가 떨구는 예외도 처리해서 내보내야함
-    - message관련, mail관련 exception 발생하면 클라이언트에 "메일발송실패" 뜨게하자, rollback도 되야하고
-- 메일인증 링크 클릭시 보일 화면 추가
-- 인증유효시간 30분이 지날경우를 적용
-    - 스레드세이프하게 다시 생각해보자(syncronized?)
-- 페이징 관련 repository에서 start 값 -1하는거 좀더 보기좋게 고쳐야함
-- @FileSize , @FileExtension 대충 복붙한거 리팩토링필요함
-    - extension 유효성 검사에서 . 으로 나누고 length 2아닐때 예외던지게 했는데 고쳐야함(ex: abc.def.hwp)
-- 프로퍼티즈 이용해서 확장자 제한 관리를 하는 것 필요
-- @AuthenticationPrincipal이 AccountDetails에 자동으로 주입이 안되네 
-    - 내가 구성한 AccountDetails가 문제일까?? 고민이 필요함
-- @PreAuthorize 에 대한 예외처리가 필요함
-- post.js에서 board_id값 초기화처리를 해보자(지금은 초기화로 값바뀌면 한번더 호출해서 오류남)
-- boardService의 파일다운로드에서 byte[4096]인거 설정파일에서 읽게 수정해야함
-- deletePost()에서 검증관력 로직을 분리하고 싶어
-- postView boardId 이슈 ----> vue router를 써야 근본적인 해결이 가능할듯
-- axios통해서 파일다운로드를 구현하고, down 값이 실시간으로 반영되게 만들자
-- 쿠키유효시간이 다되서 소멸할때 로그인 정보도 갱신되게 만들자
-- 삭제된 댓글처리가 시원치않음....db설계 변경이 필요할듯함
-- ERD 이미지 파일 수정해야함
-- 패키지, 클래스 관계도 그려보자 순환참조라던가 양방향참조가 존재하는지...
-- Controller에 @PathVariable, @RequestParam 에 대한 @CustomValidator 사용을 고려하자
-
 ### 게시판
 - SPA web
 - vue.js
@@ -279,6 +253,32 @@ drop table TB_ACCOUNT;
  |/api/account/signOut     |                   |SignOutFilter   | 없음                      | contextholder를 비우고 쿠키제거           |         |
  |/api/**                 |/api/account/signIn,signOut|JwtFilter      | 토큰 유효성 판단(토큰이 없는 경우는 success)| chain.doFilter()                    | Exception 발생        |
  
+ ## 할 것
+ - 커스텀한 예외를 못던지는 경우들을 해결해야해
+ - security의 exception 처리를 추가해야함
+     - @initBinder로 처리하는 validator가 떨구는 예외도 처리해서 내보내야함
+     - message관련, mail관련 exception 발생하면 클라이언트에 "메일발송실패" 뜨게하자, rollback도 되야하고
+ - 메일인증 링크 클릭시 보일 화면 추가
+ - 인증유효시간 30분이 지날경우를 적용
+     - 스레드세이프하게 다시 생각해보자(syncronized?)
+ - 페이징 관련 repository에서 start 값 -1하는거 좀더 보기좋게 고쳐야함
+ - @FileSize , @FileExtension 대충 복붙한거 리팩토링필요함
+     - extension 유효성 검사에서 . 으로 나누고 length 2아닐때 예외던지게 했는데 고쳐야함(ex: abc.def.hwp)
+ - 프로퍼티즈 이용해서 확장자 제한 관리를 하는 것 필요
+ - @AuthenticationPrincipal이 AccountDetails에 자동으로 주입이 안되네 
+     - 내가 구성한 AccountDetails가 문제일까?? 고민이 필요함
+ - @PreAuthorize 에 대한 예외처리가 필요함
+ - post.js에서 board_id값 초기화처리를 해보자(지금은 초기화로 값바뀌면 한번더 호출해서 오류남)
+ - boardService의 파일다운로드에서 byte[4096]인거 설정파일에서 읽게 수정해야함
+ - deletePost()에서 검증관력 로직을 분리하고 싶어
+ - postView boardId 이슈 ----> vue router를 써야 근본적인 해결이 가능할듯
+ - axios통해서 파일다운로드를 구현하고, down 값이 실시간으로 반영되게 만들자
+ - 쿠키유효시간이 다되서 소멸할때 로그인 정보도 갱신되게 만들자
+ - 삭제된 댓글처리가 시원치않음....db설계 변경이 필요할듯함
+ - ERD 이미지 파일 수정해야함
+ - 패키지, 클래스 관계도 그려보자 순환참조라던가 양방향참조가 존재하는지...
+ - Controller에 @PathVariable, @RequestParam 에 대한 @CustomValidator 사용을 고려하자
+ 
  ## 생각해볼 것
  - TB_ALARM에서 TB_CONTENT_ID 는 외래키로 설정하지 않았다.
     - COMMENT,BOARD,LIKE 등등 많은 교차엔티티와 관계가 발생되고 불필요한 칼럼이 예상되었기때문
@@ -369,3 +369,39 @@ drop table TB_ACCOUNT;
 - enum 
     - @converter를 사용하는 방법 고려
         - https://lng1982.tistory.com/279   @Converter를 이용하는 방법 고려
+        
+        
+### 피드백
+- 메일보내기는 스레드로 처리
+  	- 메일보내기위해 커넥션이 존재하는데 이 커넥션을 만드는게 시간이 걸리는 작업
+  	- 또는 커스텀하게해서 커넥션이 일정텀을 두고 close되게 만들면 시간이 덜걸릴수있음
+  	- 즉, 한번에 여러개를 직렬적으로 보내는게 비용이 적게듬
+  	- 메일인증은 그냥 db업데이트로하는게 나음
+- 대댓글에서 삭제된 댓글 표시할려고 컬럼추가했잖아? 그냥 flag로 삭제처리하고서 뱃치로 나중에 정리해
+    - flag + batch 조합이게더 싸게먹혀
+    
+- 자바 Lock에 대해 알아야함
+    - JPA에서 @Lock이라는게 있음
+    - update, delete할때 row락이 자동으로 걸림(select lock도 한번 찾아봐)
+    - (락걸려고 @Transactional에다가 고립걸고 그러는건 좋지않아)
+
+- modelMapper는 무조건 싱글톤으로 써야함(성능이슈)
+
+- 컨트롤러는 데이터 파싱만 해줘야해, @Valid에서 repository쓰는건 좀 어긋남 고민해보자
+    - (id이상한거오면 그냥 빈값줘버리고 끝내도 무방함)
+
+- 같은 트랜잭션내에서 JPA가 쿼리한거는 1차캐싱되서 재사용가능함
+
+- 게시물에서 content부분만 따로 관리하는게 훨씬 좋을듯
+    - 다음에는 erd에 게시판에 카테고리가 생긴다거나 하는 경우도 고려해서 작성(복잡도가 올라감)
+
+- 그리고 콘솔지우고 요청보내고하면서 JPA쿼리가 두번되는지 안되는지 확인할수있네 요령....
+
+- 브레이크포인트에 suspand all로하면 모든 스레드관점에서 다보임 옵션바꿔서하는것도 고려해(내스레드에 대해서만 작업해야하니깐...)
+
+- contextholder에 authentication이 언제 사라지는지 확인좀하자 provider에서 계속 null이던데? 그리고 그게 맞고...
+
+- Vue할때 컴포넌트 다때려박았짢아? 라우트같은거 이용해서 프론트만의 MVC를 만들어야해 이런관점으로 고민이필요함
+
+- 코드를짤때 안전한 방법을 베이스로해, 그 이후에 업그레이드 시켜가는거야, 이 마인드가 적절할듯
+    - (ex: 쿼리해서 특정값을 읽어서 증가시킨값을 사용하는건 불안하잖아? flag로 true false읽는 편이 안정적이지)
