@@ -36,9 +36,45 @@
 ### Git Branch
 - master/origin
 - dev
-##프로젝트 구성
-- 내용추가 필요
+##필요한 config.properties
+- /resources/properties/private/database-config.properties
+~~~
+# MySQL Configuration
+#spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.url=jdbc:mysql://localhost:3306/portfolio_board?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
 
+spring.datasource.username=root
+spring.datasource.password=1234
+
+spring.datasource.hikari.maximum-pool-size=10
+spring.datasource.hikari.minimum-idle=2
+spring.datasource.hikari.connection-test-query=select now()
+
+spring.jpa.generate-ddl=false
+spring.jpa.show-sql=true
+spring.jpa.database=mysql
+~~~ 
+- /resources/properties/private/jwt-config.properties
+~~~
+# jwt decode & encode 문자열
+jwt.secret=JWT
+jwt.token.name=jwt-token
+jwt.cookie.name=jwt-token
+~~~
+- /resources/properties/private/mail-config.properties
+~~~
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username= 구글메일
+spring.mail.password= 구글메일 비밀번호
+spring.mail.properties.mail.smtp.starttls.enable=true
+spring.mail.properties.mail.smtp.auth=true
+
+
+mail.from=[발송자 별명]<구글메일>
+mail.auth.limit =메일인증 유효시간 밀리세컨즈(ex 360000) 
+~~~
 
 ## DataBase
 ### ERD
