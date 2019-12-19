@@ -11,7 +11,7 @@
 - master/origin
 - dev
 
-##필요한 config.properties
+## 필요한 config.properties
 - /resources/properties/private/database-config.properties
 ~~~
 # MySQL Configuration
