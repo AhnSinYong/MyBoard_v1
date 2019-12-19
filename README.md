@@ -391,6 +391,9 @@ drop table TB_ACCOUNT;
 
 - 컨트롤러는 데이터 파싱만 해줘야해, @Valid에서 repository쓰는건 좀 어긋남 고민해보자
     - (id이상한거오면 그냥 빈값줘버리고 끝내도 무방함)
+    - 그리고 아직 @CustomValid 이용해서 repository사용하는거 괜찮지 않나 생각이듬
+    - 이에따름 예외처리에 대한 팁 https://jojoldu.tistory.com/129?category=635883
+       - 일일이 예외를 만들필요는 없고 이걸로 퉁치고, 상세 정보를 전달하자(email, 중복됨) 이런식으로....
 
 - 같은 트랜잭션내에서 JPA가 쿼리한거는 1차캐싱되서 재사용가능함
 
