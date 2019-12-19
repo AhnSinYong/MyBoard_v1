@@ -10,6 +10,7 @@
 ### Git Branch
 - master/origin
 - dev
+- [show all branch](https://github.com/DingDongDeng/portfolio/branches/all)
 
 ## 필요한 config.properties
 - /resources/properties/private/database-config.properties
