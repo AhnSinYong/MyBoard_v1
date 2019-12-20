@@ -404,6 +404,8 @@ drop table TB_ACCOUNT;
 
 - Vue할때 컴포넌트 다때려박았짢아? 라우트같은거 이용해서 프론트만의 MVC를 만들어야해 이런관점으로 고민이필요함
 
+- @Autowired를 생성자로 쓸때 final키워드가 없으면 무의미함, final키워드를 꼭 추가해주자
+
 - @Valid 의 message를 properties를 이용해서 사용하자 
     - https://www.baeldung.com/spring-custom-validation-message-source
 
