@@ -404,5 +404,8 @@ drop table TB_ACCOUNT;
 
 - Vue할때 컴포넌트 다때려박았짢아? 라우트같은거 이용해서 프론트만의 MVC를 만들어야해 이런관점으로 고민이필요함
 
+- @Valid 의 message를 properties를 이용해서 사용하자 
+    - https://www.baeldung.com/spring-custom-validation-message-source
+
 - 코드를짤때 안전한 방법을 베이스로해, 그 이후에 업그레이드 시켜가는거야, 이 마인드가 적절할듯
     - (ex: 쿼리해서 특정값을 읽어서 증가시킨값을 사용하는건 불안하잖아? flag로 true false읽는 편이 안정적이지)
