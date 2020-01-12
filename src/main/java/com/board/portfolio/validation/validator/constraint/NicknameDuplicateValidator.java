@@ -1,7 +1,7 @@
 package com.board.portfolio.validation.validator.constraint;
 
 import com.board.portfolio.repository.AccountRepository;
-import com.board.portfolio.validation.anotation.NicknameUnique;
+import com.board.portfolio.validation.anotation.NicknameDuplicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,11 +11,11 @@ import javax.validation.ConstraintValidatorContext;
 
 @Component
 @RequiredArgsConstructor
-public class NicknameUniqueValidator implements ConstraintValidator<NicknameUnique, String> {
+public class NicknameDuplicateValidator implements ConstraintValidator<NicknameDuplicate, String> {
     @Autowired
     private AccountRepository accountRepository;
     @Override
-    public void initialize(NicknameUnique nicknameUnique) {
+    public void initialize(NicknameDuplicate nicknameDuplicate) {
     }
     @Override
     public boolean isValid(String nickname, ConstraintValidatorContext cxt) {
