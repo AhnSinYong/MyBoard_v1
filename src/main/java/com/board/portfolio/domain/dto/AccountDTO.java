@@ -32,11 +32,11 @@ public class AccountDTO {
     }
     @Data
     public static class Auth{
-        @NotBlank(message = "required email")
-        @EmailExist(message = "fail authenticate")
+        @NotBlank(message = "{email.not.blank}")
+        @EmailExist(message = "{email.exist}")
         private String email;
-        @NotBlank(message = "required authKey")
-        @AuthKeyExist(message = "fail authenticate")
+        @NotBlank(message = "{authkey.not.blank}")
+        @AuthKeyExist(message = "{authkey.exist}")
         private String authKey;
     }
 }
