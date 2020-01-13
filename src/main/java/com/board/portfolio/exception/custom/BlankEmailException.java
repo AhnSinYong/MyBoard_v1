@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class BlankEmailException extends CustomRuntimeException {
     public BlankEmailException(){
-        super("Blank Email");
+        super("email.not.blank");
     }
     public BlankEmailException(String msg){
         super(msg);

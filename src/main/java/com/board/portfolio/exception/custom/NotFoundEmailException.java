@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class NotFoundEmailException extends CustomRuntimeException {
     public NotFoundEmailException(){
-        super("Not Found Email");
+        super("email.exist");
     }
     public NotFoundEmailException(String msg){
         super(msg);

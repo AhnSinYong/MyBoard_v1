@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class NotSamePasswordException extends CustomRuntimeException {
     public NotSamePasswordException(){
-        super("Not same password and password check");
+        super("password.compare");
     }
     public NotSamePasswordException(String msg){
         super(msg);

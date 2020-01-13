@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class BlankPasswordException extends CustomRuntimeException {
     public BlankPasswordException(){
-        super("Blank Password");
+        super("password.not.blank");
     }
     public BlankPasswordException(String msg){
         super(msg);

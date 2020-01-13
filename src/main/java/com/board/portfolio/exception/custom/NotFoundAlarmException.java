@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class NotFoundAlarmException extends CustomRuntimeException {
     public NotFoundAlarmException(){
-        super("Not found alarm");
+        super("alarm.exist");
     }
     public NotFoundAlarmException(String msg){
         super(msg);

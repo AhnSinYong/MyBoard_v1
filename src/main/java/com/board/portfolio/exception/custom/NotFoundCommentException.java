@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class NotFoundCommentException extends CustomRuntimeException {
     public NotFoundCommentException(){
-        super("Not found comment");
+        super("comment.exist");
     }
     public NotFoundCommentException(String msg){
         super(msg);

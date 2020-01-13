@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class NotFoundFileException extends CustomRuntimeException {
     public NotFoundFileException(){
-        super("Not Found File");
+        super("file.not.found");
     }
     public NotFoundFileException(String msg){
         super(msg);

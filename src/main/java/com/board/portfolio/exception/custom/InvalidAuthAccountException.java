@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public class InvalidAuthAccountException extends CustomRuntimeException {
     public InvalidAuthAccountException(){
-        super("invalid account");
+        super("email.invalid");
     }
     public InvalidAuthAccountException(String msg){
         super(msg);
