@@ -182,6 +182,7 @@ export default Vue.component('post',{
             loginInfo : shareObject.login.info,
             loginMethod : shareObject.login.method,
             deliveryData : shareObject.deliveryData,
+            failFunc : shareObject.failFunc,
             input:{
                 inputComment:'',
                 modifyComment: {
@@ -245,9 +246,8 @@ export default Vue.component('post',{
             shareObject.refreshManager.refresh();
         },
         fail(err){
-            console.log(err);
-            alert(err.data);
-            this.coverViewMethod.resetState();
+            this.failFunc.failFunc(err);
+            // this.coverViewMethod.resetState();
         },
 
         download(fileId){

@@ -28,6 +28,7 @@ export default Vue.component('sign-up',{
             coverViewState:shareObject.coverView.state,
             coverViewMethod : shareObject.coverView.method,
             inputMethod : shareObject.input.method,
+            failFunc : shareObject.failFunc,
             input :{
                 nickname : '',
                 email : '',
@@ -55,8 +56,7 @@ export default Vue.component('sign-up',{
                     this.inputMethod.resetInput(this.input);
                 })
                 .catch(err=>{
-                    alert(err.data);
-                    console.log(err);
+                    this.failFunc.failFunc(err);
                 })
         },
 

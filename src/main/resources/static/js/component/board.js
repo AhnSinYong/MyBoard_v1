@@ -66,6 +66,7 @@ export default Vue.component('board',{
             inputMethod : shareObject.input.method,
             loginInfo : shareObject.login.info,
             loginMethod : shareObject.login.method,
+            failFunc : shareObject.failFunc,
             input:{
             },
             pagination:{
@@ -93,7 +94,7 @@ export default Vue.component('board',{
             this.pagination = res.data;
         },
         fail(err){
-            alert(err.data.message);
+            this.failFunc.failFunc(err);
         },
     }
 });

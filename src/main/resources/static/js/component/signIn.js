@@ -31,6 +31,7 @@ export default Vue.component('sign-in',{
             coverViewMethod : shareObject.coverView.method,
             inputMethod : shareObject.input.method,
             loginMethod : shareObject.login.method,
+            failFunc : shareObject.failFunc,
             input:{
                 email : '',
                 password : '',
@@ -58,7 +59,8 @@ export default Vue.component('sign-in',{
             this.inputMethod.resetInput(this.input);
         },
         failSignIn(err){
-            alert(err.data.message);
+            this.failFunc.failFunc(err);
+            // alert(err.data.message);
             this.input.password='';
         }
 

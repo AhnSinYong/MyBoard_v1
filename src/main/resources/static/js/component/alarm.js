@@ -47,6 +47,7 @@ export default Vue.component('alarm',{
             loginInfo : shareObject.login.info,
             deliveryData : shareObject.deliveryData,
             socket : shareObject.socket,
+            failFunc : shareObject.failFunc,
 
             alarmList:[],
 
@@ -132,7 +133,7 @@ export default Vue.component('alarm',{
             this.alarmListVisibleState = false;
         },
         fail(err){
-            alert(err.data);
+            this.failFunc.failFunc(err);
         },
         checkAlarm(alarm){
             axios.put('/api/alarm/'+alarm.alarmId)
