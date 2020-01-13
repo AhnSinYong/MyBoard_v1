@@ -74,7 +74,7 @@ public class AlarmSocketHandler extends TextWebSocketHandler {
 
     @Transactional
     public void commentAlarmProcess(Long boardId, Account triggerAccount){
-        Board board = boardRepository.findById(boardId).orElseThrow(()->new NotFoundPostException());
+        Board board = boardRepository.findById(boardId).orElseThrow(NotFoundPostException::new);
         Account targetAccount = board.getAccount();
         if(targetAccount==null)
             return;

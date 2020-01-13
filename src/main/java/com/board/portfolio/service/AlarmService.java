@@ -41,19 +41,19 @@ public class AlarmService {
 
     @Transactional
     public void checkAlarm(String alarmId, AccountSecurityDTO accountDTO) {
-        Alarm alarm = alarmRepository.findById(alarmId).orElseThrow(()->new NotFoundAlarmException("not found alarm"));
+        Alarm alarm = alarmRepository.findById(alarmId).orElseThrow(NotFoundAlarmException::new);
         if(!alarm.getTargetAccount().getEmail().equals(accountDTO.getEmail())) {
-            throw new NotAllowAccessException("not allow access");
+            throw new NotAllowAccessException();
         }
         alarm.setCheckDate(new Date());
     }
 
     @Transactional
     public void deleteAlarm(String alarmId, AccountSecurityDTO accountDTO) {
-        Alarm alarm = alarmRepository.findById(alarmId).orElseThrow(()->new NotFoundAlarmException("not found alarm"));
+        Alarm alarm = alarmRepository.findById(alarmId).orElseThrow(NotFoundAlarmException::new);
         String targetEmail = alarm.getTargetAccount().getEmail();
         if(!targetEmail.equals(accountDTO.getEmail())) {
-            throw new NotAllowAccessException("not allow access");
+            throw new NotAllowAccessException();
         }
         alarmRepository.delete(alarm);
     }

@@ -41,7 +41,7 @@ public class AccountService {
         String authKey = dto.getAuthKey();
         accountRepository
                 .findByEmailAndAuthKey(email, authKey)
-                .orElseThrow(()->new NotFoundEmailException("fail to find email for authenticate"))
+                .orElseThrow(NotFoundEmailException::new)
                 .setAuth(true);
         emailSender.completeAuthMail(email);
     }

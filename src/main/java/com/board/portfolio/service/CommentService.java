@@ -66,7 +66,7 @@ public class CommentService {
 
     @Transactional
     public Map modifyComment(Long commentId, CommentDTO.Modify dto, AccountSecurityDTO accountDTO) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(()->new NotFoundCommentException("comment isn't exist"));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundCommentException::new);
         if(!comment.getAccount().getEmail().equals(accountDTO.getEmail())){
             throw new NotAllowAccessException("not allow access");
         }
@@ -80,7 +80,7 @@ public class CommentService {
 
     @Transactional
     public Map deleteComment(Long commentId, AccountSecurityDTO accountDTO) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(()->new NotFoundCommentException("comment isn't exist"));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundCommentException::new);
         if(!comment.getAccount().getEmail().equals(accountDTO.getEmail())){
             throw new NotAllowAccessException("not allow access");
         }
@@ -120,7 +120,7 @@ public class CommentService {
 
     @Transactional
     public Map likeComment(Long commentId, AccountSecurityDTO accountDTO) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(()->new NotFoundCommentException("comment isn't exist"));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundCommentException::new );
         Account account = modelMapper.map(accountDTO, Account.class);
 
         Optional<LikeComment> opLikeComment = likeCommentRepository.findByCommentAndAccount(comment,account);
@@ -140,7 +140,7 @@ public class CommentService {
 
     @Transactional
     public Map replyWriteComment(CommentDTO.Reply dto, AccountSecurityDTO accountDTO) {
-        Comment parentComment = commentRepository.findById(dto.getCommentId()).orElseThrow(()->new NotFoundCommentException("comment isn't exist"));
+        Comment parentComment = commentRepository.findById(dto.getCommentId()).orElseThrow(NotFoundCommentException::new);
         Comment comment = Comment.builder()
                 .board(new Board(dto.getBoardId()))
                 .content(dto.getContent())

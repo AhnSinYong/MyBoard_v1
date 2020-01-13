@@ -17,7 +17,7 @@ public class AccountSignUpValidator implements Validator {
     public void validate(Object o, Errors errors) {
         AccountDTO.SignUp dto = (AccountDTO.SignUp) o;
         if(!isValidPassword(dto)){
-            throw new NotSamePasswordException("Not same password and password check");
+            throw new NotSamePasswordException();
         }
 
     }

@@ -22,7 +22,7 @@ public class JwtDecoder {
     private String secret;
 
     public DecodedJWT decodeJwt(String token) {
-        return isValidToken(token).orElseThrow(() -> new InvalidJwtException("유효한 토큰아 아닙니다."));
+        return isValidToken(token).orElseThrow(() -> new InvalidJwtException());
     }
 
     private Optional<DecodedJWT> isValidToken(String token) {

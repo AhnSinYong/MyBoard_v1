@@ -23,7 +23,7 @@ public class AccountAuthValidator implements Validator {
         AccountDTO.Auth dto = (AccountDTO.Auth) o;
         boolean isAuth = accountRepository.existsByEmailAndAuthKeyAndIsAuth(dto.getEmail(), dto.getAuthKey(),true);
         if(isAuth){
-            throw new AleadyAuthenticatedException("aleady authenticated account");
+            throw new AleadyAuthenticatedException();
         }
 
     }
