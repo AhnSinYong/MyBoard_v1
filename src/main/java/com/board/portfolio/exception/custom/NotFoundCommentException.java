@@ -1,4 +1,4 @@
-package com.board.portfolio.exception;
+package com.board.portfolio.exception.custom;
 
 import lombok.Getter;
 
