@@ -3,8 +3,7 @@ package com.board.portfolio.controller;
 import com.board.portfolio.domain.dto.AccountDTO;
 import com.board.portfolio.service.AccountService;
 import com.board.portfolio.validation.validator.AccountAuthValidator;
-import com.board.portfolio.validation.validator.AccountSignUpValidator;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -13,19 +12,10 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class AccountController {
-    private AccountService accountService;
-    private AccountSignUpValidator accountSignUpValidator;
-    private AccountAuthValidator accountAuthValidator;
-
-    @Autowired
-    public AccountController(AccountService accountService,
-                             AccountSignUpValidator accountSignUpValidator,
-                             AccountAuthValidator accountAuthValidator){
-        this.accountService = accountService;
-        this.accountSignUpValidator = accountSignUpValidator;
-        this.accountAuthValidator = accountAuthValidator;
-    }
+    private final AccountService accountService;
+    private final AccountAuthValidator accountAuthValidator;
 
     @PostMapping("/account")
     public ResponseEntity signUp(@RequestBody @Valid AccountDTO.SignUp dto){
@@ -38,8 +28,6 @@ public class AccountController {
         return ResponseEntity.ok(Result.SUCCESS);
     }
 
-    @InitBinder("signUp")
-    protected void initBinderSignUp(WebDataBinder binder){ binder.addValidators(accountSignUpValidator); }
     @InitBinder("auth")
     protected void initBinderAuth(WebDataBinder binder){ binder.addValidators(accountAuthValidator); }
 }
