@@ -1,8 +1,7 @@
 package com.board.portfolio.validation.validator;
 
 import com.board.portfolio.domain.dto.AccountDTO;
-import com.board.portfolio.exception.AleadyAuthenticatedException;
-import com.board.portfolio.exception.NotSamePasswordException;
+import com.board.portfolio.exception.custom.AleadyAuthenticatedException;
 import com.board.portfolio.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

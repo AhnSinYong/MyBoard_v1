@@ -2,13 +2,12 @@ package com.board.portfolio.service;
 
 import com.board.portfolio.domain.dto.CommentDTO;
 import com.board.portfolio.domain.entity.*;
-import com.board.portfolio.exception.NotAllowAccessException;
-import com.board.portfolio.exception.NotFoundCommentException;
+import com.board.portfolio.exception.custom.NotAllowAccessException;
+import com.board.portfolio.exception.custom.NotFoundCommentException;
 import com.board.portfolio.repository.CommentRepository;
 import com.board.portfolio.repository.LikeCommentRepository;
 import com.board.portfolio.security.account.AccountSecurityDTO;
 import com.board.portfolio.socket.AlarmSocketHandler;
-import com.board.portfolio.socket.SocketAccount;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

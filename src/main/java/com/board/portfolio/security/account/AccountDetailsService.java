@@ -1,7 +1,7 @@
 package com.board.portfolio.security.account;
 
 import com.board.portfolio.domain.entity.Account;
-import com.board.portfolio.exception.NotFoundEmailException;
+import com.board.portfolio.exception.custom.NotFoundEmailException;
 import com.board.portfolio.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

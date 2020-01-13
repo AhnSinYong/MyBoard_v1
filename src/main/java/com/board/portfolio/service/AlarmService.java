@@ -2,8 +2,8 @@ package com.board.portfolio.service;
 
 import com.board.portfolio.domain.entity.Account;
 import com.board.portfolio.domain.entity.Alarm;
-import com.board.portfolio.exception.NotAllowAccessException;
-import com.board.portfolio.exception.NotFoundAlarmException;
+import com.board.portfolio.exception.custom.NotAllowAccessException;
+import com.board.portfolio.exception.custom.NotFoundAlarmException;
 import com.board.portfolio.repository.AlarmRepository;
 import com.board.portfolio.security.account.AccountSecurityDTO;
 import org.modelmapper.ModelMapper;

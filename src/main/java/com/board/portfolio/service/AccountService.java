@@ -2,7 +2,7 @@ package com.board.portfolio.service;
 
 import com.board.portfolio.domain.dto.AccountDTO;
 import com.board.portfolio.domain.entity.Account;
-import com.board.portfolio.exception.NotFoundEmailException;
+import com.board.portfolio.exception.custom.NotFoundEmailException;
 import com.board.portfolio.mail.EmailSender;
 import com.board.portfolio.mail.manager.AuthMail;
 import com.board.portfolio.repository.AccountRepository;

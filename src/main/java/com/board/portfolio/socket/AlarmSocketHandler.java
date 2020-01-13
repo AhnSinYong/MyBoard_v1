@@ -1,8 +1,8 @@
 package com.board.portfolio.socket;
 
 import com.board.portfolio.domain.entity.*;
-import com.board.portfolio.exception.NotAllowAccessException;
-import com.board.portfolio.exception.NotFoundPostException;
+import com.board.portfolio.exception.custom.NotAllowAccessException;
+import com.board.portfolio.exception.custom.NotFoundPostException;
 import com.board.portfolio.repository.AlarmRepository;
 import com.board.portfolio.repository.BoardRepository;
 import com.board.portfolio.security.jwt.JwtDecoder;

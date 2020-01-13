@@ -2,7 +2,7 @@ package com.board.portfolio.service;
 
 import com.board.portfolio.domain.dto.BoardDTO;
 import com.board.portfolio.domain.entity.*;
-import com.board.portfolio.exception.*;
+import com.board.portfolio.exception.custom.*;
 import com.board.portfolio.paging.BoardPagination;
 import com.board.portfolio.paging.PageDTO;
 import com.board.portfolio.repository.BoardDetailRepository;
