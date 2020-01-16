@@ -4,7 +4,10 @@ import com.board.portfolio.exception.ApiError;
 import com.board.portfolio.exception.ErrorContent;
 import com.board.portfolio.exception.FieldErrorContent;
 import com.board.portfolio.exception.GlobalErrorContent;
+import com.board.portfolio.exception.custom.CustomRuntimeException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,16 +15,21 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 @Slf4j
+@RequiredArgsConstructor
 @RestControllerAdvice
 public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
+    private final MessageSource validMessageSource;
     @Override
     protected ResponseEntity<Object> handleBindException(BindException ex, HttpHeaders headers, HttpStatus status, WebRequest req) {
         List<ErrorContent> contentList = getErrorContentList(ex, BindException.class);
@@ -32,6 +40,19 @@ public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest req) {
         List<ErrorContent> contentList = getErrorContentList(ex, MethodArgumentNotValidException.class);
         return responseWithBody(ex,new ApiError(HttpStatus.BAD_REQUEST,contentList), req);
+    }
+
+    @ExceptionHandler(CustomRuntimeException.class)
+    public ResponseEntity customRuntimeException(CustomRuntimeException ex, WebRequest req, Locale locale){
+        String message = validMessageSource.getMessage(ex.getMessage(), null,locale);
+        return responseWithBody(ex, new ApiError(HttpStatus.BAD_REQUEST,Arrays.asList(new GlobalErrorContent(message))), req);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity runtimeException(RuntimeException ex, WebRequest req){
+        log.error("runtimeException ", ex);
+        String message = ex.getMessage();
+        return responseWithBody(ex, new ApiError(HttpStatus.BAD_REQUEST,Arrays.asList(new GlobalErrorContent(message))), req);
     }
 
     private ResponseEntity<Object> responseWithBody(Exception ex, ApiError body, WebRequest request){
