@@ -2,10 +2,11 @@ package com.board.portfolio.security.account;
 
 import com.board.portfolio.domain.entity.Account;
 import com.board.portfolio.domain.entity.AccountRole;
-import com.board.portfolio.exception.custom.BlankEmailException;
-import com.board.portfolio.exception.custom.BlankPasswordException;
-import com.board.portfolio.exception.custom.InvalidAuthAccountException;
 import com.board.portfolio.exception.custom.NotFoundEmailException;
+import com.board.portfolio.security.exception.BlankEmailException;
+import com.board.portfolio.security.exception.BlankPasswordException;
+import com.board.portfolio.security.exception.FailSignInException;
+import com.board.portfolio.security.exception.InvalidAuthAccountException;
 import com.board.portfolio.security.token.SignInPostToken;
 import com.board.portfolio.security.token.SignInPreToken;
 import org.modelmapper.ModelMapper;
@@ -63,7 +64,7 @@ public class AccountDetails extends User {
             throw new BlankPasswordException();
         }
         if(isAbleSignIn(email, password, passwordEncoder)){
-            throw new NotFoundEmailException();
+            throw new FailSignInException();
         }
     }
 
