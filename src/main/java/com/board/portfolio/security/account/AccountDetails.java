@@ -1,15 +1,14 @@
 package com.board.portfolio.security.account;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.board.portfolio.domain.entity.Account;
 import com.board.portfolio.domain.entity.AccountRole;
-import com.board.portfolio.exception.custom.NotFoundEmailException;
 import com.board.portfolio.security.exception.BlankEmailException;
 import com.board.portfolio.security.exception.BlankPasswordException;
 import com.board.portfolio.security.exception.FailSignInException;
 import com.board.portfolio.security.exception.InvalidAuthAccountException;
 import com.board.portfolio.security.token.SignInPostToken;
 import com.board.portfolio.security.token.SignInPreToken;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -20,12 +19,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.board.portfolio.util.StaticUtils.modelMapper;
+
 public class AccountDetails extends User {
 
     private AccountSecurityDTO account;
 
     private void saveAccount(Account account){
-        this.account = new ModelMapper().map(account, AccountSecurityDTO.class);
+        this.account = modelMapper.map(account, AccountSecurityDTO.class);
     }
 
     public AccountDetails(String username, String password, Collection<? extends GrantedAuthority> authorities) {
@@ -90,5 +91,10 @@ public class AccountDetails extends User {
 
     public SignInPostToken getPostToken(AccountDetails details) {
         return new SignInPostToken(details.getAccount(), details.getPassword(), details.getAuthorities() );
+    }
+    public static SignInPostToken getPostToken(DecodedJWT decodedJWT){
+        String email = decodedJWT.getClaim("email").asString();
+        AccountRole role = decodedJWT.getClaim("role").as(AccountRole.class);
+        return new SignInPostToken(new AccountSecurityDTO(email, role), null, parseAuthorities(role));
     }
 }
