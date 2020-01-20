@@ -54,7 +54,7 @@ public class AccountDetails extends User {
         validateSignIn(email,password,passwordEncoder);
     }
 
-    private void validateSignIn(String email, String password,PasswordEncoder passwordEncoder){
+    private void validateSignIn(String email, String password, PasswordEncoder passwordEncoder){
         if(!this.account.isAuth()){
             throw new InvalidAuthAccountException();
         }
