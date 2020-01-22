@@ -13,7 +13,7 @@ public class WebControllerAdvice {
     @ModelAttribute("accountDTO")
     private AccountSecurityDTO getAccountDTO(Authentication authentication){
         if(authentication==null)
-            return null;
+            return new AccountSecurityDTO();
         if(authentication.getPrincipal().equals("")){
             return new AccountSecurityDTO();
         }
