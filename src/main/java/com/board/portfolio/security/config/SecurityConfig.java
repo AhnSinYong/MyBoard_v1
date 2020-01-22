@@ -10,7 +10,7 @@ import com.board.portfolio.security.handler.SignInFilterFailureHandler;
 import com.board.portfolio.security.handler.SignInFilterSuccessHandler;
 import com.board.portfolio.security.provider.JwtProvider;
 import com.board.portfolio.security.provider.SignInProvider;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,21 +27,16 @@ import java.util.Arrays;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    SignInProvider signInProvider;
-    @Autowired
-    SignInFilterSuccessHandler signInFilterSuccessHandler;
-    @Autowired
-    SignInFilterFailureHandler signInFilterFailureHandler;
+    private final SignInProvider signInProvider;
+    private final SignInFilterSuccessHandler signInFilterSuccessHandler;
+    private final SignInFilterFailureHandler signInFilterFailureHandler;
 
-    @Autowired
-    JwtProvider jwtProvider;
-    @Autowired
-    JwtFilterSuccessHandler jwtFilterSuccessHandler;
-    @Autowired
-    JwtFilterFailureHandler jwtFilterFailureHandler;
+    private final JwtProvider jwtProvider;
+    private final JwtFilterSuccessHandler jwtFilterSuccessHandler;
+    private final JwtFilterFailureHandler jwtFilterFailureHandler;
 
 
     //filter 생성 및 Manager에 등록
