@@ -2,7 +2,6 @@ package com.board.portfolio.security.handler;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.stereotype.Component;
@@ -19,8 +18,7 @@ public class JwtFilterFailureHandler implements AuthenticationFailureHandler {
     private final ResponseHandler responseHandler;
     @Override
     public void onAuthenticationFailure(HttpServletRequest req, HttpServletResponse res, AuthenticationException e) throws IOException, ServletException {
-        String message = validMessageSource.getMessage(e.getMessage(),null, LocaleContextHolder.getLocale());
+        String message = validMessageSource.getMessage(e.getMessage(), null, ResponseHandler.getLocale(req));
         responseHandler.jwtResponse400(res,message);
-
     }
 }
