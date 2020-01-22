@@ -24,12 +24,10 @@
     <div class="header">
         <div class="top-bar">
             <div class="title">
-                <span class="main inline-block left">
-                    My Board
-                </span>
+                <span th:text="#{index.title}" class="main inline-block left"></span>
                 <span class="inline-block right">
-                    <input v-if="!loginInfo.isLogin" type="button" class="btn btn-outline-dark" value="sign in" @click="coverViewMethod.showSignInView()">
-                    <input v-else type="button" class="btn btn-outline-dark" value="logout" @click="loginMethod.logout()">
+                    <input th:value="#{index.signin}" v-if="!loginInfo.isLogin" type="button" class="btn btn-outline-dark" value="sign in" @click="coverViewMethod.showSignInView()">
+                    <input th:value="#{index.logout}" v-else type="button" class="btn btn-outline-dark" value="logout" @click="loginMethod.logout()">
                 </span>
             </div>
         </div>
@@ -37,7 +35,14 @@
     <div class="body">
          <board @post="post"/>
     </div>
-    <div class="footer"></div>
+    <div class="footer">
+        <div class="Internationalization">
+            <select v-model="lang" @change="setLanguage(lang)">
+                <option value="ko">한국어</option>
+                <option value="en">ENGLISH</option>
+            </select>
+        </div>
+    </div>
     <div class="cover-view-wrapper">
         <div v-show="coverViewState.signUp"><sign-up/></div>
         <div v-show="coverViewState.signIn"><sign-in/></div>
@@ -50,6 +55,7 @@
                 @post="post"/>
     </div>
 </div>
+
 <!--<script  src="http://code.jquery.com/jquery-latest.min.js"></script>-->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
@@ -57,7 +63,7 @@
 <script src="//kr.vuejs.org/js/vue.js"></script>
 <script src="/static/js/common/dateFormat.js"></script>
 <script src="//unpkg.com/axios@0.12.0/dist/axios.min.js"></script>
-<script src="/static/js/index.js" type="module"></script>
+<script th:src="@{/static/js/index.js(lang=${locale})}" type="module"></script>
 <script type="application/javascript"></script>
 </body>
 </html>
