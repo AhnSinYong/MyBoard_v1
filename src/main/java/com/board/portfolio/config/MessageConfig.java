@@ -35,7 +35,7 @@ public class MessageConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public MessageSource validMessageSource(){
+    public MessageSource messageSource(){
         ReloadableResourceBundleMessageSource messageSource
                 = new ReloadableResourceBundleMessageSource();
 
@@ -49,7 +49,7 @@ public class MessageConfig implements WebMvcConfigurer {
     @Bean
     public LocalValidatorFactoryBean validator() {
         LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
-        bean.setValidationMessageSource(validMessageSource());
+        bean.setValidationMessageSource(messageSource());
         return bean;
     }
 }
