@@ -2,10 +2,11 @@ package com.board.portfolio.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.Optional;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -15,6 +16,7 @@ import java.util.UUID;
 @Builder
 @Getter
 @Setter
+@EntityListeners(AuditingEntityListener.class)
 public class LikeComment extends EntityDefaultValues{
 
     @Id
@@ -32,8 +34,8 @@ public class LikeComment extends EntityDefaultValues{
     private Account account;
 
     @Column(name = "REG_DATE")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date regDate;
+    @CreatedDate
+    private LocalDateTime regDate;
 
     public LikeComment(Comment comment, Account account) {
         this.comment = comment;
@@ -43,6 +45,5 @@ public class LikeComment extends EntityDefaultValues{
     @Override
     public void setDefaultValues() {
         this.likeCommentId = UUID.randomUUID().toString();
-        this.regDate = Optional.ofNullable(this.regDate).orElse(new Date());
     }
 }

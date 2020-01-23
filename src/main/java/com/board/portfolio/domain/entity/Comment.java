@@ -3,10 +3,11 @@ package com.board.portfolio.domain.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +18,7 @@ import java.util.Optional;
 @Builder
 @Getter
 @Setter
+@EntityListeners(AuditingEntityListener.class)
 public class Comment extends EntityDefaultValues{
 
     @Id
@@ -36,12 +38,11 @@ public class Comment extends EntityDefaultValues{
     private Integer like;
 
     @Column(name = "REG_DATE")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date regDate;
+    @CreatedDate
+    private LocalDateTime regDate;
 
     @Column(name = "UP_DATE")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date upDate;
+    private LocalDateTime upDate;
 
     @ManyToOne
     @JoinColumn(name="EMAIL")
@@ -82,7 +83,6 @@ public class Comment extends EntityDefaultValues{
     @Override
     public void setDefaultValues() {
         this.like = Optional.ofNullable(this.like).orElse(0);
-        this.regDate = Optional.ofNullable(this.regDate).orElse(new Date());
         this.delParentCnt = Optional.ofNullable(this.delParentCnt).orElse(0);
     }
 }

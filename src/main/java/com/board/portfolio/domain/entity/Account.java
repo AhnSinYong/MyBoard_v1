@@ -3,9 +3,11 @@ package com.board.portfolio.domain.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,6 +22,7 @@ import java.util.UUID;
 @Builder
 @Getter
 @Setter
+@EntityListeners(AuditingEntityListener.class)
 public class Account extends EntityDefaultValues {
 
     @Id
@@ -34,8 +37,8 @@ public class Account extends EntityDefaultValues {
     private String nickname;
 
     @Column(name="SIGNUP_DATE")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date signUpDate = new Date();
+    @CreatedDate
+    private LocalDateTime signUpDate;
 
     @Column(name="ROLE")
     @Enumerated(value= EnumType.STRING)
@@ -84,7 +87,6 @@ public class Account extends EntityDefaultValues {
 
     @Override
     public void setDefaultValues() {
-        this.signUpDate = Optional.ofNullable(this.signUpDate).orElse(new Date());
         this.role = Optional.ofNullable(this.role).orElse(AccountRole.MEMBER);
         this.authKey = Optional.ofNullable(this.authKey).orElse(UUID.randomUUID().toString());
         this.isAuth = Optional.ofNullable(this.isAuth).orElse(false);
