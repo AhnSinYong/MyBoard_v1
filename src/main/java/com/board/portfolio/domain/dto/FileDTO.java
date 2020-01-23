@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class FileDTO {
-    @BoardIdExist(message = "post ins't exist")
+    @BoardIdExist(message = "{board.exist}")
     private Long boardId;
 
     private String email;

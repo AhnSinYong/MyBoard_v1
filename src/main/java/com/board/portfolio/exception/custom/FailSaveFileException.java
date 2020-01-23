@@ -1,11 +1,11 @@
-package com.board.portfolio.exception;
+package com.board.portfolio.exception.custom;
 
 import lombok.Getter;
 
 @Getter
 public class FailSaveFileException extends CustomRuntimeException {
     public FailSaveFileException(){
-        super("Fail to save file");
+        super("file.fail.save");
     }
     public FailSaveFileException(String msg){
         super(msg);

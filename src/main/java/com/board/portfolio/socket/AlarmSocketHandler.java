@@ -1,8 +1,8 @@
 package com.board.portfolio.socket;
 
 import com.board.portfolio.domain.entity.*;
-import com.board.portfolio.exception.NotAllowAccessException;
-import com.board.portfolio.exception.NotFoundPostException;
+import com.board.portfolio.exception.custom.NotAllowAccessException;
+import com.board.portfolio.exception.custom.NotFoundPostException;
 import com.board.portfolio.repository.AlarmRepository;
 import com.board.portfolio.repository.BoardRepository;
 import com.board.portfolio.security.jwt.JwtDecoder;
@@ -74,7 +74,7 @@ public class AlarmSocketHandler extends TextWebSocketHandler {
 
     @Transactional
     public void commentAlarmProcess(Long boardId, Account triggerAccount){
-        Board board = boardRepository.findById(boardId).orElseThrow(()->new NotFoundPostException());
+        Board board = boardRepository.findById(boardId).orElseThrow(NotFoundPostException::new);
         Account targetAccount = board.getAccount();
         if(targetAccount==null)
             return;

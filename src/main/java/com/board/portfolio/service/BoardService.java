@@ -2,7 +2,7 @@ package com.board.portfolio.service;
 
 import com.board.portfolio.domain.dto.BoardDTO;
 import com.board.portfolio.domain.entity.*;
-import com.board.portfolio.exception.*;
+import com.board.portfolio.exception.custom.*;
 import com.board.portfolio.paging.BoardPagination;
 import com.board.portfolio.paging.PageDTO;
 import com.board.portfolio.repository.BoardDetailRepository;
@@ -71,7 +71,7 @@ public class BoardService {
             }
         }
         catch (IOException e){
-            throw new FailSaveFileException("fail to save file");
+            throw new FailSaveFileException();
         }
 
     }
@@ -99,7 +99,7 @@ public class BoardService {
 
     @Transactional
     public Map readPost(long boardId, AccountSecurityDTO accountDTO) {
-        BoardDetail boardDetail = boardDetailRepository.findById(boardId).orElseThrow(()->new NotFoundPostException());
+        BoardDetail boardDetail = boardDetailRepository.findById(boardId).orElseThrow(NotFoundPostException::new);
         List<FileAttachment> fileAttachmentList = boardDetail.getFileAttachmentList();
 
         boardDetail.increaseView();
@@ -136,7 +136,7 @@ public class BoardService {
 
     @Transactional
     public Map likePost(BoardDTO.Like dto, AccountSecurityDTO accountDTO) {
-        Board board = boardRepository.findById(dto.getBoardId()).orElseThrow(()->new NotFoundPostException());
+        Board board = boardRepository.findById(dto.getBoardId()).orElseThrow(NotFoundPostException::new);
         Account account = modelMapper.map(accountDTO, Account.class);
 
         Optional<LikeBoard> opLikeBoard =  likeBoardRepository.findByBoardAndAccount(board,account);
@@ -158,7 +158,7 @@ public class BoardService {
 
     @Transactional
     public void download(HttpServletResponse res, String fileId) {
-        FileAttachment file = fileAttachmentRepository.findById(fileId).orElseThrow(()->new NotFoundFileException());
+        FileAttachment file = fileAttachmentRepository.findById(fileId).orElseThrow(NotFoundFileException::new);
 
         setDownloadHeader(res,file);
         executeDownload(res,file);
@@ -171,7 +171,7 @@ public class BoardService {
                     "attachment;filename="+docName+";");
         }
         catch (IOException e){
-            throw new FailDownLoadFileException("fail set config at header, contentType");
+            throw new FailDownLoadFileException();
         }
     }
 
@@ -188,7 +188,7 @@ public class BoardService {
             file.increaseDown();
         }
         catch (IOException e){
-            throw new FailDownLoadFileException("fail download");
+            throw new FailDownLoadFileException();
         }
 
     }
@@ -196,7 +196,7 @@ public class BoardService {
     @Transactional
     public void deletePost(Long boardId, AccountSecurityDTO accountDTO) {
 
-        Board board = boardRepository.findById(boardId).orElseThrow(()->new NotFoundPostException("post isn't exist"));
+        Board board = boardRepository.findById(boardId).orElseThrow(NotFoundPostException::new);
         if(!board.getAccount().getEmail().equals(accountDTO.getEmail())){
             throw new NotAllowAccessException("not allow access");
         }
@@ -216,7 +216,7 @@ public class BoardService {
     @Transactional
     public void updatePost(Long boardId, BoardDTO.Update dto, AccountSecurityDTO accountDTO) {
         Account account = modelMapper.map(accountDTO, Account.class);
-        BoardDetail board = boardDetailRepository.findById(boardId).orElseThrow(()->new NotFoundPostException("post isn't exist"));
+        BoardDetail board = boardDetailRepository.findById(boardId).orElseThrow(NotFoundPostException::new);
         board.setTitle(dto.getTitle());
         board.setContent(dto.getContent());
         board.setUpDate(new Date());
@@ -237,7 +237,7 @@ public class BoardService {
             }
         }
         catch (IOException e){
-            throw new FailSaveFileException("fail to save file");
+            throw new FailSaveFileException();
         }
 
 

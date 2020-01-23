@@ -15,8 +15,14 @@ import java.io.IOException;
 public class JwtFilterSuccessHandler implements AuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest req, HttpServletResponse res, Authentication auth) throws IOException, ServletException {
-        SecurityContext context = SecurityContextHolder.createEmptyContext();
-        context.setAuthentication(auth);
-        SecurityContextHolder.setContext(context);
+        if (!isAnonymous(auth)) {
+            SecurityContext context = SecurityContextHolder.createEmptyContext();
+            context.setAuthentication(auth);
+            SecurityContextHolder.setContext(context);
+        }
+    }
+
+    private boolean isAnonymous(Authentication auth){
+        return auth.getPrincipal().equals("");
     }
 }

@@ -1,11 +1,11 @@
-package com.board.portfolio.exception;
+package com.board.portfolio.exception.custom;
 
 import lombok.Getter;
 
 @Getter
 public class NotFoundPostException extends CustomRuntimeException {
     public NotFoundPostException(){
-        super("Not Found Post");
+        super("board.exist");
     }
     public NotFoundPostException(String msg){
         super(msg);

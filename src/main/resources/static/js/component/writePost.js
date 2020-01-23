@@ -29,6 +29,8 @@ export default Vue.component('write-Post',{
         return {
             coverViewMethod : shareObject.coverView.method,
             inputMethod : shareObject.input.method,
+
+            failFunc : shareObject.failFunc,
             input:{
                 title : '',
                 content : '',
@@ -64,8 +66,7 @@ export default Vue.component('write-Post',{
             shareObject.refreshManager.refresh();
         },
         failSignIn(err){
-            console.log(err);
-            alert(err.data);
+            this.failFunc.failFunc(err);
         },
         addFile(){
             this.input.fileList.push(this.$refs.fileInput.files[0]);

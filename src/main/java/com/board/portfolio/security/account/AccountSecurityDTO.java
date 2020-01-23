@@ -16,4 +16,13 @@ public class AccountSecurityDTO {
     private String socialId;
     private String authKey;
     private boolean isAuth;
+
+    public AccountSecurityDTO(){
+
+    }
+
+    public AccountSecurityDTO(String email, AccountRole role) {
+        this.email = email;
+        this.role = role;
+    }
 }

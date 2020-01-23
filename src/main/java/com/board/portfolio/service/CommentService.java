@@ -2,13 +2,12 @@ package com.board.portfolio.service;
 
 import com.board.portfolio.domain.dto.CommentDTO;
 import com.board.portfolio.domain.entity.*;
-import com.board.portfolio.exception.NotAllowAccessException;
-import com.board.portfolio.exception.NotFoundCommentException;
+import com.board.portfolio.exception.custom.NotAllowAccessException;
+import com.board.portfolio.exception.custom.NotFoundCommentException;
 import com.board.portfolio.repository.CommentRepository;
 import com.board.portfolio.repository.LikeCommentRepository;
 import com.board.portfolio.security.account.AccountSecurityDTO;
 import com.board.portfolio.socket.AlarmSocketHandler;
-import com.board.portfolio.socket.SocketAccount;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -67,7 +66,7 @@ public class CommentService {
 
     @Transactional
     public Map modifyComment(Long commentId, CommentDTO.Modify dto, AccountSecurityDTO accountDTO) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(()->new NotFoundCommentException("comment isn't exist"));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundCommentException::new);
         if(!comment.getAccount().getEmail().equals(accountDTO.getEmail())){
             throw new NotAllowAccessException("not allow access");
         }
@@ -81,7 +80,7 @@ public class CommentService {
 
     @Transactional
     public Map deleteComment(Long commentId, AccountSecurityDTO accountDTO) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(()->new NotFoundCommentException("comment isn't exist"));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundCommentException::new);
         if(!comment.getAccount().getEmail().equals(accountDTO.getEmail())){
             throw new NotAllowAccessException("not allow access");
         }
@@ -121,7 +120,7 @@ public class CommentService {
 
     @Transactional
     public Map likeComment(Long commentId, AccountSecurityDTO accountDTO) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(()->new NotFoundCommentException("comment isn't exist"));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundCommentException::new );
         Account account = modelMapper.map(accountDTO, Account.class);
 
         Optional<LikeComment> opLikeComment = likeCommentRepository.findByCommentAndAccount(comment,account);
@@ -141,7 +140,7 @@ public class CommentService {
 
     @Transactional
     public Map replyWriteComment(CommentDTO.Reply dto, AccountSecurityDTO accountDTO) {
-        Comment parentComment = commentRepository.findById(dto.getCommentId()).orElseThrow(()->new NotFoundCommentException("comment isn't exist"));
+        Comment parentComment = commentRepository.findById(dto.getCommentId()).orElseThrow(NotFoundCommentException::new);
         Comment comment = Comment.builder()
                 .board(new Board(dto.getBoardId()))
                 .content(dto.getContent())

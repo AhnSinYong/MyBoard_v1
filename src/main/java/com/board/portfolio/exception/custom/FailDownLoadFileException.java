@@ -1,11 +1,11 @@
-package com.board.portfolio.exception;
+package com.board.portfolio.exception.custom;
 
 import lombok.Getter;
 
 @Getter
 public class FailDownLoadFileException extends CustomRuntimeException {
     public FailDownLoadFileException(){
-        super("Fail file Download");
+        super("file.fail.download");
     }
     public FailDownLoadFileException(String msg){
         super(msg);

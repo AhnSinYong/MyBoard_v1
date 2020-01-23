@@ -1,5 +1,21 @@
 import shareObject from "./shareObject/shareObject.js";
 
+function setLang(){
+    let lang = getUrlParams().lang;
+    if(lang == undefined)
+        lang = 'ko';
+    return lang;
+}
+
+function getUrlParams() {
+    let params = {};
+    window.location.search.replace(/[?&]+([^=&]+)=([^&]*)/gi,
+        function(str, key, value) {
+        params[key] = value;
+    });
+    return params;
+}
+
 export default Vue.component('sign-in',{
     template:
         `<div class="cover-view">
@@ -31,6 +47,7 @@ export default Vue.component('sign-in',{
             coverViewMethod : shareObject.coverView.method,
             inputMethod : shareObject.input.method,
             loginMethod : shareObject.login.method,
+            failFunc : shareObject.failFunc,
             input:{
                 email : '',
                 password : '',
@@ -47,7 +64,7 @@ export default Vue.component('sign-in',{
                 email : email,
                 password : password
             }
-            axios.post('/api/account/signIn',data)
+            axios.post('/api/account/signIn'+'?lang='+setLang(),data)
                 .then(this.successSignIn)
                 .catch(this.failSignIn)
         },
@@ -58,7 +75,8 @@ export default Vue.component('sign-in',{
             this.inputMethod.resetInput(this.input);
         },
         failSignIn(err){
-            alert(err.data.message);
+            this.failFunc.failFunc(err);
+            // alert(err.data.message);
             this.input.password='';
         }
 

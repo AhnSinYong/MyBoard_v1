@@ -1,11 +1,11 @@
-package com.board.portfolio.exception;
+package com.board.portfolio.exception.custom;
 
 import lombok.Getter;
 
 @Getter
 public class NotFoundAlarmException extends CustomRuntimeException {
     public NotFoundAlarmException(){
-        super("Not found alarm");
+        super("alarm.exist");
     }
     public NotFoundAlarmException(String msg){
         super(msg);
