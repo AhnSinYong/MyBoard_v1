@@ -10,8 +10,7 @@ import com.board.portfolio.repository.BoardRepository;
 import com.board.portfolio.repository.FileAttachmentRepository;
 import com.board.portfolio.repository.LikeBoardRepository;
 import com.board.portfolio.security.account.AccountSecurityDTO;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,34 +24,23 @@ import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.*;
 
+import static com.board.portfolio.util.StaticUtils.modelMapper;
+
 @Service
+@RequiredArgsConstructor
 public class BoardService {
 
-    private BoardRepository boardRepository;
-    private BoardDetailRepository boardDetailRepository;
-    private LikeBoardRepository likeBoardRepository;
-    private FileAttachmentRepository fileAttachmentRepository;
-    private BoardPagination boardPagination;
-    private ModelMapper modelMapper;
+    private final BoardRepository boardRepository;
+    private final BoardDetailRepository boardDetailRepository;
+    private final LikeBoardRepository likeBoardRepository;
+    private final FileAttachmentRepository fileAttachmentRepository;
+    private final BoardPagination boardPagination;
 
     private final String FILE_COMMON_PATH = "./src/main/resources/attachment/";
 
-    @Autowired
-    public BoardService(BoardRepository boardRepository,
-                        BoardDetailRepository boardDetailRepository,
-                        LikeBoardRepository likeBoardRepository,
-                        FileAttachmentRepository fileAttachmentRepository,
-                        BoardPagination boardPagination,
-                        ModelMapper modelMapper){
-        this.boardRepository = boardRepository;
-        this.boardDetailRepository = boardDetailRepository;
-        this.likeBoardRepository = likeBoardRepository;
-        this.fileAttachmentRepository = fileAttachmentRepository;
-        this.boardPagination = boardPagination;
-        this.modelMapper = modelMapper;
-    }
 
     public PageDTO<Board> getPaginBoardList(int page){
         return boardPagination.getPaginationList(page);
@@ -219,7 +207,7 @@ public class BoardService {
         BoardDetail board = boardDetailRepository.findById(boardId).orElseThrow(NotFoundPostException::new);
         board.setTitle(dto.getTitle());
         board.setContent(dto.getContent());
-        board.setUpDate(new Date());
+        board.setUpDate(LocalDateTime.now());
 
         List<FileAttachment> fileAttachmentList = board.getFileAttachmentList();
 

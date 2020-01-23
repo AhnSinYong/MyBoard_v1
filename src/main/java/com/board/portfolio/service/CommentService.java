@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -71,7 +72,7 @@ public class CommentService {
             throw new NotAllowAccessException("not allow access");
         }
         comment.setContent(dto.getContent());
-        comment.setUpDate(new Date());
+        comment.setUpDate(LocalDateTime.now());
 
         Map data = new HashMap();
         data.put("boardId", comment.getBoard().getBoardId());
