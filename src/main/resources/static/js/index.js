@@ -27,7 +27,7 @@ new Vue({
 
             loginInfo : shareObject.login.info,
             loginMethod: shareObject.login.method,
-            lang : this.getParam('lang'),
+            lang : this.getParam('lang')||'ko',
             delivery:{
                 post:{
                     boardId:''
@@ -54,7 +54,7 @@ new Vue({
         },
         getParam(sname) {
             let params = location.search.substr(location.search.indexOf("?") + 1);
-            let sval = "";
+            let sval;
             params = params.split("&");
             for (let i = 0; i < params.length; i++) {
                 let temp = params[i].split("=");
