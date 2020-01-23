@@ -15,7 +15,7 @@ import java.util.UUID;
 @Builder
 @Getter
 @Setter
-public class LikeComment implements EntityDefaultValues{
+public class LikeComment extends EntityDefaultValues{
 
     @Id
     @Column(name="LIKE_COMMENT_ID")
@@ -40,7 +40,6 @@ public class LikeComment implements EntityDefaultValues{
         this.account = account;
     }
 
-    @PrePersist
     @Override
     public void setDefaultValues() {
         this.likeCommentId = UUID.randomUUID().toString();

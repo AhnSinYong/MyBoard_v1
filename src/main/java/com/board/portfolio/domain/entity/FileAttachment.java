@@ -15,7 +15,7 @@ import java.util.UUID;
 @Builder
 @Getter
 @Setter
-public class FileAttachment implements EntityDefaultValues{
+public class FileAttachment extends EntityDefaultValues{
 
     @Id
     @Column(name="FILE_ID")
@@ -51,7 +51,6 @@ public class FileAttachment implements EntityDefaultValues{
         this.down++;
     }
 
-    @PrePersist
     @Override
     public void setDefaultValues() {
         this.fileId = UUID.randomUUID().toString();

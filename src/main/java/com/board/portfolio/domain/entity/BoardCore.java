@@ -13,7 +13,7 @@ import java.util.Optional;
 @NoArgsConstructor
 @Getter
 @Setter
-public abstract class BoardCore implements EntityDefaultValues{
+public abstract class BoardCore extends EntityDefaultValues{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,7 +57,6 @@ public abstract class BoardCore implements EntityDefaultValues{
         this.view++;
     }
 
-    @PrePersist
     @Override
     public void setDefaultValues() {
         this.like = Optional.ofNullable(this.like).orElse(0);

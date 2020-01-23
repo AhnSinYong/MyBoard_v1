@@ -15,7 +15,7 @@ import java.util.UUID;
 @Builder
 @Getter
 @Setter
-public class Alarm implements EntityDefaultValues{
+public class Alarm extends EntityDefaultValues{
 
     @Id
     @Column(name="ALARM_ID")
@@ -46,8 +46,6 @@ public class Alarm implements EntityDefaultValues{
     @Temporal(TemporalType.TIMESTAMP)
     private Date checkDate;
 
-
-    @PrePersist
     @Override
     public void setDefaultValues() {
         this.alarmId = Optional.ofNullable(this.alarmId).orElse(UUID.randomUUID().toString());

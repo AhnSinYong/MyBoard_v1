@@ -17,7 +17,7 @@ import java.util.Optional;
 @Builder
 @Getter
 @Setter
-public class Comment implements EntityDefaultValues{
+public class Comment extends EntityDefaultValues{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -78,7 +78,7 @@ public class Comment implements EntityDefaultValues{
     public void increaseDelParentCnt(int cnt){
         this.delParentCnt += cnt;
     }
-    @PrePersist
+
     @Override
     public void setDefaultValues() {
         this.like = Optional.ofNullable(this.like).orElse(0);

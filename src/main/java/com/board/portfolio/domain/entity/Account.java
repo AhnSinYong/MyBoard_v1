@@ -20,7 +20,7 @@ import java.util.UUID;
 @Builder
 @Getter
 @Setter
-public class Account implements EntityDefaultValues {
+public class Account extends EntityDefaultValues {
 
     @Id
     @Column(name="EMAIL")
@@ -82,7 +82,6 @@ public class Account implements EntityDefaultValues {
         this.email = email;
     }
 
-    @PrePersist
     @Override
     public void setDefaultValues() {
         this.signUpDate = Optional.ofNullable(this.signUpDate).orElse(new Date());

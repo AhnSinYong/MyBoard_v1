@@ -34,4 +34,5 @@ public class BoardDetail extends BoardCore{
     @OneToMany(mappedBy = "board")
     @JsonBackReference
     private List<FileAttachment> fileAttachmentList;
+
 }

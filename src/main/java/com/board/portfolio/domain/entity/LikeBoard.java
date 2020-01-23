@@ -15,7 +15,7 @@ import java.util.UUID;
 @Builder
 @Getter
 @Setter
-public class LikeBoard implements EntityDefaultValues{
+public class LikeBoard extends EntityDefaultValues{
 
     @Id
     @Column(name="LIKE_BOARD_ID")
@@ -40,7 +40,6 @@ public class LikeBoard implements EntityDefaultValues{
         this.account = account;
     }
 
-    @PrePersist
     @Override
     public void setDefaultValues() {
         this.likeBoardId = UUID.randomUUID().toString();
