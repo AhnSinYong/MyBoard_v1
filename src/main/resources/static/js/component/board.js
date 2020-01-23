@@ -80,10 +80,14 @@ export default Vue.component('board',{
         }
     },
     created(){
-        shareObject.refreshManager.register(this.getBoardList,1);
+        shareObject.refreshManager.register(this.refreshBoard);
         this.getBoardList(1);
+
     },
     methods:{
+        refreshBoard(){
+            this.getBoardList(this.pagination.page);
+        },
         getBoardList(page){
             axios.get('/api/board/'+page)
                 .then(this.success)
