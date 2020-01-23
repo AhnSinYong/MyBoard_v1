@@ -6,9 +6,9 @@ import com.board.portfolio.exception.custom.NotFoundPostException;
 import com.board.portfolio.repository.AlarmRepository;
 import com.board.portfolio.repository.BoardRepository;
 import com.board.portfolio.security.jwt.JwtDecoder;
+import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.socket.CloseStatus;
@@ -22,24 +22,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
+@RequiredArgsConstructor
 public class AlarmSocketHandler extends TextWebSocketHandler {
 
-    private Map<String, Object> httpSessions = new HashMap();
-    private BoardRepository boardRepository;
-    private AlarmRepository alarmRepository;
-    private JwtDecoder jwtDecoder;
-    private ModelMapper modelMapper;
-
-    @Autowired
-    public AlarmSocketHandler(BoardRepository boardRepository,
-                              AlarmRepository alarmRepository,
-                              JwtDecoder jwtDecoder,
-                              ModelMapper modelMapper){
-        this.boardRepository = boardRepository;
-        this.alarmRepository = alarmRepository;
-        this.modelMapper = modelMapper;
-        this.jwtDecoder = jwtDecoder;
-    }
+    private final Map<String, Object> httpSessions = new HashMap();
+    private final BoardRepository boardRepository;
+    private final AlarmRepository alarmRepository;
+    private final JwtDecoder jwtDecoder;
+    @Value("${jwt.token.name}")
+    private String tokenName;
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
@@ -48,15 +39,18 @@ public class AlarmSocketHandler extends TextWebSocketHandler {
         httpSessions.put(email, session);
     }
     private String getEmailFromJWT(WebSocketSession session){
-        String cookieString = session.getHandshakeHeaders().get("cookie").get(0);
-        String jwt;
+        String[] cookieStrings = session.getHandshakeHeaders().get("cookie").get(0).split(";");
 
-        if(cookieString == null){
-            throw new NotAllowAccessException("need sign in");
+        String jwt="";
+
+        for(String cookieString : cookieStrings){
+            String[] strings = cookieString.split("=");
+            if(tokenName.equals(strings[0])){
+                jwt = strings[1];
+            }
         }
-        jwt = cookieString.split("=")[1];
         if(jwt.equals("")){
-            throw new NotAllowAccessException("need sign in");
+            throw new NotAllowAccessException();
         }
         return jwtDecoder.decodeJwt(jwt).getClaims().get("email").asString();
     }
