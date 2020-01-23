@@ -13,7 +13,7 @@ export default Vue.component('alarm',{
                         <div v-for="(alarm,index) in alarmList"
                              :class="{checkedAlarm:alarm.isChecked}"
                              class="alarm"
-                             @click="checkAlarm(alarm)">
+                             @click.self="checkAlarm(alarm)">
                             <div>
                                 <div>
                                     <span>{{new Date(alarm.recieveDate).format('yy-MM-dd a/p hh:mm:ss')}}</span>
