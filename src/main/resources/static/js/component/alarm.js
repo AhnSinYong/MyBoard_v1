@@ -13,11 +13,11 @@ export default Vue.component('alarm',{
                         <div v-for="(alarm,index) in alarmList"
                              :class="{checkedAlarm:alarm.isChecked}"
                              class="alarm"
-                             @click.self="checkAlarm(alarm)">
+                             @click="checkAlarm(alarm)">
                             <div>
                                 <div>
                                     <span>{{new Date(alarm.recieveDate).format('yy-MM-dd a/p hh:mm:ss')}}</span>
-                                    <input type="button" value="x" @click="deleteAlarm(alarm)"                                           
+                                    <input type="button" value="x" @click.stop="deleteAlarm(alarm)"                                           
                                            class="btn btn-outline-dark right">
                                     <input type="button" value="go post" @click="showPost(alarm.eventContentId)"
                                            name="goPost"
