@@ -100,6 +100,7 @@ export default Vue.component('alarm',{
         },
         setNickname(alarm){
             if(alarm.triggerAccount==null){
+                alarm.triggerAccount ={};
                 alarm.triggerAccount.nickname="unknown";
             }
         },
