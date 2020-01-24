@@ -30,7 +30,7 @@ public class BoardPagination extends Pagination {
         long nextPage = (page+1)<=totalPage?(page+1):-1;
 
 
-        return new PageDTO(boardRepository.findLimitByBoard(start-1, super.pageSize),
+        return new PageDTO(boardRepository.getBoardList(start, super.pageSize),
                 page,
                 startPage,
                 endPage,

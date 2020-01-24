@@ -18,7 +18,7 @@ class BoardRepositoryTest {
     BoardRepository boardRepository;
     @Test
     public void getBoardLimitTest(){
-        List boardList = boardRepository.findLimitByBoard(0,1);
+        List boardList = boardRepository.getBoardList(0,1);
     }
     @Test
     public void getPaginationTest(){
