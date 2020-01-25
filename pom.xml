@@ -127,6 +127,11 @@
             <version>4.1.4</version>
             <scope>provided</scope>
         </dependency>
+        <!-- Caching-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
 
     </dependencies>
 
