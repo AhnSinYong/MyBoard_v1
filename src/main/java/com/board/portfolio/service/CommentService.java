@@ -8,31 +8,22 @@ import com.board.portfolio.repository.CommentRepository;
 import com.board.portfolio.repository.LikeCommentRepository;
 import com.board.portfolio.security.account.AccountSecurityDTO;
 import com.board.portfolio.socket.AlarmSocketHandler;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
+import static com.board.portfolio.util.StaticUtils.modelMapper;
+
 @Service
+@RequiredArgsConstructor
 public class CommentService {
 
-    private CommentRepository commentRepository;
-    private LikeCommentRepository likeCommentRepository;
-    private AlarmSocketHandler alarmSocketHandler;
-    private ModelMapper modelMapper;
-    @Autowired
-    public CommentService(CommentRepository commentRepository,
-                          LikeCommentRepository likeCommentRepository,
-                          AlarmSocketHandler alarmSocketHandler,
-                          ModelMapper modelMapper){
-        this.commentRepository = commentRepository;
-        this.likeCommentRepository = likeCommentRepository;
-        this.alarmSocketHandler = alarmSocketHandler;
-        this.modelMapper = modelMapper;
-    }
+    private final CommentRepository commentRepository;
+    private final LikeCommentRepository likeCommentRepository;
+    private final AlarmSocketHandler alarmSocketHandler;
 
     @Transactional
     public Map getCommentList(Long boardId,AccountSecurityDTO accountDTO) {
