@@ -3,7 +3,7 @@ package com.board.portfolio.controller;
 import com.board.portfolio.domain.dto.BoardDTO;
 import com.board.portfolio.security.account.AccountSecurityDTO;
 import com.board.portfolio.service.BoardService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -11,16 +11,13 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
 public class BoardController {
 
-    private BoardService boardService;
+    private final BoardService boardService;
 
-    @Autowired
-    public BoardController(BoardService boardService){
-        this.boardService = boardService;
-    }
     @GetMapping("/board/{page}")
     public ResponseEntity getBoardList(@PathVariable int page){
         return ResponseEntity.ok(boardService.getPaginBoardList(page));
