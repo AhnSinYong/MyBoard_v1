@@ -10,6 +10,7 @@ import com.board.portfolio.repository.BoardRepository;
 import com.board.portfolio.repository.FileAttachmentRepository;
 import com.board.portfolio.repository.LikeBoardRepository;
 import com.board.portfolio.security.account.AccountSecurityDTO;
+import com.board.portfolio.store.repository.StoredBoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,13 +39,15 @@ public class BoardService {
     private final LikeBoardRepository likeBoardRepository;
     private final FileAttachmentRepository fileAttachmentRepository;
     private final BoardPagination boardPagination;
+    private final StoredBoardRepository storedBoardRepository;
 
     private final String FILE_COMMON_PATH = "./src/main/resources/attachment/";
 
-
+    @Transactional
     public PageDTO<Board> getPaginBoardList(int page){
         return boardPagination.getPaginationList(page);
     }
+
 
     @Transactional
     public void writePost(BoardDTO.Write boardDTO, AccountSecurityDTO accountDTO) {
@@ -52,7 +55,7 @@ public class BoardService {
         BoardDetail board = modelMapper.map(boardDTO, BoardDetail.class);
         Account account = modelMapper.map(accountDTO, Account.class);
         board.setAccount(account);
-        board = boardDetailRepository.save(board);
+        board = storedBoardRepository.save(board);
         try {
             if(!boardDTO.isNullFileList()){
                 saveFileAttachment(board, boardDTO.getFileList(), account);
@@ -84,13 +87,13 @@ public class BoardService {
             fileAttachmentRepository.save(fileAttachment);
         }
     }
-
+//    @Cacheable(value = "post", key = "#boardId")
     @Transactional
     public Map readPost(long boardId, AccountSecurityDTO accountDTO) {
-        BoardDetail boardDetail = boardDetailRepository.findById(boardId).orElseThrow(NotFoundPostException::new);
+        BoardDetail boardDetail = storedBoardRepository.findById(boardId).orElseThrow(NotFoundPostException::new);
         List<FileAttachment> fileAttachmentList = boardDetail.getFileAttachmentList();
 
-        boardDetail.increaseView();
+        boardDetail.increaseView(storedBoardRepository);
 
         Map data = new HashMap<String,Object>();
         data.put("post",boardDetail);
@@ -122,6 +125,7 @@ public class BoardService {
         return isLikedBoard;
     }
 
+//    @CacheEvict(value = "post", key = "#dto.boardId")
     @Transactional
     public Map likePost(BoardDTO.Like dto, AccountSecurityDTO accountDTO) {
         Board board = boardRepository.findById(dto.getBoardId()).orElseThrow(NotFoundPostException::new);
@@ -131,11 +135,11 @@ public class BoardService {
 
         if(opLikeBoard.isPresent()){//이미 "좋아요"를 누름
             likeBoardRepository.delete(opLikeBoard.get());
-            board.decreaseLike();
+            board.decreaseLike(storedBoardRepository);
         }
         else{
             likeBoardRepository.save(new LikeBoard(board,account));
-            board.increaseLike();
+            board.increaseLike(storedBoardRepository);
         }
 
         Map data = new HashMap<String,Object>();
@@ -181,17 +185,18 @@ public class BoardService {
 
     }
 
+//    @CacheEvict(value = "post", key = "#boardId")
     @Transactional
     public void deletePost(Long boardId, AccountSecurityDTO accountDTO) {
 
-        Board board = boardRepository.findById(boardId).orElseThrow(NotFoundPostException::new);
+        BoardDetail board = boardDetailRepository.findById(boardId).orElseThrow(NotFoundPostException::new);
         if(!board.getAccount().getEmail().equals(accountDTO.getEmail())){
-            throw new NotAllowAccessException("not allow access");
+            throw new NotAllowAccessException();
         }
 
         List<FileAttachment> fileAttachmentList = board.getFileAttachmentList();
         deleteFilePhysic(fileAttachmentList);
-        boardRepository.delete(board);
+        storedBoardRepository.delete(board);
     }
     private void deleteFilePhysic(List<FileAttachment> fileAttachmentList){
         for(FileAttachment fileAttachment : fileAttachmentList){
@@ -201,13 +206,19 @@ public class BoardService {
         }
     }
 
+//    @CacheEvict(value = "post", key = "#boardId")
     @Transactional
     public void updatePost(Long boardId, BoardDTO.Update dto, AccountSecurityDTO accountDTO) {
         Account account = modelMapper.map(accountDTO, Account.class);
-        BoardDetail board = boardDetailRepository.findById(boardId).orElseThrow(NotFoundPostException::new);
-        board.setTitle(dto.getTitle());
-        board.setContent(dto.getContent());
-        board.setUpDate(LocalDateTime.now());
+        BoardDetail board = storedBoardRepository.findById(boardId).orElseThrow(NotFoundPostException::new);
+        if(!board.getAccount().getEmail().equals(accountDTO.getEmail())){
+            throw new NotAllowAccessException();
+        }
+
+        board.updatePost(dto.getTitle(),
+                dto.getContent(),
+                LocalDateTime.now(),
+                storedBoardRepository);
 
         List<FileAttachment> fileAttachmentList = board.getFileAttachmentList();
 
