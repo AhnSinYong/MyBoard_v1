@@ -1,5 +1,9 @@
 package com.board.portfolio.repository;
 
-public interface BoardDetailRepositoryCustom {
+import com.board.portfolio.domain.entity.BoardDetail;
 
+import java.util.List;
+
+public interface BoardDetailRepositoryCustom {
+    List<BoardDetail> getBoardList(int size);
 }
