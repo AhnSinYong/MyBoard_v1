@@ -45,7 +45,7 @@ public class AlarmSocketHandler extends TextWebSocketHandler {
 
         for(String cookieString : cookieStrings){
             String[] strings = cookieString.split("=");
-            if(tokenName.equals(strings[0])){
+            if(tokenName.equals(strings[0].trim())){
                 jwt = strings[1];
             }
         }
