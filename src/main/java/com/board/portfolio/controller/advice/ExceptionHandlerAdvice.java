@@ -21,10 +21,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -42,6 +42,13 @@ public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
         List<ErrorContent> contentList = getErrorContentList(ex, MethodArgumentNotValidException.class);
         return responseWithBody(ex,new ApiError(HttpStatus.BAD_REQUEST,contentList), req);
     }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Object> constraintViolationException(ConstraintViolationException ex, WebRequest req, Locale locale){
+        List<ErrorContent> contentList = getErrorContentList(ex, ConstraintViolationException.class);
+        return responseWithBody(ex,new ApiError(HttpStatus.BAD_REQUEST,contentList),req);
+    }
+
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<Object> accessDeniedException(AccessDeniedException ex, WebRequest req, Locale locale){
@@ -79,6 +86,10 @@ public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
             addFieldErrors(contentList, ex.getBindingResult().getFieldErrors());
             addGlobalErrors(contentList, ex.getBindingResult().getGlobalErrors());
         }
+        else if(ConstraintViolationException.class.isAssignableFrom(aClass)){
+            ConstraintViolationException ex = (ConstraintViolationException) e;
+            addGlobalErrors(contentList, ex.getConstraintViolations());
+        }
 
 
         return contentList;
@@ -98,6 +109,16 @@ public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
         for(ObjectError error : globalErrorList){
             contentList.add(new GlobalErrorContent(
                     error.getDefaultMessage()
+            ));
+        }
+    }
+
+    private void addGlobalErrors(List<ErrorContent> contentList, Set<ConstraintViolation<?>> constraintViolations){
+        List constraintViolationList = constraintViolations.stream().collect(Collectors.toList());
+        for(Object object : constraintViolationList){
+            ConstraintViolation constraintViolation = (ConstraintViolation)object;
+            contentList.add(new GlobalErrorContent(
+                    constraintViolation.getMessage()
             ));
         }
     }
