@@ -99,30 +99,17 @@ public class BoardService {
         data.put("post",boardDetail);
         data.put("fileList", fileAttachmentList);
 
-        String email = accountDTO.getEmail();
-
-
-        boolean isLikedPost = isLikedPost(boardDetail.getLikeBoardList(), email);
+        boolean isLikedPost = isLikedPost(boardId, accountDTO.getEmail());
         data.put("isLikedPost",isLikedPost);
-
 
         return data;
     }
-    private boolean isLikedPost(List<LikeBoard> likeBoardList, String email){
+    private boolean isLikedPost(Long boardId, String email){
         if(email==null){
             return false;
         }
+        return likeBoardRepository.findByBoardAndAccount(new Board(boardId),new Account(email)).isPresent();
 
-        boolean isLikedBoard = false;
-
-        for(LikeBoard likeBoard : likeBoardList){
-            String likeEmail = likeBoard.getAccount().getEmail();
-            if(likeEmail.equals(email)){
-                isLikedBoard = true;
-                break;
-            }
-        }
-        return isLikedBoard;
     }
 
 //    @CacheEvict(value = "post", key = "#dto.boardId")
