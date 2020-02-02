@@ -28,40 +28,18 @@ public class CommentService {
     @Transactional
     public Map getCommentList(Long boardId,AccountSecurityDTO accountDTO) {
         List<Comment> commentList = commentRepository.getCommentList(new Board(boardId));
+        List<Comment> likedCommentList = Optional.ofNullable(accountDTO.getEmail())
+                .map(email->commentRepository.getLikedCommentList(new Board(boardId), new Account(email)))
+                .orElse(new ArrayList<>());
         Map data = new HashMap();
         data.put("commentList", commentList);
-        List isLikedList = new ArrayList();
-
-        String email = accountDTO.getEmail();
-        if(commentList!=null){
-
-            for(Comment comment: commentList){
-                boolean isLiked  = isLikedComment(comment.getLikeCommentList(), email);
-                isLikedList.add(isLiked);
-            }
-        }
-        data.put("isLikedList",isLikedList);
+        data.put("likedCommentList",likedCommentList);
         return data;
     }
-    private boolean isLikedComment(List<LikeComment> likeCommentList, String email){
-        if(email==null){
-            return false;
-        }
-        for(LikeComment likeComment : likeCommentList){
-            if(likeComment.getAccount().getEmail().equals(email)){
-                return true;
-            }
-        }
-        return false;
-    }
-
 
     @Transactional
     public Map modifyComment(Long commentId, CommentDTO.Modify dto, AccountSecurityDTO accountDTO) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundCommentException::new);
-        if(!comment.getAccount().getEmail().equals(accountDTO.getEmail())){
-            throw new NotAllowAccessException("not allow access");
-        }
         comment.setContent(dto.getContent());
         comment.setUpDate(LocalDateTime.now());
 
@@ -73,11 +51,8 @@ public class CommentService {
     @Transactional
     public Map deleteComment(Long commentId, AccountSecurityDTO accountDTO) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundCommentException::new);
-        if(!comment.getAccount().getEmail().equals(accountDTO.getEmail())){
-            throw new NotAllowAccessException("not allow access");
-        }
 
-        Optional<Comment> opChildCommnet =commentRepository.findTopByBoardAndGroupAndCommentIdGreaterThanOrderByRegDateAsc(comment.getBoard(),comment.getGroup(),commentId);
+        Optional<Comment> opChildCommnet =commentRepository.getChildComment(comment.getBoard(),comment.getGroup(),commentId);
         if(opChildCommnet.isPresent()){
             Comment childComment = opChildCommnet.get();
             childComment.increaseDelParentCnt(comment.getDelParentCnt()+1);
