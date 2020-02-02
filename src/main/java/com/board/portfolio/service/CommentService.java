@@ -27,7 +27,7 @@ public class CommentService {
 
     @Transactional
     public Map getCommentList(Long boardId,AccountSecurityDTO accountDTO) {
-        List<Comment> commentList = commentRepository.findAllByBoardOrderByGroupAscRegDateAsc(new Board(boardId));
+        List<Comment> commentList = commentRepository.getCommentList(new Board(boardId));
         Map data = new HashMap();
         data.put("commentList", commentList);
         List isLikedList = new ArrayList();

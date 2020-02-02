@@ -7,6 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CommentRepositoryCustom {
-    List<Comment> findAllByBoardOrderByGroupAscRegDateAsc(Board board);
+    List<Comment> getCommentList(Board board);
     Optional<Comment> findTopByBoardAndGroupAndCommentIdGreaterThanOrderByRegDateAsc(Board board, Long group, Long commentId);
 }

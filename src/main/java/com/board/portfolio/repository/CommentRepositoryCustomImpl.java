@@ -16,7 +16,7 @@ public class CommentRepositoryCustomImpl implements CommentRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<Comment> findAllByBoardOrderByGroupAscRegDateAsc(Board board) {
+    public List<Comment> getCommentList(Board board) {
         return queryFactory
                 .selectFrom(comment)
                 .where(comment.board.eq(board))
