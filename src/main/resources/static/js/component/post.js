@@ -283,12 +283,19 @@ export default Vue.component('post',{
         successGetCommentList(res){
             const data = res.data;
             this.commentList = data.commentList;
-            const isLikedList = data.isLikedList;
+            const likedCommentList = data.likedCommentList;
 
-            for(let i=0; i<isLikedList.length; i++){
-                this.commentList[i].isLiked = isLikedList[i];
+            for(let i=0; i<this.commentList.length; i++){
+                this.commentList[i].isLiked = this.isLikedComment(this.commentList[i],likedCommentList);
             }
-
+        },
+        isLikedComment(comment, likedCommentList){
+            for(let i=0; i<likedCommentList.length; i++){
+                if(comment.commentId == likedCommentList[i].commentId){
+                    return true;
+                }
+            }
+            return false;
         },
         showModifyCommentView(index){
             this.invisibleCommentIndex = index;
