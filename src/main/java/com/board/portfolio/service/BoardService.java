@@ -12,6 +12,9 @@ import com.board.portfolio.repository.LikeBoardRepository;
 import com.board.portfolio.security.account.AccountSecurityDTO;
 import com.board.portfolio.store.repository.StoredBoardRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,6 +36,12 @@ import static com.board.portfolio.util.StaticUtils.modelMapper;
 @Service
 @RequiredArgsConstructor
 public class BoardService {
+
+    private final ApplicationContext applicationContext;
+    private BoardService self(){
+        return applicationContext.getBean(BoardService.class);
+    }
+
 
     private final BoardRepository boardRepository;
     private final BoardDetailRepository boardDetailRepository;
@@ -87,11 +96,11 @@ public class BoardService {
             fileAttachmentRepository.save(fileAttachment);
         }
     }
-//    @Cacheable(value = "post", key = "#boardId")
+
     @Transactional
     public Map readPost(long boardId, AccountSecurityDTO accountDTO) {
         BoardDetail boardDetail = storedBoardRepository.findById(boardId).orElseThrow(NotFoundPostException::new);
-        List<FileAttachment> fileAttachmentList = boardDetail.getFileAttachmentList();
+        List<FileAttachment> fileAttachmentList = this.self().getFileAttachment(boardId, boardDetail);
 
         boardDetail.increaseView(storedBoardRepository);
 
@@ -112,7 +121,12 @@ public class BoardService {
 
     }
 
-//    @CacheEvict(value = "post", key = "#dto.boardId")
+    @Cacheable(value = "fileList", key = "#boardId")
+    public List<FileAttachment> getFileAttachment(long boardId, BoardDetail boardDetail){
+        return boardDetail.getFileAttachmentList();
+    }
+
+
     @Transactional
     public Map likePost(BoardDTO.Like dto, AccountSecurityDTO accountDTO) {
         Board board = boardRepository.findById(dto.getBoardId()).orElseThrow(NotFoundPostException::new);
@@ -172,9 +186,9 @@ public class BoardService {
 
     }
 
-//    @CacheEvict(value = "post", key = "#boardId")
+    @CacheEvict(value = "fileList", key = "#boardId")
     @Transactional
-    public void deletePost(Long boardId, AccountSecurityDTO accountDTO) {
+    public void deletePost(long boardId, AccountSecurityDTO accountDTO) {
 
         BoardDetail board = boardDetailRepository.findById(boardId).orElseThrow(NotFoundPostException::new);
         if(!board.getAccount().getEmail().equals(accountDTO.getEmail())){
@@ -193,7 +207,7 @@ public class BoardService {
         }
     }
 
-//    @CacheEvict(value = "post", key = "#boardId")
+
     @Transactional
     public void updatePost(Long boardId, BoardDTO.Update dto, AccountSecurityDTO accountDTO) {
         Account account = modelMapper.map(accountDTO, Account.class);
@@ -207,9 +221,12 @@ public class BoardService {
                 LocalDateTime.now(),
                 storedBoardRepository);
 
-        List<FileAttachment> fileAttachmentList = board.getFileAttachmentList();
+        this.self().updateFileList(board.getFileAttachmentList(),dto,boardId,account);
 
+    }
 
+    @CacheEvict(value = "fileList",key = "#boardId")
+    public void updateFileList(List<FileAttachment> fileAttachmentList,BoardDTO.Update dto, long boardId, Account account ){
         for(FileAttachment file : fileAttachmentList){
             if(!dto.isExistFileId(file.getFileId())){
                 deleteFilePhysic(Arrays.asList(file));
@@ -219,13 +236,11 @@ public class BoardService {
 
         try {
             if(!dto.isNullFileList()){
-                saveFileAttachment(board, dto.getInputFileList(), account);
+                saveFileAttachment(new BoardDetail(boardId), dto.getInputFileList(), account);
             }
         }
         catch (IOException e){
             throw new FailSaveFileException();
         }
-
-
     }
 }
