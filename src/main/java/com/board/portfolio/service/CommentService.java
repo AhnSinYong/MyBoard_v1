@@ -40,6 +40,9 @@ public class CommentService {
     @Transactional
     public Map modifyComment(Long commentId, CommentDTO.Modify dto, AccountSecurityDTO accountDTO) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundCommentException::new);
+        if(!accountDTO.getEmail().equals(comment.getAccount().getEmail())){
+            throw new NotAllowAccessException();
+        }
         comment.setContent(dto.getContent());
         comment.setUpDate(LocalDateTime.now());
 
@@ -51,7 +54,9 @@ public class CommentService {
     @Transactional
     public Map deleteComment(Long commentId, AccountSecurityDTO accountDTO) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundCommentException::new);
-
+        if(!accountDTO.getEmail().equals(comment.getAccount().getEmail())){
+            throw new NotAllowAccessException();
+        }
         Optional<Comment> opChildCommnet =commentRepository.getChildComment(comment.getBoard(),comment.getGroup(),commentId);
         if(opChildCommnet.isPresent()){
             Comment childComment = opChildCommnet.get();
