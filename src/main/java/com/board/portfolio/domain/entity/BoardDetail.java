@@ -11,6 +11,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,7 +21,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class BoardDetail extends BoardCore{
+public class BoardDetail extends BoardCore implements Serializable {
 
     @Column(name = "CONTENT")
     private String content;
@@ -36,6 +37,10 @@ public class BoardDetail extends BoardCore{
     @OneToMany(mappedBy = "board")
     @JsonBackReference
     private List<FileAttachment> fileAttachmentList;
+
+    public BoardDetail(long boardId) {
+        super(boardId);
+    }
 
     public void updatePost(String title, String content, LocalDateTime upDate){
         updatePost(title,upDate);
