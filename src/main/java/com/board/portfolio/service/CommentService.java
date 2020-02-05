@@ -26,7 +26,7 @@ public class CommentService {
     private final AlarmSocketHandler alarmSocketHandler;
 
     @Transactional
-    public Map getCommentList(Long boardId,AccountSecurityDTO accountDTO) {
+    public Map getCommentList(long boardId,AccountSecurityDTO accountDTO) {
         List<Comment> commentList = commentRepository.getCommentList(new Board(boardId));
         List<Comment> likedCommentList = Optional.ofNullable(accountDTO.getEmail())
                 .map(email->commentRepository.getLikedCommentList(new Board(boardId), new Account(email)))
