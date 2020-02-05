@@ -13,8 +13,17 @@
 - master/origin
 - dev
 
-## 필요한 config.properties
-- /resources/properties/private/database-config.properties
+## 실행방법
+1.본문의 하단에 있는 "DataBase" 항목의 DDL을 참고하여 데이터베이스를 세팅
+
+2.아래의 properties를 생성
+
+<details>
+ <summary> properties 생성</summary>
+<p>
+ /resources/properties/private 경로에 아래의 properties 파일을 생성해야함
+ 
+ - /resources/properties/private/database-config.properties
 ~~~
 # MySQL Configuration
 #spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
@@ -52,6 +61,10 @@ spring.mail.properties.mail.smtp.auth=true
 mail.from=[발송자 별명]<구글메일>
 mail.auth.limit =메일인증 유효시간 밀리세컨즈(ex 360000) 
 ~~~
+ 
+</p>
+</details>
+
 ## DataBase
 <details>
 <summary>ERD</summary>
@@ -296,19 +309,6 @@ create table TB_ALARM(
 </p>
 </details>
 
-
-
-
-~~~
-## table 제거
-drop table TB_ALARM;
-drop table TB_FILE_ATTACHMENT;
-drop table TB_LIKE_BOARD;
-drop table TB_LIKE_COMMENT;
-drop table TB_COMMENT;
-drop table TB_BOARD;
-drop table TB_ACCOUNT;
-~~~
 
  ## Spring Security
  ### Filter
