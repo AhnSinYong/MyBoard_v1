@@ -52,17 +52,20 @@ spring.mail.properties.mail.smtp.auth=true
 mail.from=[발송자 별명]<구글메일>
 mail.auth.limit =메일인증 유효시간 밀리세컨즈(ex 360000) 
 ~~~
-## collapsible markdown?
-
+## DataBase
 <details>
-<summary>CLICK ME</summary>
+<summary>ERD</summary>
+<p>
+ 
+![portfolio_erd_v3](./README_RESOURCES/portfolio_erd_v3.png)
+
+</p>
+</details>
+<details>
+ <summary>TB_ACCOUNT</summary>
 <p>
 
-## DataBase
-### ERD
-![portfolio_erd_v3](./README_RESOURCES/portfolio_erd_v3.png)
-### TB_ACCOUNT
- |항목            | 설명                |key type    |data type              | unique   | nullable  |비고               |
+|항목            | 설명                |key type    |data type              | unique   | nullable  |비고               |
  |----------------|--------------------|------------|-----------------------|----------|----------|-------------------|
  |EMAIL           |회원의 이메일        |primary     |varchar(100)             | unique   | not null |   이메일 패턴이여야 함, 최소 5자, 최대 40자|   
  |PASSWORD     	 |회원의 비밀번호		   |            | varchar(100)            |         | not null |숫자,영문,특문 8자이상 16이하 -> 암호화|
@@ -73,8 +76,14 @@ mail.auth.limit =메일인증 유효시간 밀리세컨즈(ex 360000)
  |AUTH_KEY       |이메일 인증을 위한 키 |           | varchar(40)           |            | not null | 무작위 문자열   |
  |IS_AUTH        |이메일 인증을 한 계정인지 명시|    | boolean default false  |             | not null|  이메일 인증을 마치면 true  |
 
-### TB_BOARD
- |항목            | 설명                |key type                            |data type              | unique   | nullable  |비고                 |
+</p>
+</details>
+
+<details>
+ <summary>TB_BOARD</summary>
+<p>
+ 
+  |항목            | 설명                |key type                            |data type              | unique   | nullable  |비고                 |
  |---------------|---------------------|-----------------------------------|-----------------------|----------|-----------|---------------------|
  |BOARD_ID            |게시글 식별 번호      | primary(auto inc)                        | int                     |   unique | not null  |   |
  |TITLE          |게시글의 제목			|                                 |varchar(110)            |           | not null  | 공백금지,50자 이하   |
@@ -84,8 +93,16 @@ mail.auth.limit =메일인증 유효시간 밀리세컨즈(ex 360000)
  |REG_DATE     	|게시글 생성 날짜		    |                                | datetime default now()  |            |not null |                      |
  |UP_DATE     	|게시글 수정 날짜		    |                                | datetime                |           | null   |                        |
  |EMAIL         |게시글의 작성자         |	foreign(TB_ACCOUNT) on delete set null   |varchar(100)              |            |        |   이메일 패턴이여야 함|
+
  
- ### TB_COMMENT
+</p>
+</details>
+
+
+<details>
+ <summary>TB_COMMENT</summary>
+<p>
+ 
  |항목            | 설명                |key type                            |data type              | unique   | nullable  |비고                 |
  |---------------|---------------------|-----------------------------------|-----------------------|----------|-----------|---------------------|
  |COMMENT_ID            |댓글을 식별하는 ID|primary(auto inc)                | int         | unique     | not null  |                  |
@@ -100,7 +117,15 @@ mail.auth.limit =메일인증 유효시간 밀리세컨즈(ex 360000)
  |HAS_DEL_TYPE_PARENT |삭제된 부모댓글들 중 타입 PARENT가 있는지 |           | boolean             |            |          |                       |
  |TYPE          |댓글이 부모인지, 자식인지 구분|                               |varchar(30)        |           |not null|              |
  
- ### TB_LIKE_BOARD
+ 
+</p>
+</details>
+ 
+ 
+ <details>
+ <summary>TB_LIKE_BOARD</summary>
+<p>
+ 
  |항목            | 설명                          |key type                             |data type                      | unique   | nullable  |비고                 |
  |---------------|-------------------------------|-------------------------------------|-------------------------------|----------|-----------|---------------------|
  |LIKE_BOARD_ID             |좋아요 이력을 식별하는 UUID      | primary                             | varchar(40)                   | unique  | not null  |             |
@@ -108,7 +133,14 @@ mail.auth.limit =메일인증 유효시간 밀리세컨즈(ex 360000)
  |EMAIL          | "좋아요"를 누른 유저             | foreign(TB_ACCOUNT) on delete set null |varchar(100)                 |          |    null | 이메일 패턴이여야 함  |
  |REG_DATE      	 | "좋아요"를 누른 날짜             |                                     | datetime default now()     |          |not null |                      |
  
- ### TB_LIKE_COMMENT
+ 
+</p>
+</details>
+ 
+ <details>
+ <summary>TB_LIKE_COMMENT</summary>
+<p>
+ 
   |항목            | 설명                          |key type                             |data type                      | unique   | nullable  |비고                 |
   |---------------|-------------------------------|-------------------------------------|-------------------------------|----------|-----------|---------------------|
   |LIKE_COMMENT_ID             |좋아요 이력을 식별하는 ID      | primary                             | int                    | unique  | not null  |                     |
@@ -117,7 +149,14 @@ mail.auth.limit =메일인증 유효시간 밀리세컨즈(ex 360000)
   |REG_DATE      	 | "좋아요"를 누른 날짜          |                                  | datetime default now()        |          |not null |                      |
  
  
- ### TB_FILE_ATTACHMENT
+</p>
+</details>
+ 
+  
+ <details>
+ <summary>TB_FILE_ATTACHMENT</summary>
+<p>
+ 
  |항목            | 설명                          |key type                             |data type                      | unique   | nullable  |비고                 |
  |---------------|-------------------------------|-------------------------------------|-------------------------------|----------|-----------|---------------------|
  |FILE_ID            | 파일을 식별하는 UUID            |primary                              | varchar(40)                  | unique    | not null |                      |
@@ -130,8 +169,13 @@ mail.auth.limit =메일인증 유효시간 밀리세컨즈(ex 360000)
  |EMAIL          | 파일을 저장한 사용자의 이메일    | foreign(TB_ACCOUNT) on delete cascade |  varchar(100)              |              |  not null |                   |
  
  
+</p>
+</details>
+
+ <details>
+ <summary>TB_ALARM</summary>
+<p>
  
- ### TB_ALARM
  |항목            | 설명                                           |key type                             |data type                      | unique   | nullable  |비고                 |
  |---------------|------------------------------------------------|-------------------------------------|-------------------------------|----------|-----------|---------------------|
  |ALARM_ID            | 알람을 식별하는 UUID                             |primary                              | varchar(40)                   | unique   | not null  |                    |
@@ -142,9 +186,11 @@ mail.auth.limit =메일인증 유효시간 밀리세컨즈(ex 360000)
  |RECIEVE_DATE      | 알람을 받은 날짜                                 |                                   | datetime default now()         |         |  not null  |                 |
  |CHECK_DATE      | 알람을 읽은 날짜                                 |                                    | datetime                       |          | null      |                 |
 
+
+ 
 </p>
 </details>
-
+ 
 
  
  
