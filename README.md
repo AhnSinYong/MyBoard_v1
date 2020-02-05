@@ -3,9 +3,11 @@
 - SPA web
 - vue.js
 - spring boot
-- jpa
 - spring security
+- spring data jpa
+- Querydsl
 - MySQL
+- jmeter
 
 ### Git Branch
 - master/origin
@@ -234,7 +236,6 @@ create table TB_ALARM(
     foreign key (TRIGGER_ACCOUNT) REFERENCES TB_ACCOUNT(EMAIL) on delete set null
 );
 ~~~
-### 사용한 테스트 SQL
 ~~~
 ## table 제거
 drop table TB_ALARM;
@@ -254,6 +255,8 @@ drop table TB_ACCOUNT;
  |/api/account/signOut     |                   |SignOutFilter   | 없음                      | contextholder를 비우고 쿠키제거           |         |
  |/api/**                 |/api/account/signIn,signOut|JwtFilter      | 토큰 유효성 판단(토큰이 없는 경우는 success)| chain.doFilter()                    | Exception 발생        |
  
+ 
+ 
  ## 할 것
  - 커스텀한 예외를 못던지는 경우들을 해결해야해
  - security의 exception 처리를 추가해야함
@@ -262,64 +265,19 @@ drop table TB_ACCOUNT;
  - 메일인증 링크 클릭시 보일 화면 추가
  - 인증유효시간 30분이 지날경우를 적용
      - 스레드세이프하게 다시 생각해보자(syncronized?)
- - 페이징 관련 repository에서 start 값 -1하는거 좀더 보기좋게 고쳐야함
  - @FileSize , @FileExtension 대충 복붙한거 리팩토링필요함
      - extension 유효성 검사에서 . 으로 나누고 length 2아닐때 예외던지게 했는데 고쳐야함(ex: abc.def.hwp)
  - 프로퍼티즈 이용해서 확장자 제한 관리를 하는 것 필요
  - @AuthenticationPrincipal이 AccountDetails에 자동으로 주입이 안되네 
      - 내가 구성한 AccountDetails가 문제일까?? 고민이 필요함
- - @PreAuthorize 에 대한 예외처리가 필요함
- - post.js에서 board_id값 초기화처리를 해보자(지금은 초기화로 값바뀌면 한번더 호출해서 오류남)
  - boardService의 파일다운로드에서 byte[4096]인거 설정파일에서 읽게 수정해야함
- - deletePost()에서 검증관력 로직을 분리하고 싶어
  - postView boardId 이슈 ----> vue router를 써야 근본적인 해결이 가능할듯
- - axios통해서 파일다운로드를 구현하고, down 값이 실시간으로 반영되게 만들자
  - 쿠키유효시간이 다되서 소멸할때 로그인 정보도 갱신되게 만들자
- - 삭제된 댓글처리가 시원치않음....db설계 변경이 필요할듯함
- - ERD 이미지 파일 수정해야함
  - 패키지, 클래스 관계도 그려보자 순환참조라던가 양방향참조가 존재하는지...
- - Controller에 @PathVariable, @RequestParam 에 대한 @CustomValidator 사용을 고려하자
  
- ## 생각해볼 것
- - TB_ALARM에서 TB_CONTENT_ID 는 외래키로 설정하지 않았다.
-    - COMMENT,BOARD,LIKE 등등 많은 교차엔티티와 관계가 발생되고 불필요한 칼럼이 예상되었기때문
-    - 이를 해결할 더 좋은 방법이 있었을까?
-    
- - TB_Account에서 @OneToMany가 많은데, 이게 성능에 악영향을 주지 않을까?
- - TB_EMAIL 에서 기본키를 email로 하였는데, 이것이 인덱싱 관련해서 문제를 일으킬 수 있지 않을까?
-    - MySQL은 기본키에 디폴트 인덱스를 거는 개념이 혹시 존재하나?
-    
- - ResponseEntity를 사용하지 않고 응답을 구성하는법...
-    - 단순히 클래스 리턴이 아니라 에러, 응답코드 등의 정보를 부여
+ ## 생각해볼 것 
  - axios를 export 하는 파일들 안에서 명시적으로 쓰는 것 고려
-    - 경고 밑줄이 그어짐, import 같은 것을 써야 할까?
-    
- - jwt 쿠키가 탈취 당할 경우를 고려해서 매 요청마다 새로운 토큰을 주는 게 나을까?
- 
- - contextHolder 안에 있는 authentication은 요청이 끝나면 사라지게 되는걸까???
- - jpa의 update를 하지 않고 findby 이후 setter를 이용해도 괜찮은걸까?
- - @initBinder에서 validator의 클래스비교가 false가 뜨면 에러가 발생하는데 이 에러를 캐치해주면 하나의 @initBinder에서 깔끔하게 처리 가능하지 않을까?
-     - @initBinder(name) 에서 name은 모델명, 클래스명을 타겟하는구나
-
-- JwtCookieUtil을 제대로 구성한게 맞는걸까?
-    - jwtTokenName에 @Value를쓰기 위해서 클래스에 @Component를 사용
-    - 그럼에도 불구하고 @Value가 null로 보여서 생성자에 @Autowired를 걸고 @Value를 씀
-        - 안됬던 이유는 static 메소드와 관련이 있을까???
-        - 스프링 빈 라이프 사이클에 대한 이해 필요
-        - @autowired 더 정확히 이해하자(메소드,생성자에 대한 쓰임)
-        - 스프링 빈 라이프 사이클에 대한 이해 필요
-        - @value가 JwtCookieUtil에서 왜 안되었던거지??
-        - 참고  https://codeday.me/ko/qa/20190411/301654.html 
-        
-- 커스텀 @Valid 만들어서 사용하는 거에 대한 의견이 궁금
-- @autowired를 생성자 주입으로 써야하는 이유
-    - https://yaboong.github.io/spring/2019/08/29/why-field-injection-is-bad/
-    - 꽤 생각해볼만한 이야기
-    
-- new Thread에서 @Transactional이 안돼서 repository에 사용했음 개선점은 무엇이 있을까?
-
-- spa형식으로 만들때 url을 통한 접근성이 떨어질 수 있겠네 이에 대한 해결법이 있을까?
-    - 자바스크립트로 location을 정의해줄까?
+    - 경고 밑줄이 그어짐, import 같은 것을 써야 할까?           
 
 - 클라이언트에서 file을 리스트([])로 만들어서 formData에 담아 보냈지만 컨버터에서는 "[Object object]"라는 문자열로 인식했음
     - 이를 해결하기 위해서 formData에 file[0], file[1] ... 이런식으로 여러개의 값을 추가해줫음
@@ -330,19 +288,8 @@ drop table TB_ACCOUNT;
 - vue 에서 :key 값을 통해서 랜더링을 관리하는 구나, 그런데 updatePost.js에서 왜 deleteFile()했을때 업데이트가 안됬지????
     - 이를 해결하기 위한 방법으로 :key의 값을 바꿔주는법
     - this.$forceUpdate() 를 실행하는 법이 있다고함
-- @Valid를 클래스 안에 클래스에서 사용하기도 했는데 이에 대한 생각...좋은 패턴?(BoardDTO.Update)
-- controllerAdvice에 @ModelAttribute를 추가 했는데 이게 좋은 패턴일까???
-- 커스텀한 느낌이 나는 검증로직은 @initBinder의 validator같은 느낌으로 처리할수 없을까???
-    - 비밀번호 비교로직은 가능(회원가입)
-    - deleteComment같은 경우는 모르겠어.....억지로 객체하나에 다 담아서 클라이언트에서 쏴줘야하나???
-- commentDelete에서 Transactional의 설정이 필요하지않을까? 락을 건다거나....(delete의 경우는 락을걸어도 사양에 큰 문제는 없을거같아)    
-- 나는 db를 잘 설계한걸까??(성능적인면에서?)
 
-### 메모
-- JPA 
-    - findTop3ByBoardAndLikeGreaterThanOrderByLikeDesc
-    - @Transactional이 끝나는 순간 엔티티의 setter로 설정한게 db에 반영되는구나
-    
+### 메모    
 - valid 
     - message 정의하던 부분     
     ~~~
@@ -352,25 +299,20 @@ drop table TB_ACCOUNT;
                       MessageFormat.format("이미 존재하는 이메일 입니다. \n ({0})", email))
                       .addConstraintViolation();
           }
-    ~~~
-    - @valid 를 사용하는 여러가지 사례 
-            - https://www.logicbig.com/how-to/code-snippets/jcode-bean-validation-valid.html
-            - 이거 말고도 다양한 쓰임이 가능할듯 @Valid + a 느낌으로 사용
-    - @NotBlank는 String에 대해서만 정상동작함, Long, Integer는 NotNull 정도로 사용하자
-    - @PathVariable과 @RequestParam에서 @Valid를 사용하는 방법
-        - https://www.baeldung.com/spring-validate-requestparam-pathvariable
-            - Spring의 경우 @Bean을 설정해줘야하는데 Boot에서 해보니깐 예외가 발생한다 왜그런거지???
-        - https://cnpnote.tistory.com/entry/SPRING-Spring-MVC-PathVariable-%EA%B0%92%EC%9D%84-%EA%B2%80%EC%A6%9D%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95%EC%9D%80-%EB%AC%B4%EC%97%87%EC%9E%85%EB%8B%88%EA%B9%8C
-        - Controller 파라미터에 사용하기 위해서 @CustomValidator에 ElementType.PARMETER 를 추가하였음
-    - @Valid를 사용하는 여러가지 방법
-        - https://medium.com/@gaemi/java-%EC%99%80-spring-%EC%9D%98-validation-b5191a113f5c 
-- socket
-    - Websocket은 IE10이상부터인데 SocketJS는 IE6이상부터 지원한다고함
-    
+    ~~~ 
+
 - enum 
     - @converter를 사용하는 방법 고려
         - https://lng1982.tistory.com/279   @Converter를 이용하는 방법 고려
-        
+- @Test에서 JPA의 동작이 예상이 가지 않음 이해가 필요
+- Parsing에 static final이 안되는 이유?
+- @Valid와 message.properties 사용하는법
+    - setBasename에서 "/messages"를 꼭 붙여야하는 구나... 이거떄문에 오래해맴 
+    - https://www.javadevjournal.com/spring-boot/spring-custom-validation-message-source/    @valid에 메세지 사용하는법1
+    - https://www.baeldung.com/spring-custom-validation-message-source   @valid에 메세지 사용하는법2
+    - https://www.baeldung.com/spring-boot-internationalization   메세지 국제화
+- ResponseEntity 안쓰고 응답코드 내려주는법...?
+- @Entity의 Date 를 localdate 시리즈로 모두 변경        
         
 ### 피드백
 - 메일보내기는 스레드로 처리
@@ -378,36 +320,10 @@ drop table TB_ACCOUNT;
   	- 또는 커스텀하게해서 커넥션이 일정텀을 두고 close되게 만들면 시간이 덜걸릴수있음
   	- 즉, 한번에 여러개를 직렬적으로 보내는게 비용이 적게듬
   	- 메일인증은 그냥 db업데이트로하는게 나음
+  	
 - 대댓글에서 삭제된 댓글 표시할려고 컬럼추가했잖아? 그냥 flag로 삭제처리하고서 뱃치로 나중에 정리해
     - flag + batch 조합이게더 싸게먹혀
-    
-- 자바 Lock에 대해 알아야함
-    - JPA에서 @Lock이라는게 있음
-    - update, delete할때 row락이 자동으로 걸림(select lock도 한번 찾아봐)
-    - (락걸려고 @Transactional에다가 고립걸고 그러는건 좋지않아)
-
-- modelMapper는 무조건 싱글톤으로 써야함(성능이슈)
-
-- 컨트롤러는 데이터 파싱만 해줘야해, @Valid에서 repository쓰는건 좀 어긋남 고민해보자
-    - (id이상한거오면 그냥 빈값줘버리고 끝내도 무방함)
-
-- 같은 트랜잭션내에서 JPA가 쿼리한거는 1차캐싱되서 재사용가능함
-
-- 게시물에서 content부분만 따로 관리하는게 훨씬 좋을듯
-    - 다음에는 erd에 게시판에 카테고리가 생긴다거나 하는 경우도 고려해서 작성(복잡도가 올라감)
-
-- 그리고 콘솔지우고 요청보내고하면서 JPA쿼리가 두번되는지 안되는지 확인할수있네 요령....
 
 - 브레이크포인트에 suspand all로하면 모든 스레드관점에서 다보임 옵션바꿔서하는것도 고려해(내스레드에 대해서만 작업해야하니깐...)
 
-- contextholder에 authentication이 언제 사라지는지 확인좀하자 provider에서 계속 null이던데? 그리고 그게 맞고...
-
 - Vue할때 컴포넌트 다때려박았짢아? 라우트같은거 이용해서 프론트만의 MVC를 만들어야해 이런관점으로 고민이필요함
-
-- @Autowired를 생성자로 쓸때 final키워드가 없으면 무의미함, final키워드를 꼭 추가해주자
-
-- @Valid 의 message를 properties를 이용해서 사용하자 
-    - https://www.baeldung.com/spring-custom-validation-message-source
-
-- 코드를짤때 안전한 방법을 베이스로해, 그 이후에 업그레이드 시켜가는거야, 이 마인드가 적절할듯
-    - (ex: 쿼리해서 특정값을 읽어서 증가시킨값을 사용하는건 불안하잖아? flag로 true false읽는 편이 안정적이지)
