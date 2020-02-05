@@ -52,6 +52,19 @@ spring.mail.properties.mail.smtp.auth=true
 mail.from=[발송자 별명]<구글메일>
 mail.auth.limit =메일인증 유효시간 밀리세컨즈(ex 360000) 
 ~~~
+## collapsible markdown?
+
+<details><summary>CLICK ME</summary>
+<p>
+
+#### yes, even hidden code blocks!
+
+```python
+print("hello world!")
+```
+
+</p>
+</details>
 
 ## DataBase
 ### ERD
