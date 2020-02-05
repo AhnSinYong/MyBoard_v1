@@ -54,17 +54,9 @@ mail.auth.limit =메일인증 유효시간 밀리세컨즈(ex 360000)
 ~~~
 ## collapsible markdown?
 
-<details><summary>CLICK ME</summary>
+<details>
+<summary>CLICK ME</summary>
 <p>
-
-#### yes, even hidden code blocks!
-
-```python
-print("hello world!")
-```
-
-</p>
-</details>
 
 ## DataBase
 ### ERD
@@ -149,6 +141,11 @@ print("hello world!")
  |EVENT_CONTENT_ID   | 알람이벤트가 발생한 컨텐츠의 ID                  |                                   |  varchar(100)                  |         |not null    |                |
  |RECIEVE_DATE      | 알람을 받은 날짜                                 |                                   | datetime default now()         |         |  not null  |                 |
  |CHECK_DATE      | 알람을 읽은 날짜                                 |                                    | datetime                       |          | null      |                 |
+
+</p>
+</details>
+
+
  
  
  ### SQL(DDL)
