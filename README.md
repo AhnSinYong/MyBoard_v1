@@ -61,6 +61,112 @@ mail.auth.limit =메일인증 유효시간 밀리세컨즈(ex 360000)
 
 </p>
 </details>
+
+<details>
+ <summary>DDL</summary>
+<p>
+ 
+ ~~~
+create table TB_ACCOUNT(
+    EMAIL varchar(100),
+    PASSWORD varchar(100) not null ,
+    NICKNAME varchar(30) unique ,
+    SIGNUP_DATE datetime default now(),
+    ROLE varchar(30) default 'MEMBER',
+    SOCIAL_ID varchar(100) unique,
+    AUTH_KEY varchar(40) not null,
+    IS_AUTH boolean default false,
+    primary key(EMAIL)
+);
+~~~
+
+~~~
+create table TB_BOARD(
+     BOARD_ID int auto_increment,
+     TITLE varchar(110) not null ,
+     CONTENT varchar(750) not null ,
+     LIKE_ int default 0,
+     VIEW int default 0,
+     REG_DATE datetime default now(),
+     UP_DATE datetime,
+     EMAIL varchar(100) ,
+     primary key (BOARD_ID),
+     foreign key (EMAIL) REFERENCES TB_ACCOUNT(EMAIL) on delete set null
+);
+~~~
+~~~
+create table TB_COMMENT(
+    COMMENT_ID int auto_increment,
+    BOARD_ID int not null ,
+    CONTENT varchar(350) not null ,
+    LIKE_ int default 0,
+    REG_DATE datetime default now(),
+    UP_DATE datetime,
+    EMAIL varchar(100),
+    GROUP_ int not null, ##COMMENT_ID 값이 들어감
+    DEL_PARENT_CNT int default 0,
+    HAS_DEL_TYPE_PARENT boolean,
+    TYPE varchar(30) not null, ##PARENT_ID가 NULL 인데 TYPE이 CHILD면 알수없음 댓글 만들면 됨
+    primary key (COMMENT_ID),
+    foreign key (BOARD_ID) REFERENCES  TB_BOARD(BOARD_ID) on delete cascade ,
+    foreign key (EMAIL) REFERENCES TB_ACCOUNT(EMAIL) on delete set null
+);
+~~~
+~~~
+create table TB_LIKE_BOARD(
+    LIKE_BOARD_ID varchar(40),
+    BOARD_ID int not null ,
+    EMAIL varchar(100) ,
+    REG_DATE datetime default now(),
+    primary key (LIKE_BOARD_ID),
+    foreign key (BOARD_ID) REFERENCES TB_BOARD(BOARD_ID) on delete cascade ,
+    foreign key (EMAIL) REFERENCES TB_ACCOUNT(EMAIL) on delete set null
+);
+~~~
+~~~
+create table TB_LIKE_COMMENT(
+    LIKE_COMMENT_ID varchar(40),
+    COMMENT_ID int not null ,
+    EMAIL varchar(100) ,
+    REG_DATE datetime default now(),
+    primary key (LIKE_COMMENT_ID),
+    foreign key (COMMENT_ID) REFERENCES TB_COMMENT(COMMENT_ID) on delete cascade ,
+    foreign key (EMAIL) REFERENCES TB_ACCOUNT(EMAIL) on delete set null
+);
+~~~
+~~~
+create table TB_FILE_ATTACHMENT(
+    FILE_ID varchar(40),
+    BOARD_ID int not null,
+    ORIGIN_NAME varchar(70) not null ,
+    SAVE_NAME varchar(70) unique ,
+    EXTENSION varchar(20) not null ,
+    DOWN int default 0,
+    SAVE_DATE datetime default now(),
+    EMAIL varchar(100) not null,
+    primary key(FILE_ID),
+    foreign key (BOARD_ID) REFERENCES TB_BOARD(BOARD_ID) on delete cascade,
+    foreign key (EMAIL) REFERENCES TB_ACCOUNT(EMAIL) on delete cascade
+);
+~~~
+~~~
+create table TB_ALARM(
+    ALARM_ID varchar(40),
+    TARGET_ACCOUNT varchar(100) not null ,
+    TRIGGER_ACCOUNT varchar(100) ,
+    EVENT_TYPE varchar(100) not null ,
+    EVENT_CONTENT_ID varchar(100) not null ,
+    RECIEVE_DATE datetime default now(),
+    CHECK_DATE datetime,
+    primary key (ALARM_ID),
+    foreign key (TARGET_ACCOUNT) REFERENCES TB_ACCOUNT(EMAIL) on delete cascade,
+    foreign key (TRIGGER_ACCOUNT) REFERENCES TB_ACCOUNT(EMAIL) on delete set null
+);
+~~~
+ 
+</p>
+</details>
+
 <details>
  <summary>TB_ACCOUNT</summary>
 <p>
@@ -186,112 +292,13 @@ mail.auth.limit =메일인증 유효시간 밀리세컨즈(ex 360000)
  |RECIEVE_DATE      | 알람을 받은 날짜                                 |                                   | datetime default now()         |         |  not null  |                 |
  |CHECK_DATE      | 알람을 읽은 날짜                                 |                                    | datetime                       |          | null      |                 |
 
-
  
 </p>
 </details>
- 
 
- 
- 
- ### SQL(DDL)
-~~~
-create table TB_ACCOUNT(
-    EMAIL varchar(100),
-    PASSWORD varchar(100) not null ,
-    NICKNAME varchar(30) unique ,
-    SIGNUP_DATE datetime default now(),
-    ROLE varchar(30) default 'MEMBER',
-    SOCIAL_ID varchar(100) unique,
-    AUTH_KEY varchar(40) not null,
-    IS_AUTH boolean default false,
-    primary key(EMAIL)
-);
-~~~
 
-~~~
-create table TB_BOARD(
-     BOARD_ID int auto_increment,
-     TITLE varchar(110) not null ,
-     CONTENT varchar(750) not null ,
-     LIKE_ int default 0,
-     VIEW int default 0,
-     REG_DATE datetime default now(),
-     UP_DATE datetime,
-     EMAIL varchar(100) ,
-     primary key (BOARD_ID),
-     foreign key (EMAIL) REFERENCES TB_ACCOUNT(EMAIL) on delete set null
-);
-~~~
-~~~
-create table TB_COMMENT(
-    COMMENT_ID int auto_increment,
-    BOARD_ID int not null ,
-    CONTENT varchar(350) not null ,
-    LIKE_ int default 0,
-    REG_DATE datetime default now(),
-    UP_DATE datetime,
-    EMAIL varchar(100),
-    GROUP_ int not null, ##COMMENT_ID 값이 들어감
-    DEL_PARENT_CNT int default 0,
-    HAS_DEL_TYPE_PARENT boolean,
-    TYPE varchar(30) not null, ##PARENT_ID가 NULL 인데 TYPE이 CHILD면 알수없음 댓글 만들면 됨
-    primary key (COMMENT_ID),
-    foreign key (BOARD_ID) REFERENCES  TB_BOARD(BOARD_ID) on delete cascade ,
-    foreign key (EMAIL) REFERENCES TB_ACCOUNT(EMAIL) on delete set null
-);
-~~~
-~~~
-create table TB_LIKE_BOARD(
-    LIKE_BOARD_ID varchar(40),
-    BOARD_ID int not null ,
-    EMAIL varchar(100) ,
-    REG_DATE datetime default now(),
-    primary key (LIKE_BOARD_ID),
-    foreign key (BOARD_ID) REFERENCES TB_BOARD(BOARD_ID) on delete cascade ,
-    foreign key (EMAIL) REFERENCES TB_ACCOUNT(EMAIL) on delete set null
-);
-~~~
-~~~
-create table TB_LIKE_COMMENT(
-    LIKE_COMMENT_ID varchar(40),
-    COMMENT_ID int not null ,
-    EMAIL varchar(100) ,
-    REG_DATE datetime default now(),
-    primary key (LIKE_COMMENT_ID),
-    foreign key (COMMENT_ID) REFERENCES TB_COMMENT(COMMENT_ID) on delete cascade ,
-    foreign key (EMAIL) REFERENCES TB_ACCOUNT(EMAIL) on delete set null
-);
-~~~
-~~~
-create table TB_FILE_ATTACHMENT(
-    FILE_ID varchar(40),
-    BOARD_ID int not null,
-    ORIGIN_NAME varchar(70) not null ,
-    SAVE_NAME varchar(70) unique ,
-    EXTENSION varchar(20) not null ,
-    DOWN int default 0,
-    SAVE_DATE datetime default now(),
-    EMAIL varchar(100) not null,
-    primary key(FILE_ID),
-    foreign key (BOARD_ID) REFERENCES TB_BOARD(BOARD_ID) on delete cascade,
-    foreign key (EMAIL) REFERENCES TB_ACCOUNT(EMAIL) on delete cascade
-);
-~~~
-~~~
-create table TB_ALARM(
-    ALARM_ID varchar(40),
-    TARGET_ACCOUNT varchar(100) not null ,
-    TRIGGER_ACCOUNT varchar(100) ,
-    EVENT_TYPE varchar(100) not null ,
-    EVENT_CONTENT_ID varchar(100) not null ,
-    RECIEVE_DATE datetime default now(),
-    CHECK_DATE datetime,
-    primary key (ALARM_ID),
-    foreign key (TARGET_ACCOUNT) REFERENCES TB_ACCOUNT(EMAIL) on delete cascade,
-    foreign key (TRIGGER_ACCOUNT) REFERENCES TB_ACCOUNT(EMAIL) on delete set null
-);
-~~~
+
+
 ~~~
 ## table 제거
 drop table TB_ALARM;
