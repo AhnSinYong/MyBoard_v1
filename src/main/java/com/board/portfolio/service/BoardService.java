@@ -99,9 +99,8 @@ public class BoardService {
 
     @Transactional
     public Map readPost(long boardId, AccountSecurityDTO accountDTO) {
-        BoardDetail boardDetail = storedBoardRepository.findById(boardId).orElseThrow(NotFoundPostException::new);
+        BoardDetail boardDetail = boardDetailRepository.findById(boardId).orElseThrow(NotFoundPostException::new);
         List<FileAttachment> fileAttachmentList = this.self().getFileAttachment(boardId, boardDetail);
-
         boardDetail.increaseView(storedBoardRepository);
 
         Map data = new HashMap<String,Object>();
@@ -123,7 +122,8 @@ public class BoardService {
 
     @Cacheable(value = "fileList", key = "#boardId")
     public List<FileAttachment> getFileAttachment(long boardId, BoardDetail boardDetail){
-        return boardDetail.getFileAttachmentList();
+        List fileList = boardDetail.getFileAttachmentList();
+        return fileList;
     }
 
 
