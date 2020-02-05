@@ -1,25 +1,10 @@
-## 표준 정의서
-### 게시판
-- SPA web
-- vue.js
-- spring boot
-- spring security
-- spring data jpa
-- Querydsl
-- MySQL
-- jmeter
-
-### Git Branch
-- master/origin
-- dev
-
 ## 실행방법
-1.본문의 하단에 있는 "DataBase" 항목의 DDL을 참고하여 데이터베이스를 세팅
+1.본 레포지토리를 클론받는다.(git clone)
 
-2.아래의 properties를 생성
+2.클론 받은 프로젝트 폴더에 properties 파일들을 생성
 
 <details>
- <summary> properties 생성</summary>
+ <summary> properties 상세내용</summary>
 <p>
  /resources/properties/private 경로에 아래의 properties 파일을 생성해야함
  
@@ -64,6 +49,25 @@ mail.auth.limit =메일인증 유효시간 밀리세컨즈(ex 360000)
  
 </p>
 </details>
+
+3.본문의 하단에 있는 "DataBase" 항목의 DDL을 참고하여 데이터베이스를 세팅
+
+## 표준 정의서
+### 게시판
+- SPA
+- vue.js
+- spring boot
+- spring security
+- spring data jpa
+- Querydsl
+- MySQL
+- cache(ehcache)
+- jmeter
+
+### Git Branch
+- master/origin
+- dev
+
 
 ## DataBase
 <details>
