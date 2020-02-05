@@ -4,7 +4,7 @@ import com.board.portfolio.domain.dto.CommentDTO;
 import com.board.portfolio.security.account.AccountSecurityDTO;
 import com.board.portfolio.service.CommentService;
 import com.board.portfolio.validation.anotation.BoardIdExist;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -15,13 +15,9 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api")
 @Validated
+@RequiredArgsConstructor
 public class CommentController {
-
-    private CommentService commentService;
-    @Autowired
-    public CommentController(CommentService commentService){
-        this.commentService = commentService;
-    }
+    private final CommentService commentService;
 
     @GetMapping("/comment/{boardId}")
     public ResponseEntity getCommentList(@PathVariable @BoardIdExist Long boardId,

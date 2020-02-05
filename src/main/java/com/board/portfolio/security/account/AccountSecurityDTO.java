@@ -5,7 +5,6 @@ import lombok.Data;
 
 import java.util.Date;
 
-//TODO password에 대한 엄격한 접근 제한이 필요할듯
 @Data
 public class AccountSecurityDTO {
     private String email;
@@ -16,4 +15,14 @@ public class AccountSecurityDTO {
     private String socialId;
     private String authKey;
     private boolean isAuth;
+
+    public AccountSecurityDTO(){
+
+    }
+
+    public AccountSecurityDTO(String email,String nickname, AccountRole role) {
+        this.email = email;
+        this.nickname = nickname;
+        this.role = role;
+    }
 }

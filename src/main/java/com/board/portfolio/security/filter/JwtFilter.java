@@ -4,7 +4,6 @@ import com.board.portfolio.security.cookie.JwtCookieUtil;
 import com.board.portfolio.security.handler.JwtFilterFailureHandler;
 import com.board.portfolio.security.handler.JwtFilterSuccessHandler;
 import com.board.portfolio.security.token.JwtPreToken;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;

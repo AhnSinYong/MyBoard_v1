@@ -2,7 +2,7 @@ package com.board.portfolio.service;
 
 import com.board.portfolio.domain.dto.AccountDTO;
 import com.board.portfolio.domain.entity.Account;
-import com.board.portfolio.exception.NotFoundEmailException;
+import com.board.portfolio.exception.custom.NotFoundEmailException;
 import com.board.portfolio.mail.EmailSender;
 import com.board.portfolio.mail.manager.AuthMail;
 import com.board.portfolio.repository.AccountRepository;
@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Service
@@ -31,7 +32,7 @@ public class AccountService {
         Account account = modelMapper.map(dto, Account.class);
         account = accountRepository.save(account);
         String authKey = account.getAuthKey();
-        Date signUpDate = account.getSignUpDate();
+        LocalDateTime signUpDate = account.getSignUpDate();
         emailSender.sendAuthMail(new AuthMail(dto.getEmail(), signUpDate, authKey));
 
     }
@@ -41,7 +42,7 @@ public class AccountService {
         String authKey = dto.getAuthKey();
         accountRepository
                 .findByEmailAndAuthKey(email, authKey)
-                .orElseThrow(()->new NotFoundEmailException("fail to find email for authenticate"))
+                .orElseThrow(NotFoundEmailException::new)
                 .setAuth(true);
         emailSender.completeAuthMail(email);
     }

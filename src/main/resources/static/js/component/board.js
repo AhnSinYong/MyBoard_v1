@@ -66,6 +66,7 @@ export default Vue.component('board',{
             inputMethod : shareObject.input.method,
             loginInfo : shareObject.login.info,
             loginMethod : shareObject.login.method,
+            failFunc : shareObject.failFunc,
             input:{
             },
             pagination:{
@@ -79,10 +80,14 @@ export default Vue.component('board',{
         }
     },
     created(){
-        shareObject.refreshManager.register(this.getBoardList,1);
+        shareObject.refreshManager.register(this.refreshBoard);
         this.getBoardList(1);
+
     },
     methods:{
+        refreshBoard(){
+            this.getBoardList(this.pagination.page);
+        },
         getBoardList(page){
             axios.get('/api/board/'+page)
                 .then(this.success)
@@ -93,7 +98,7 @@ export default Vue.component('board',{
             this.pagination = res.data;
         },
         fail(err){
-            alert(err.data.message);
+            this.failFunc.failFunc(err);
         },
     }
 });

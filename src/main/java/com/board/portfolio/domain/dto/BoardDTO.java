@@ -16,14 +16,14 @@ import java.util.List;
 public class BoardDTO {
     @Data
     public static class Write{
-        @NotBlank(message = "please, enter \"title\"")
-        @Size(min=1,max=50,message = "title must be at least 1 characters and at most 50 characters.")
+        @NotBlank(message = "{board.title.not.blank}")
+        @Size(min=1,max=50,message = "{board.title.size}")
         private String title;
-        @NotBlank(message = "please, enter \"content\"")
-        @Size(min=1,max=350,message = "content must be at least 1 characters and at most 350 characters.")
+        @NotBlank(message = "{board.content.not.blank}")
+        @Size(min=1,max=350,message = "{board.content.size}")
         private String content;
-        @FileSize(fileSize = 1024*1024, nullable = true, message = "The maximum file size is 1MB.")
-        @FileExtension(fileExtension = {"txt","hwp","png","jpg"}, nullable = true, message = "not allow extension.")
+        @FileSize(fileSize = 1024*1024, nullable = true, message = "{board.filesize}")
+        @FileExtension(fileExtension = {"txt","hwp","png","jpg"}, nullable = true, message = "{board.fileextension}")
         private List<MultipartFile> fileList;
 
         public boolean isNullFileList(){
@@ -32,18 +32,18 @@ public class BoardDTO {
     }
     @Data
     public static class Update{
-        @NotBlank(message = "please, enter \"title\"")
-        @Size(min=1,max=50,message = "title must be at least 1 characters and at most 50 characters.")
+        @NotBlank(message = "{board.title.not.blank}")
+        @Size(min=1,max=50,message = "{board.title.size}")
         private String title;
-        @NotBlank(message = "please, enter \"content\"")
-        @Size(min=1,max=350,message = "content must be at least 1 characters and at most 350 characters.")
+        @NotBlank(message = "{board.content.not.blank}")
+        @Size(min=1,max=350,message = "{board.content.size}")
         private String content;
 
         @Valid
         private List<FileDTO> existFileInfoList;
 
-        @FileSize(fileSize = 1024*1024, nullable = true, message = "The maximum file size is 1MB.")
-        @FileExtension(fileExtension = {"txt","hwp","png","jpg"}, nullable = true, message = "not allow extension.")
+        @FileSize(fileSize = 1024*1024, nullable = true, message = "{board.filesize}")
+        @FileExtension(fileExtension = {"txt","hwp","png","jpg"}, nullable = true, message = "{board.fileextension}")
         private List<MultipartFile> inputFileList;
 
         public boolean isNullFileList(){
@@ -66,7 +66,7 @@ public class BoardDTO {
     @Data
     public static class Like{
         @NotNull
-        @BoardIdExist(message = "post isn't exist")
+        @BoardIdExist(message = "{board.exist}")
         private Long boardId;
     }
 }

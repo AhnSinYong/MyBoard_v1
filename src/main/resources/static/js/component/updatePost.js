@@ -42,6 +42,7 @@ export default Vue.component('update-post',{
             inputMethod : shareObject.input.method,
             loginInfo : shareObject.login.info,
             loginMethod : shareObject.login.method,
+            failFunc : shareObject.failFunc,
 
             post:{
                 title:'',
@@ -97,8 +98,7 @@ export default Vue.component('update-post',{
             shareObject.refreshManager.refresh();
         },
         fail(err){
-            console.log(err);
-            alert(err.data);
+            this.failFunc.failFunc(err);
         },
         deleteFile(index){
             this.post.fileList.splice(index,1);

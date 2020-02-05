@@ -17,7 +17,7 @@ export default Vue.component('alarm',{
                             <div>
                                 <div>
                                     <span>{{new Date(alarm.recieveDate).format('yy-MM-dd a/p hh:mm:ss')}}</span>
-                                    <input type="button" value="x" @click="deleteAlarm(alarm)"                                           
+                                    <input type="button" value="x" @click.stop="deleteAlarm(alarm)"                                           
                                            class="btn btn-outline-dark right">
                                     <input type="button" value="go post" @click="showPost(alarm.eventContentId)"
                                            name="goPost"
@@ -47,6 +47,7 @@ export default Vue.component('alarm',{
             loginInfo : shareObject.login.info,
             deliveryData : shareObject.deliveryData,
             socket : shareObject.socket,
+            failFunc : shareObject.failFunc,
 
             alarmList:[],
 
@@ -99,6 +100,7 @@ export default Vue.component('alarm',{
         },
         setNickname(alarm){
             if(alarm.triggerAccount==null){
+                alarm.triggerAccount ={};
                 alarm.triggerAccount.nickname="unknown";
             }
         },
@@ -132,7 +134,7 @@ export default Vue.component('alarm',{
             this.alarmListVisibleState = false;
         },
         fail(err){
-            alert(err.data);
+            this.failFunc.failFunc(err);
         },
         checkAlarm(alarm){
             axios.put('/api/alarm/'+alarm.alarmId)

@@ -10,25 +10,25 @@ import javax.validation.constraints.Size;
 public class CommentDTO {
     @Data
     public static class Write{
-        @NotBlank(message = "not allow blank")
-        @Size(min=1, max=150)
+        @NotBlank(message = "{comment.not.blank}")
+        @Size(min=1, max=150, message = "{comment.size}")
         private String content;
     }
     @Data
     public static class Reply{
         @NotNull
-        @BoardIdExist
+        @BoardIdExist(message = "{board.exist}")
         private Long boardId;
         @NotNull
         private Long commentId;
-        @NotBlank(message = "not allow blank")
-        @Size(min=1, max=150)
+        @NotBlank(message = "{comment.not.blank}")
+        @Size(min=1, max=150, message = "{comment.size}")
         private String content;
     }
     @Data
     public static class Modify{
-        @NotBlank(message = "not allow blank")
-        @Size(min=1, max=150)
+        @NotBlank(message = "{comment.not.blank}")
+        @Size(min=1, max=150, message = "{comment.size}")
         private String content;
     }
 }

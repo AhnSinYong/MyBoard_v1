@@ -1,14 +1,14 @@
 package com.board.portfolio.security.account;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.board.portfolio.domain.entity.Account;
 import com.board.portfolio.domain.entity.AccountRole;
-import com.board.portfolio.exception.BlankEmailException;
-import com.board.portfolio.exception.BlankPasswordException;
-import com.board.portfolio.exception.InvalidAuthAccountException;
-import com.board.portfolio.exception.NotFoundEmailException;
+import com.board.portfolio.security.exception.BlankEmailException;
+import com.board.portfolio.security.exception.BlankPasswordException;
+import com.board.portfolio.security.exception.FailSignInException;
+import com.board.portfolio.security.exception.InvalidAuthAccountException;
 import com.board.portfolio.security.token.SignInPostToken;
 import com.board.portfolio.security.token.SignInPreToken;
-import org.modelmapper.ModelMapper;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -19,12 +19,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.board.portfolio.util.StaticUtils.modelMapper;
+
 public class AccountDetails extends User {
 
     private AccountSecurityDTO account;
 
     private void saveAccount(Account account){
-        this.account = new ModelMapper().map(account, AccountSecurityDTO.class);
+        this.account = modelMapper.map(account, AccountSecurityDTO.class);
     }
 
     public AccountDetails(String username, String password, Collection<? extends GrantedAuthority> authorities) {
@@ -52,18 +54,18 @@ public class AccountDetails extends User {
         validateSignIn(email,password,passwordEncoder);
     }
 
-    private void validateSignIn(String email, String password,PasswordEncoder passwordEncoder){
+    private void validateSignIn(String email, String password, PasswordEncoder passwordEncoder){
         if(!this.account.isAuth()){
-            throw new InvalidAuthAccountException("please, authenticate");
+            throw new InvalidAuthAccountException();
         }
         if(email.equals("") || email == null){
-            throw new BlankEmailException("please, enter \"email\"");
+            throw new BlankEmailException();
         }
         if(password.equals("") || password == null){
-            throw new BlankPasswordException("please, enter \"password\"");
+            throw new BlankPasswordException();
         }
         if(isAbleSignIn(email, password, passwordEncoder)){
-            throw new NotFoundEmailException("please, check login info");
+            throw new FailSignInException();
         }
     }
 
@@ -89,5 +91,11 @@ public class AccountDetails extends User {
 
     public SignInPostToken getPostToken(AccountDetails details) {
         return new SignInPostToken(details.getAccount(), details.getPassword(), details.getAuthorities() );
+    }
+    public static SignInPostToken getPostToken(DecodedJWT decodedJWT){
+        String email = decodedJWT.getClaim("email").asString();
+        String nickname = decodedJWT.getClaim("nickname").asString();
+        AccountRole role = decodedJWT.getClaim("role").as(AccountRole.class);
+        return new SignInPostToken(new AccountSecurityDTO(email,nickname, role), null, parseAuthorities(role));
     }
 }

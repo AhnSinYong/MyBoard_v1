@@ -2,7 +2,7 @@ package com.board.portfolio.service;
 
 import com.board.portfolio.domain.dto.BoardDTO;
 import com.board.portfolio.domain.entity.*;
-import com.board.portfolio.exception.*;
+import com.board.portfolio.exception.custom.*;
 import com.board.portfolio.paging.BoardPagination;
 import com.board.portfolio.paging.PageDTO;
 import com.board.portfolio.repository.BoardDetailRepository;
@@ -10,8 +10,11 @@ import com.board.portfolio.repository.BoardRepository;
 import com.board.portfolio.repository.FileAttachmentRepository;
 import com.board.portfolio.repository.LikeBoardRepository;
 import com.board.portfolio.security.account.AccountSecurityDTO;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.board.portfolio.store.repository.StoredBoardRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,38 +28,35 @@ import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.*;
 
+import static com.board.portfolio.util.StaticUtils.modelMapper;
+
 @Service
+@RequiredArgsConstructor
 public class BoardService {
 
-    private BoardRepository boardRepository;
-    private BoardDetailRepository boardDetailRepository;
-    private LikeBoardRepository likeBoardRepository;
-    private FileAttachmentRepository fileAttachmentRepository;
-    private BoardPagination boardPagination;
-    private ModelMapper modelMapper;
+    private final ApplicationContext applicationContext;
+    private BoardService self(){
+        return applicationContext.getBean(BoardService.class);
+    }
+
+
+    private final BoardRepository boardRepository;
+    private final BoardDetailRepository boardDetailRepository;
+    private final LikeBoardRepository likeBoardRepository;
+    private final FileAttachmentRepository fileAttachmentRepository;
+    private final BoardPagination boardPagination;
+    private final StoredBoardRepository storedBoardRepository;
 
     private final String FILE_COMMON_PATH = "./src/main/resources/attachment/";
 
-    @Autowired
-    public BoardService(BoardRepository boardRepository,
-                        BoardDetailRepository boardDetailRepository,
-                        LikeBoardRepository likeBoardRepository,
-                        FileAttachmentRepository fileAttachmentRepository,
-                        BoardPagination boardPagination,
-                        ModelMapper modelMapper){
-        this.boardRepository = boardRepository;
-        this.boardDetailRepository = boardDetailRepository;
-        this.likeBoardRepository = likeBoardRepository;
-        this.fileAttachmentRepository = fileAttachmentRepository;
-        this.boardPagination = boardPagination;
-        this.modelMapper = modelMapper;
-    }
-
+    @Transactional
     public PageDTO<Board> getPaginBoardList(int page){
         return boardPagination.getPaginationList(page);
     }
+
 
     @Transactional
     public void writePost(BoardDTO.Write boardDTO, AccountSecurityDTO accountDTO) {
@@ -64,14 +64,14 @@ public class BoardService {
         BoardDetail board = modelMapper.map(boardDTO, BoardDetail.class);
         Account account = modelMapper.map(accountDTO, Account.class);
         board.setAccount(account);
-        board = boardDetailRepository.save(board);
+        board = storedBoardRepository.save(board);
         try {
             if(!boardDTO.isNullFileList()){
                 saveFileAttachment(board, boardDTO.getFileList(), account);
             }
         }
         catch (IOException e){
-            throw new FailSaveFileException("fail to save file");
+            throw new FailSaveFileException();
         }
 
     }
@@ -99,55 +99,48 @@ public class BoardService {
 
     @Transactional
     public Map readPost(long boardId, AccountSecurityDTO accountDTO) {
-        BoardDetail boardDetail = boardDetailRepository.findById(boardId).orElseThrow(()->new NotFoundPostException());
-        List<FileAttachment> fileAttachmentList = boardDetail.getFileAttachmentList();
-
-        boardDetail.increaseView();
+        BoardDetail boardDetail = boardDetailRepository.findById(boardId).orElseThrow(NotFoundPostException::new);
+        List<FileAttachment> fileAttachmentList = this.self().getFileAttachment(boardId, boardDetail);
+        boardDetail.increaseView(storedBoardRepository);
 
         Map data = new HashMap<String,Object>();
         data.put("post",boardDetail);
         data.put("fileList", fileAttachmentList);
 
-        String email = accountDTO.getEmail();
-
-
-        boolean isLikedPost = isLikedPost(boardDetail.getLikeBoardList(), email);
+        boolean isLikedPost = isLikedPost(boardId, accountDTO.getEmail());
         data.put("isLikedPost",isLikedPost);
-
 
         return data;
     }
-    private boolean isLikedPost(List<LikeBoard> likeBoardList, String email){
+    private boolean isLikedPost(Long boardId, String email){
         if(email==null){
             return false;
         }
+        return likeBoardRepository.findByBoardAndAccount(new Board(boardId),new Account(email)).isPresent();
 
-        boolean isLikedBoard = false;
-
-        for(LikeBoard likeBoard : likeBoardList){
-            String likeEmail = likeBoard.getAccount().getEmail();
-            if(likeEmail.equals(email)){
-                isLikedBoard = true;
-                break;
-            }
-        }
-        return isLikedBoard;
     }
+
+    @Cacheable(value = "fileList", key = "#boardId")
+    public List<FileAttachment> getFileAttachment(long boardId, BoardDetail boardDetail){
+        List fileList = boardDetail.getFileAttachmentList();
+        return fileList;
+    }
+
 
     @Transactional
     public Map likePost(BoardDTO.Like dto, AccountSecurityDTO accountDTO) {
-        Board board = boardRepository.findById(dto.getBoardId()).orElseThrow(()->new NotFoundPostException());
+        Board board = boardRepository.findById(dto.getBoardId()).orElseThrow(NotFoundPostException::new);
         Account account = modelMapper.map(accountDTO, Account.class);
 
         Optional<LikeBoard> opLikeBoard =  likeBoardRepository.findByBoardAndAccount(board,account);
 
         if(opLikeBoard.isPresent()){//이미 "좋아요"를 누름
             likeBoardRepository.delete(opLikeBoard.get());
-            board.decreaseLike();
+            board.decreaseLike(storedBoardRepository);
         }
         else{
             likeBoardRepository.save(new LikeBoard(board,account));
-            board.increaseLike();
+            board.increaseLike(storedBoardRepository);
         }
 
         Map data = new HashMap<String,Object>();
@@ -158,7 +151,7 @@ public class BoardService {
 
     @Transactional
     public void download(HttpServletResponse res, String fileId) {
-        FileAttachment file = fileAttachmentRepository.findById(fileId).orElseThrow(()->new NotFoundFileException());
+        FileAttachment file = fileAttachmentRepository.findById(fileId).orElseThrow(NotFoundFileException::new);
 
         setDownloadHeader(res,file);
         executeDownload(res,file);
@@ -171,7 +164,7 @@ public class BoardService {
                     "attachment;filename="+docName+";");
         }
         catch (IOException e){
-            throw new FailDownLoadFileException("fail set config at header, contentType");
+            throw new FailDownLoadFileException();
         }
     }
 
@@ -188,22 +181,23 @@ public class BoardService {
             file.increaseDown();
         }
         catch (IOException e){
-            throw new FailDownLoadFileException("fail download");
+            throw new FailDownLoadFileException();
         }
 
     }
 
+    @CacheEvict(value = "fileList", key = "#boardId")
     @Transactional
-    public void deletePost(Long boardId, AccountSecurityDTO accountDTO) {
+    public void deletePost(long boardId, AccountSecurityDTO accountDTO) {
 
-        Board board = boardRepository.findById(boardId).orElseThrow(()->new NotFoundPostException("post isn't exist"));
+        BoardDetail board = boardDetailRepository.findById(boardId).orElseThrow(NotFoundPostException::new);
         if(!board.getAccount().getEmail().equals(accountDTO.getEmail())){
-            throw new NotAllowAccessException("not allow access");
+            throw new NotAllowAccessException();
         }
 
         List<FileAttachment> fileAttachmentList = board.getFileAttachmentList();
         deleteFilePhysic(fileAttachmentList);
-        boardRepository.delete(board);
+        storedBoardRepository.delete(board);
     }
     private void deleteFilePhysic(List<FileAttachment> fileAttachmentList){
         for(FileAttachment fileAttachment : fileAttachmentList){
@@ -213,17 +207,26 @@ public class BoardService {
         }
     }
 
+
     @Transactional
     public void updatePost(Long boardId, BoardDTO.Update dto, AccountSecurityDTO accountDTO) {
         Account account = modelMapper.map(accountDTO, Account.class);
-        BoardDetail board = boardDetailRepository.findById(boardId).orElseThrow(()->new NotFoundPostException("post isn't exist"));
-        board.setTitle(dto.getTitle());
-        board.setContent(dto.getContent());
-        board.setUpDate(new Date());
+        BoardDetail board = storedBoardRepository.findById(boardId).orElseThrow(NotFoundPostException::new);
+        if(!board.getAccount().getEmail().equals(accountDTO.getEmail())){
+            throw new NotAllowAccessException();
+        }
 
-        List<FileAttachment> fileAttachmentList = board.getFileAttachmentList();
+        board.updatePost(dto.getTitle(),
+                dto.getContent(),
+                LocalDateTime.now(),
+                storedBoardRepository);
 
+        this.self().updateFileList(board.getFileAttachmentList(),dto,boardId,account);
 
+    }
+
+    @CacheEvict(value = "fileList",key = "#boardId")
+    public void updateFileList(List<FileAttachment> fileAttachmentList,BoardDTO.Update dto, long boardId, Account account ){
         for(FileAttachment file : fileAttachmentList){
             if(!dto.isExistFileId(file.getFileId())){
                 deleteFilePhysic(Arrays.asList(file));
@@ -233,13 +236,11 @@ public class BoardService {
 
         try {
             if(!dto.isNullFileList()){
-                saveFileAttachment(board, dto.getInputFileList(), account);
+                saveFileAttachment(new BoardDetail(boardId), dto.getInputFileList(), account);
             }
         }
         catch (IOException e){
-            throw new FailSaveFileException("fail to save file");
+            throw new FailSaveFileException();
         }
-
-
     }
 }

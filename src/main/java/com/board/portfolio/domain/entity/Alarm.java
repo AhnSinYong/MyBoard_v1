@@ -2,9 +2,11 @@ package com.board.portfolio.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -15,7 +17,8 @@ import java.util.UUID;
 @Builder
 @Getter
 @Setter
-public class Alarm implements EntityDefaultValues{
+@EntityListeners(AuditingEntityListener.class)
+public class Alarm extends EntityDefaultValues{
 
     @Id
     @Column(name="ALARM_ID")
@@ -39,18 +42,14 @@ public class Alarm implements EntityDefaultValues{
     private String eventContentId;
 
     @Column(name = "RECIEVE_DATE")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date recieveDate;
+    @CreatedDate
+    private LocalDateTime recieveDate;
 
     @Column(name = "CHECK_DATE")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date checkDate;
+    private LocalDateTime checkDate;
 
-
-    @PrePersist
     @Override
     public void setDefaultValues() {
         this.alarmId = Optional.ofNullable(this.alarmId).orElse(UUID.randomUUID().toString());
-        this.recieveDate = Optional.ofNullable(this.recieveDate).orElse(new Date());
     }
 }

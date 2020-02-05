@@ -43,18 +43,18 @@ public class FileSizeValidator implements ConstraintValidator<FileSize, List<Mul
         if(isNull(file))
             return true;
         if(!isFileSizeFit(file)) {
-            setValidatorDefaultMessageFormat("파일 사이즈가 적절하지 않습니다. \n ({0})이하 크기로 입력해주세요", fileSize, cxt);
+//            setValidatorDefaultMessageFormat("파일 사이즈가 적절하지 않습니다. \n ({0})이하 크기로 입력해주세요", fileSize, cxt);
             return false;
         }
         return true;
     }
     private boolean validFile(MultipartFile file, ConstraintValidatorContext cxt){
         if(isNull(file)){
-            setValidatorDefaultMessageFormat("파일이 null 입니다. \n ({0})이하 크기로 입력해주세요",fileSize,cxt);
+//            setValidatorDefaultMessageFormat("파일이 null 입니다. \n ({0})이하 크기로 입력해주세요",fileSize,cxt);
             return false;
         }
         if(!isFileSizeFit(file)){
-            setValidatorDefaultMessageFormat("파일 사이즈가 적절하지 않습니다. \n ({0})이하 크기로 입력해주세요",fileSize,cxt);
+//            setValidatorDefaultMessageFormat("파일 사이즈가 적절하지 않습니다. \n ({0})이하 크기로 입력해주세요",fileSize,cxt);
             return false;
         }
         return true;

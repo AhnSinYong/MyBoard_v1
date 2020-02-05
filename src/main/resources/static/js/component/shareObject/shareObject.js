@@ -3,6 +3,7 @@ import coverView from "./share.coverView.js"
 import input from "./share.input.js"
 import refreshManager from "./share.refreshManager.js"
 import socket from "./share.socket.js"
+import failFunc from "./share.failFunc.js"
 
 export default {
     login: login,
@@ -13,4 +14,5 @@ export default {
         this.$emit(eventName,{name:name,content:data});
     },
     socket : socket,
+    failFunc : failFunc
 }
