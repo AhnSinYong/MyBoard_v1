@@ -16,5 +16,14 @@
     font-weight: bold;
 }
 .board .table td[name=number]{
-    width: 50px;
+    width: 65px;
+}
+.board .search {
+    margin-top : 15px;
+}
+.board .search select{
+    height: 30px;
+}
+.board input[name=write]{
+    float: right;
 }

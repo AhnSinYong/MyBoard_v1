@@ -15,10 +15,10 @@ public class BoardRepositoryCustomImpl implements BoardRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<Board> getBoardList(long start, int size) {
+    public List<Board> getBoardList(long startNum, int pageSize) {
         return queryFactory.selectFrom(board)
                 .orderBy(board.regDate.desc())
-                .restrict(new QueryModifiers((long)size,start-1))
+                .restrict(new QueryModifiers((long) pageSize,startNum-1))
                 .fetch();
     }
 }

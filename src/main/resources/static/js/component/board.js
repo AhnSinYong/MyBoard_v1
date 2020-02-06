@@ -34,7 +34,7 @@ export default Vue.component('board',{
             </div>
             <div>
                 <div>
-                    <input v-if="pagination.prevPage!=-1"type="button" value="prev"
+                    <input v-if="pagination.prevPage!=-1"type="button" :value="i18n('index.board.prev')"
                            class="btn btn-outline-dark" 
                            @click="getBoardList(pagination.prevPage)">
                     <input v-for="page in (pagination.endPage-pagination.startPage+1)" 
@@ -43,17 +43,34 @@ export default Vue.component('board',{
                            class="btn btn-outline-dark page-item"                           
                            :value="page+pagination.startPage-1" 
                            @click="getBoardList(page+pagination.startPage-1)">
-                    <input v-if="pagination.nextPage!=-1"type="button" value="next"
+                    <input v-if="pagination.nextPage!=-1"type="button" :value="i18n('index.board.next')"
                            class="btn btn-outline-dark" 
                            @click="getBoardList(pagination.nextPage)">
                 </div>                
             </div>
             <div>
                 <div>
-                    <input v-if="loginInfo.isLogin" type="button" value="write"
+                    <input v-if="loginInfo.isLogin" type="button" :value="i18n('index.board.write')"
                            class="btn btn-outline-dark" 
-                           @click="coverViewMethod.showWritePostView()">
+                           @click="coverViewMethod.showWritePostView()"
+                           name="write">
                 </div>
+            </div>
+            <div class="search">
+                <select v-model="searchCondition">
+                    <option value="?title=true">{{i18n('index.board.search.title')}}</option>
+                    <option value="?content=true">{{i18n('index.board.search.content')}}</option>
+                    <option value="?title=true&content=true">{{i18n('index.board.search.title_content')}}</option>
+                    <option value="?nickname=true">{{i18n('index.board.search.nickname')}}</option>                    
+                </select>
+                <input v-model="input.search" type="text">
+                <input type="button" :value="i18n('index.board.search')" 
+                       @click="search(input.search,searchCondition)"
+                       class="btn btn-outline-dark" >
+                <input v-show="mode=='search'" type="button"
+                       class="btn btn-outline-dark" 
+                       :value="i18n('index.board.search.return')" 
+                       @click="returnBoard()">
             </div>
         </div>`,
     components: {
@@ -68,7 +85,9 @@ export default Vue.component('board',{
             loginMethod : shareObject.login.method,
             failFunc : shareObject.failFunc,
             input:{
+                search:''
             },
+            mode:'normal',//'normal'or'search'
             pagination:{
                 list:[],
                 page:'',
@@ -77,6 +96,7 @@ export default Vue.component('board',{
                 prevPage:'',
                 nextPage:''
             },
+            searchCondition:'?title=true',
             i18n: i18n,
         }
     },
@@ -89,10 +109,32 @@ export default Vue.component('board',{
         refreshBoard(){
             this.getBoardList(this.pagination.page);
         },
+        returnBoard(){ //검색모드에서 일반모드로 변경
+            this.mode = 'normal';
+            this.input.search = '';
+            this.getNormalBoardList(1);
+        },
         getBoardList(page){
+            if(this.mode=='normal'){
+                this.getNormalBoardList(page);
+            }
+            if(this.mode=='search'){
+                this.getSearchBoardList(page,this.input.search, this.searchCondition)
+            }
+        },
+        getNormalBoardList(page){
             axios.get('/api/board/'+page)
                 .then(this.success)
                 .catch(this.fail)
+        },
+        getSearchBoardList(page,keyword, searchCondition){
+            axios.get('/api/board/search/'+page+searchCondition+'&keyword='+this.input.search)
+                .then(this.success)
+                .catch(this.fail)
+        },
+        search(keyword,searchCondition){
+            this.mode = 'search';
+            this.getSearchBoardList(1,keyword,searchCondition);
         },
         success(res){
             console.log(res);

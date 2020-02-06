@@ -28,11 +28,11 @@ public class StoredBoardRepository extends StoredRepository<BoardDetail> {
         this.boardDetailRepository = boardDetailRepository;
     }
 
-    public List<Board> getBoardList(int page, long start, int pageSize){
+    public List<Board> getBoardList(int page, long startNum, int pageSize){
         if(page<=storedSize()/pageSize){
-            return (List<Board>)getList(start,pageSize,o->o.transToBoard());
+            return (List<Board>)getList(startNum,pageSize,o->o.transToBoard());
         }
-        return boardRepository.getBoardList(start, pageSize);
+        return boardRepository.getBoardList(startNum, pageSize);
     }
 
     public void increaseView(Long id) {
