@@ -14,5 +14,5 @@ export default {
         this.$emit(eventName,{name:name,content:data});
     },
     socket : socket,
-    failFunc : failFunc
+    failFunc : failFunc,
 }

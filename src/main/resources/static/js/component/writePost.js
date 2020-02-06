@@ -7,8 +7,8 @@ export default Vue.component('write-Post',{
                 <div> <input type="button" value="x" 
                              class="btn btn-outline-dark right"
                              @click="inputMethod.closeView(input,coverViewMethod.hideWritePostView)"> </div>
-                <div ><input class="title" v-model="input.title" type="text" placeholder="title"></div>
-                <div><textarea class="content" v-model="input.content" placeholder="content"></textarea></div>
+                <div ><input class="title" v-model="input.title" type="text" :placeholder="i18n('index.post.title.placeholder')"></div>
+                <div><textarea class="content" v-model="input.content" :placeholder="i18n('index.post.content.placeholder')"></textarea></div>
                 <div>
                     <div v-for="(file,index) in input.fileList">
                         <span class="file-name"> name : {{file.name}}, size : {{file.size}}</span>
@@ -17,7 +17,7 @@ export default Vue.component('write-Post',{
                     <div><input type="file" ref="fileInput"@change="addFile()"></div>
                 </div>
                 <div>
-                    <input type="button" value="post" @click="writePost(input.title, input.content, input.fileList)"
+                    <input type="button" :value="i18n('index.post')" @click="writePost(input.title, input.content, input.fileList)"
                            class="btn btn-outline-dark right">
                 </div>
             </div>
@@ -35,7 +35,8 @@ export default Vue.component('write-Post',{
                 title : '',
                 content : '',
                 fileList : []
-            }
+            },
+            i18n : i18n,
 
         }
     },

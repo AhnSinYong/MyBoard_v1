@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface BoardIdExist {
-    String message() default "BoardId isn't exist";
+    String message() default "{board.exist}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};
 }

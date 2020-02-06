@@ -5,7 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 @Data
 @NoArgsConstructor
@@ -13,6 +15,12 @@ import java.util.Date;
 @Builder
 public class AuthMail {
     private String email;
-    private Date sendDate;
+    private LocalDateTime sendDate;
     private String authKey;
+
+    public long getSendDateMillis(){
+        LocalDateTime localDateTime = this.sendDate; // implementation details
+        ZonedDateTime zdt = ZonedDateTime.of(localDateTime, ZoneId.systemDefault());
+        return zdt.toInstant().toEpochMilli();
+    }
 }

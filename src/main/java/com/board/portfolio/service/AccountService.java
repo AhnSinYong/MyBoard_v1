@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Service
@@ -31,7 +32,7 @@ public class AccountService {
         Account account = modelMapper.map(dto, Account.class);
         account = accountRepository.save(account);
         String authKey = account.getAuthKey();
-        Date signUpDate = account.getSignUpDate();
+        LocalDateTime signUpDate = account.getSignUpDate();
         emailSender.sendAuthMail(new AuthMail(dto.getEmail(), signUpDate, authKey));
 
     }

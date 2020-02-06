@@ -2,9 +2,11 @@ package com.board.portfolio.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -15,7 +17,8 @@ import java.util.UUID;
 @Builder
 @Getter
 @Setter
-public class FileAttachment implements EntityDefaultValues{
+@EntityListeners(AuditingEntityListener.class)
+public class FileAttachment extends EntityDefaultValues{
 
     @Id
     @Column(name="FILE_ID")
@@ -39,8 +42,8 @@ public class FileAttachment implements EntityDefaultValues{
     private Integer down;
 
     @Column(name = "SAVE_DATE")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date saveDate;
+    @CreatedDate
+    private LocalDateTime saveDate;
 
     @ManyToOne
     @JoinColumn(name="EMAIL")
@@ -51,11 +54,9 @@ public class FileAttachment implements EntityDefaultValues{
         this.down++;
     }
 
-    @PrePersist
     @Override
     public void setDefaultValues() {
         this.fileId = UUID.randomUUID().toString();
-        this.saveDate = Optional.ofNullable(this.saveDate).orElse(new Date());
         this.down = Optional.ofNullable(this.down).orElse(0);
     }
 }

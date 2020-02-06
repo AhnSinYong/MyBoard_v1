@@ -108,12 +108,12 @@ public class AuthMailManager implements Runnable{
 
     private boolean isExpire(AuthMail authMail){
         long now = System.currentTimeMillis();
-        long expireTime = this.limitTime +authMail.getSendDate().getTime();
+        long expireTime = this.limitTime +authMail.getSendDateMillis();
         return now>expireTime;
     }
     private long howLeave(AuthMail authMail){
         long now = System.currentTimeMillis();
-        long leaveTime = (this.limitTime +authMail.getSendDate().getTime()) - now;
+        long leaveTime = (this.limitTime +authMail.getSendDateMillis()) - now;
         return leaveTime;
     }
 }

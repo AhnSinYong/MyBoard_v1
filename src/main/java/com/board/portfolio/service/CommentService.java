@@ -8,70 +8,43 @@ import com.board.portfolio.repository.CommentRepository;
 import com.board.portfolio.repository.LikeCommentRepository;
 import com.board.portfolio.security.account.AccountSecurityDTO;
 import com.board.portfolio.socket.AlarmSocketHandler;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
+import static com.board.portfolio.util.StaticUtils.modelMapper;
+
 @Service
+@RequiredArgsConstructor
 public class CommentService {
 
-    private CommentRepository commentRepository;
-    private LikeCommentRepository likeCommentRepository;
-    private AlarmSocketHandler alarmSocketHandler;
-    private ModelMapper modelMapper;
-    @Autowired
-    public CommentService(CommentRepository commentRepository,
-                          LikeCommentRepository likeCommentRepository,
-                          AlarmSocketHandler alarmSocketHandler,
-                          ModelMapper modelMapper){
-        this.commentRepository = commentRepository;
-        this.likeCommentRepository = likeCommentRepository;
-        this.alarmSocketHandler = alarmSocketHandler;
-        this.modelMapper = modelMapper;
-    }
+    private final CommentRepository commentRepository;
+    private final LikeCommentRepository likeCommentRepository;
+    private final AlarmSocketHandler alarmSocketHandler;
 
     @Transactional
-    public Map getCommentList(Long boardId,AccountSecurityDTO accountDTO) {
-        List<Comment> commentList = commentRepository.findAllByBoardOrderByGroupAscRegDateAsc(new Board(boardId));
+    public Map getCommentList(long boardId,AccountSecurityDTO accountDTO) {
+        List<Comment> commentList = commentRepository.getCommentList(new Board(boardId));
+        List<Comment> likedCommentList = Optional.ofNullable(accountDTO.getEmail())
+                .map(email->commentRepository.getLikedCommentList(new Board(boardId), new Account(email)))
+                .orElse(new ArrayList<>());
         Map data = new HashMap();
         data.put("commentList", commentList);
-        List isLikedList = new ArrayList();
-
-        String email = accountDTO.getEmail();
-        if(commentList!=null){
-
-            for(Comment comment: commentList){
-                boolean isLiked  = isLikedComment(comment.getLikeCommentList(), email);
-                isLikedList.add(isLiked);
-            }
-        }
-        data.put("isLikedList",isLikedList);
+        data.put("likedCommentList",likedCommentList);
         return data;
     }
-    private boolean isLikedComment(List<LikeComment> likeCommentList, String email){
-        if(email==null){
-            return false;
-        }
-        for(LikeComment likeComment : likeCommentList){
-            if(likeComment.getAccount().getEmail().equals(email)){
-                return true;
-            }
-        }
-        return false;
-    }
-
 
     @Transactional
     public Map modifyComment(Long commentId, CommentDTO.Modify dto, AccountSecurityDTO accountDTO) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundCommentException::new);
-        if(!comment.getAccount().getEmail().equals(accountDTO.getEmail())){
-            throw new NotAllowAccessException("not allow access");
+        if(!accountDTO.getEmail().equals(comment.getAccount().getEmail())){
+            throw new NotAllowAccessException();
         }
         comment.setContent(dto.getContent());
-        comment.setUpDate(new Date());
+        comment.setUpDate(LocalDateTime.now());
 
         Map data = new HashMap();
         data.put("boardId", comment.getBoard().getBoardId());
@@ -81,11 +54,10 @@ public class CommentService {
     @Transactional
     public Map deleteComment(Long commentId, AccountSecurityDTO accountDTO) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(NotFoundCommentException::new);
-        if(!comment.getAccount().getEmail().equals(accountDTO.getEmail())){
-            throw new NotAllowAccessException("not allow access");
+        if(!accountDTO.getEmail().equals(comment.getAccount().getEmail())){
+            throw new NotAllowAccessException();
         }
-
-        Optional<Comment> opChildCommnet =commentRepository.findTopByBoardAndGroupAndCommentIdGreaterThanOrderByRegDateAsc(comment.getBoard(),comment.getGroup(),commentId);
+        Optional<Comment> opChildCommnet =commentRepository.getChildComment(comment.getBoard(),comment.getGroup(),commentId);
         if(opChildCommnet.isPresent()){
             Comment childComment = opChildCommnet.get();
             childComment.increaseDelParentCnt(comment.getDelParentCnt()+1);

@@ -7,16 +7,16 @@ export default Vue.component('sign-up',{
                 <div> <input type="button" value="x" @click="inputMethod.closeView(input, coverViewMethod.hideSignUpView)"
                              class="btn btn-outline-dark right"> </div>
                 <div>
-                    <span> Please, fill out these items </span>
+                    <span> {{i18n('index.signup.guide')}} </span>
                 </div>
                 <div class="margin-auto-center">
-                    <input v-model="input.nickname" class="display-block" type="text" placeholder="nickname">
-                    <input v-model="input.email" class="display-block" type="text" placeholder="email">
-                    <input v-model="input.password" class="display-block" type="password" placeholder="password">
-                    <input v-model="input.passwordCheck" class="display-block" type="password" placeholder="password-check">
+                    <input v-model="input.nickname" class="display-block" type="text" :placeholder="i18n('index.signup.nickname.placeholder')">
+                    <input v-model="input.email" class="display-block" type="text" :placeholder="i18n('index.signup.email.placeholder')">
+                    <input v-model="input.password" class="display-block" type="password" :placeholder="i18n('index.signup.password.placeholder')">
+                    <input v-model="input.passwordCheck" class="display-block" type="password" :placeholder="i18n('index.signup.passwordcheck.placeholder')">
                 </div>
                 <div>
-                    <input class="btn btn-outline-dark" type="button" value="sign up" @click="signUp()">
+                    <input class="btn btn-outline-dark" type="button" :value="i18n('index.signup')" @click="signUp()">
                 </div>
             </div>
         </div>`,
@@ -34,7 +34,8 @@ export default Vue.component('sign-up',{
                 email : '',
                 password : '',
                 passwordCheck : ''
-            }
+            },
+            i18n:i18n,
         }
     },
     async created(){
@@ -51,7 +52,7 @@ export default Vue.component('sign-up',{
             axios.post('/api/account', data)
                 .then(res=>{
                     console.log('/api/account : ', res);
-                    alert("회원가입이 완료되었습니다. \n 이메일 인증을 진행해주세요!");
+                    alert(i18n('index.signup.complete'));
                     this.coverViewMethod.hideSignUpView();
                     this.inputMethod.resetInput(this.input);
                 })

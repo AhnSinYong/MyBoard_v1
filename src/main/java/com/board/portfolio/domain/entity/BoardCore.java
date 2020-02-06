@@ -1,19 +1,26 @@
 package com.board.portfolio.domain.entity;
 
+import com.board.portfolio.store.repository.StoredBoardRepository;
+import com.board.portfolio.store.repository.StoredEntityIdentifier;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @MappedSuperclass
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-public abstract class BoardCore implements EntityDefaultValues{
+@EntityListeners(AuditingEntityListener.class)
+public abstract class BoardCore extends EntityDefaultValues implements StoredEntityIdentifier<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,12 +37,11 @@ public abstract class BoardCore implements EntityDefaultValues{
     private Integer view;
 
     @Column(name = "REG_DATE")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date regDate;
+    @CreatedDate
+    private LocalDateTime regDate;
 
     @Column(name = "UP_DATE")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date upDate;
+    private LocalDateTime upDate;
 
     @ManyToOne
     @JoinColumn(name="EMAIL")
@@ -50,18 +56,33 @@ public abstract class BoardCore implements EntityDefaultValues{
     public void increaseLike(){
         this.like++;
     }
+    public void increaseLike(StoredBoardRepository storedBoardRepository){
+        this.like++;
+        storedBoardRepository.increaseLike(this.boardId);
+    }
     public void decreaseLike(){
         this.like--;
+    }
+    public void decreaseLike(StoredBoardRepository storedBoardRepository){
+        this.like--;
+        storedBoardRepository.decreaseLike(this.boardId);
     }
     public void increaseView(){
         this.view++;
     }
+    public void increaseView(StoredBoardRepository storedBoardRepository){
+        this.view++;
+        storedBoardRepository.increaseView(this.boardId);
+    }
 
-    @PrePersist
+    public void updatePost(String title, LocalDateTime upDate){
+        this.title = title;
+        this.upDate = upDate;
+    }
+
     @Override
     public void setDefaultValues() {
         this.like = Optional.ofNullable(this.like).orElse(0);
         this.view = Optional.ofNullable(this.view).orElse(0);
-        this.regDate = Optional.ofNullable(this.regDate).orElse(new Date());
     }
 }

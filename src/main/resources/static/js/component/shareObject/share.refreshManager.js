@@ -1,3 +1,10 @@
+/*
+외부에서 register(func, arg1, arg2) 이런식으로 등록하게되면
+func(arg1, arg2) 이런식으로 동작하는 것과 같은 동작을 한다.
+
+ex) shareObject.refreshManager.register(this.refreshBoard); << 이경우는 매개변수가 없음
+ */
+
 export default {
     methods:[],
     refresh(){
