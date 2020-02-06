@@ -52,10 +52,11 @@ export default Vue.component('board',{
                 <div>
                     <input v-if="loginInfo.isLogin" type="button" :value="i18n('index.board.write')"
                            class="btn btn-outline-dark" 
-                           @click="coverViewMethod.showWritePostView()">
+                           @click="coverViewMethod.showWritePostView()"
+                           name="write">
                 </div>
             </div>
-            <div>
+            <div class="search">
                 <select v-model="searchCondition">
                     <option value="?title=true">{{i18n('index.board.search.title')}}</option>
                     <option value="?content=true">{{i18n('index.board.search.content')}}</option>
@@ -63,8 +64,13 @@ export default Vue.component('board',{
                     <option value="?nickname=true">{{i18n('index.board.search.nickname')}}</option>                    
                 </select>
                 <input v-model="input.search" type="text">
-                <input type="button" :value="i18n('index.board.search')" @click="search(input.search,searchCondition)">
-                <input v-show="mode=='search'" type="button" :value="i18n('index.board.search.return')" @click="returnBoard()">
+                <input type="button" :value="i18n('index.board.search')" 
+                       @click="search(input.search,searchCondition)"
+                       class="btn btn-outline-dark" >
+                <input v-show="mode=='search'" type="button"
+                       class="btn btn-outline-dark" 
+                       :value="i18n('index.board.search.return')" 
+                       @click="returnBoard()">
             </div>
         </div>`,
     components: {
