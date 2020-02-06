@@ -34,7 +34,7 @@ export default Vue.component('board',{
             </div>
             <div>
                 <div>
-                    <input v-if="pagination.prevPage!=-1"type="button" value="prev"
+                    <input v-if="pagination.prevPage!=-1"type="button" :value="i18n('index.board.prev')"
                            class="btn btn-outline-dark" 
                            @click="getBoardList(pagination.prevPage)">
                     <input v-for="page in (pagination.endPage-pagination.startPage+1)" 
@@ -43,7 +43,7 @@ export default Vue.component('board',{
                            class="btn btn-outline-dark page-item"                           
                            :value="page+pagination.startPage-1" 
                            @click="getBoardList(page+pagination.startPage-1)">
-                    <input v-if="pagination.nextPage!=-1"type="button" value="next"
+                    <input v-if="pagination.nextPage!=-1"type="button" :value="i18n('index.board.next')"
                            class="btn btn-outline-dark" 
                            @click="getBoardList(pagination.nextPage)">
                 </div>                
