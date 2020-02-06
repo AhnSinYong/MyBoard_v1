@@ -62,6 +62,7 @@ mail.auth.limit =메일인증 유효시간 밀리세컨즈(ex 360000)
 - Querydsl
 - MySQL
 - cache(ehcache)
+- WebSocket
 - jmeter
 
 ### Git Branch
