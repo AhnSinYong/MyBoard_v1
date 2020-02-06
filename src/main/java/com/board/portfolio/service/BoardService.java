@@ -4,7 +4,8 @@ import com.board.portfolio.domain.dto.BoardDTO;
 import com.board.portfolio.domain.entity.*;
 import com.board.portfolio.exception.custom.*;
 import com.board.portfolio.paging.BoardPagination;
-import com.board.portfolio.paging.PageDTO;
+import com.board.portfolio.paging.PagingResult;
+import com.board.portfolio.paging.SearchBoardPagination;
 import com.board.portfolio.repository.BoardDetailRepository;
 import com.board.portfolio.repository.BoardRepository;
 import com.board.portfolio.repository.FileAttachmentRepository;
@@ -48,13 +49,19 @@ public class BoardService {
     private final LikeBoardRepository likeBoardRepository;
     private final FileAttachmentRepository fileAttachmentRepository;
     private final BoardPagination boardPagination;
+    private final SearchBoardPagination searchBoardPagination;
     private final StoredBoardRepository storedBoardRepository;
 
     private final String FILE_COMMON_PATH = "./src/main/resources/attachment/";
 
     @Transactional
-    public PageDTO<Board> getPaginBoardList(int page){
-        return boardPagination.getPaginationList(page);
+    public PagingResult<Board> getPaginBoardList(int page){
+        return boardPagination.getPagingResult(page);
+    }
+
+    @Transactional
+    public PagingResult<Board> getPaginSearchBoardList(int page, BoardDTO.Search dto){
+        return searchBoardPagination.getPagingResult(page,dto);
     }
 
 
