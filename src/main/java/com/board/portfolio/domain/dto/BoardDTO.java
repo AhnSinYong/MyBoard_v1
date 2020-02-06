@@ -15,6 +15,15 @@ import java.util.List;
 
 public class BoardDTO {
     @Data
+    public static class Search{
+        private boolean title;
+        private boolean content;
+        private boolean nickname;
+        @NotBlank(message = "{board.search.blank}")
+        private String keyword;
+    }
+
+    @Data
     public static class Write{
         @NotBlank(message = "{board.title.not.blank}")
         @Size(min=1,max=50,message = "{board.title.size}")
