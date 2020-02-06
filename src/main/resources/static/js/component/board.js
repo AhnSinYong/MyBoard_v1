@@ -7,13 +7,13 @@ export default Vue.component('board',{
                 <table class="table table-hover table-striped">
                     <thead>
                         <tr>
-                            <td name="number">NUM</td>
-                            <td name="title">TITLE</td>
-                            <td name="like">LIKE</td>
-                            <td name="view">VIEW</td>
-                            <td name="regdate">REGDATE</td>
-                            <td name="update">UPDATE</td>
-                            <td name="nickname">NICKNAME</td>                        
+                            <td name="number">{{i18n('index.board.number')}}</td>
+                            <td name="title">{{i18n('index.board.title')}}</td>
+                            <td name="like">{{i18n('index.board.like')}}</td>
+                            <td name="view">{{i18n('index.board.view')}}</td>
+                            <td name="regdate">{{i18n('index.board.regdate')}}</td>
+                            <td name="update">{{i18n('index.board.update')}}</td>
+                            <td name="nickname">{{i18n('index.board.nickname')}}</td>                        
                         </tr>
                     </thead>
                     <tbody >
@@ -27,7 +27,7 @@ export default Vue.component('board',{
                             <td>{{new Date(board.regDate).format('yy-MM-dd a/p hh:mm:ss')}}</td>                            
                             <td>{{new Date(board.upDate).format('yy-MM-dd a/p hh:mm:ss')}}</td>
                             <td v-if="board.account">{{board.account.nickname}}</td>
-                            <td v-else>알수없음</td>
+                            <td v-else>{{i18n('index.unknown')}}</td>
                         </tr>                    
                     </tbody>
                 </table>
@@ -76,7 +76,8 @@ export default Vue.component('board',{
                 endPage:'',
                 prevPage:'',
                 nextPage:''
-            }
+            },
+            i18n: i18n,
         }
     },
     created(){

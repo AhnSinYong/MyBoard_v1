@@ -25,9 +25,9 @@ export default Vue.component('update-post',{
                         </div>
                     </div>
                     <div>
-                        <input type="button" value="cancel" @click="returnPost()"
+                        <input type="button" :value="i18n('index.post.cancle')" @click="returnPost()"
                                    class="btn btn-outline-dark right">
-                        <input type="button" value="complete" @click="updatePost(post, input.fileList)"
+                        <input type="button" :value="i18n('index.post.complete')" @click="updatePost(post, input.fileList)"
                                class="btn btn-outline-dark right">                        
                     </div>
                 </div>                
@@ -52,6 +52,7 @@ export default Vue.component('update-post',{
             input:{
                 fileList:[]
             },
+            i18n : i18n,
         }
     },
     async created(){
