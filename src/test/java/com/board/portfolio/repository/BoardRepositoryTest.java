@@ -2,7 +2,7 @@ package com.board.portfolio.repository;
 
 import com.board.portfolio.domain.entity.Board;
 import com.board.portfolio.paging.BoardPagination;
-import com.board.portfolio.paging.PageDTO;
+import com.board.portfolio.paging.PagingResult;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,7 +24,7 @@ class BoardRepositoryTest {
     }
     @Test
     public void getPaginationTest(){
-        PageDTO<Board> page = boardPagination.getPaginationList(1);
+//        PagingResult<Board> page = boardPagination.getPaginationList(1);
     }
 
     @Test
