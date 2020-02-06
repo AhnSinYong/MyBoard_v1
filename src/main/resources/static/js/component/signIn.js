@@ -23,18 +23,18 @@ export default Vue.component('sign-in',{
                 <div> <input type="button" value="x" @click="inputMethod.closeView(input,coverViewMethod.hideSignInView)"
                              class="btn btn-outline-dark right"> </div>
                 <div>
-                    <span class="title"> Sign In </span>
+                    <span class="title"> {{i18n('index.signin.title')}} </span>
                 </div>
                 <div class="margin-auto-center">
                     <div class="inline-block">
-                        <input v-model="input.email" type="text" placeholder="email" @keyup.enter="signIn(input.email, input.password)"></br>
-                        <input v-model="input.password" type="password" placeholder="password" @keyup.enter="signIn(input.email, input.password)">    
+                        <input v-model="input.email" type="text" :placeholder="i18n('index.signin.email.placeholder')" @keyup.enter="signIn(input.email, input.password)"></br>
+                        <input v-model="input.password" type="password" :placeholder="i18n('index.signin.password.placeholder')" @keyup.enter="signIn(input.email, input.password)">    
                     </div>
                 </div>
                 <div>
-                    <input type="button" value="sign in" @click="signIn(input.email, input.password)"
+                    <input type="button" :value="i18n('index.signin')" @click="signIn(input.email, input.password)"
                            class="btn btn-outline-dark">
-                    <input type="button" value="sign up" @click="coverViewMethod.showSignUpView()"
+                    <input type="button" :value="i18n('index.signup')" @click="coverViewMethod.showSignUpView()"
                            class="btn btn-outline-dark">
                 </div>
             </div>
@@ -51,7 +51,8 @@ export default Vue.component('sign-in',{
             input:{
                 email : '',
                 password : '',
-            }
+            },
+            i18n: i18n,
 
         }
     },
