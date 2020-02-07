@@ -21,7 +21,8 @@ export default Vue.component('sign-in',{
         `<div class="cover-view">
             <div class="component-sign-in margin-auto-center">
                 <div> <input type="button" value="x" @click="inputMethod.closeView(input,coverViewMethod.hideSignInView)"
-                             class="btn btn-outline-dark right"> </div>
+                             class="btn btn-outline-dark right"
+                             name="x"> </div>
                 <div>
                     <span class="title"> {{i18n('index.signin.title')}} </span>
                 </div>
@@ -37,10 +38,23 @@ export default Vue.component('sign-in',{
                     <input type="button" :value="i18n('index.signup')" @click="coverViewMethod.showSignUpView()"
                            class="btn btn-outline-dark">
                 </div>
-                <div>
-                    <a href="/oauth2/authorization/google"
-                       class="btn btn-success active" role="button"> Google {{i18n('index.signin')}}</a>
-                </div>      
+                <div class="social">
+                    <div class="btn">
+                        <a href="/oauth2/authorization/google"
+                           name="google"
+                           class="btn btn-secondary active" role="button"> Google {{i18n('index.signin')}}</a>
+                    </div>      
+                    <div class="btn">
+                        <a href="/oauth2/authorization/naver"
+                           name="naver"
+                           class="btn btn-secondary active" role="button"> Naver {{i18n('index.signin')}}</a>
+                    </div>
+                    <div class="btn">
+                        <a href="/oauth2/authorization/kakao"
+                           name="kakao"
+                           class="btn btn-secondary active" role="button"> Kakao {{i18n('index.signin')}}</a>
+                    </div>                                  
+                </div>
             </div>
         </div>`,
     components: {
