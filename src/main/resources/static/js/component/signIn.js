@@ -37,6 +37,10 @@ export default Vue.component('sign-in',{
                     <input type="button" :value="i18n('index.signup')" @click="coverViewMethod.showSignUpView()"
                            class="btn btn-outline-dark">
                 </div>
+                <div>
+                    <a href="/oauth2/authorization/google"
+                       class="btn btn-success active" role="button"> Google {{i18n('index.signin')}}</a>
+                </div>      
             </div>
         </div>`,
     components: {
