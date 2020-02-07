@@ -3,6 +3,9 @@ package com.board.portfolio.security.social;
 import com.board.portfolio.domain.entity.Account;
 import com.board.portfolio.domain.entity.AccountRole;
 import com.board.portfolio.repository.AccountRepository;
+import com.board.portfolio.security.account.AccountSecurityDTO;
+import com.board.portfolio.security.cookie.JwtCookieUtil;
+import com.board.portfolio.security.jwt.JwtFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -13,13 +16,18 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
 import java.util.Map;
+
+import static com.board.portfolio.util.StaticUtils.modelMapper;
 
 @RequiredArgsConstructor
 @Component
 public class ApplicationOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
     private final AccountRepository accountRepository;
+    private final HttpServletResponse response;
+    private final JwtFactory jwtFactory;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -32,7 +40,7 @@ public class ApplicationOAuth2UserService implements OAuth2UserService<OAuth2Use
         Map attributes = oAuth2User.getAttributes();
 
         Account account = saveOrUpdate(new OAuthAttributes(registrationId, attributes));
-
+        responseJwtToken(account);
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority(account.getRole().getRoleName())),
                 attributes,userNameAttribueName);
@@ -48,5 +56,9 @@ public class ApplicationOAuth2UserService implements OAuth2UserService<OAuth2Use
                         .build()
         );
         return accountRepository.save(account);
+    }
+    private void responseJwtToken(Account account){
+        String jwt = jwtFactory.generateToken(modelMapper.map(account, AccountSecurityDTO.class));
+        response.addCookie(JwtCookieUtil.createSignInCookie(jwt));
     }
 }
