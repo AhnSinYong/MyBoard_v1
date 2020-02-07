@@ -12,10 +12,16 @@ import java.util.Optional;
 @Component
 public class JwtCookieUtil {
     private static String jwtTokenName;
+    private static String path;
+    private static int maxAge;
 
     @Autowired
-    public JwtCookieUtil(@Value("${jwt.token.name}") String jwtTokenName){
+    public JwtCookieUtil(@Value("${jwt.cookie.name}") String jwtTokenName,
+                         @Value("${jwt.cookie.path}") String path,
+                         @Value("${jwt.cookie.max-age}") String maxAge){
         this.jwtTokenName = jwtTokenName;
+        this.path = path;
+        this.maxAge = Integer.parseInt(maxAge);
     }
 
     public static String getJwtCookieValue(HttpServletRequest req){
@@ -25,7 +31,13 @@ public class JwtCookieUtil {
     public static Cookie createSignOutCookie(){
         Cookie cookie = new Cookie(jwtTokenName,"");
         cookie.setMaxAge(0);
-        cookie.setPath("/");
+        cookie.setPath(path);
+        return cookie;
+    }
+    public static Cookie createSignInCookie(String jwt){
+        Cookie cookie = new Cookie(jwtTokenName, jwt);
+        cookie.setPath(path);
+        cookie.setMaxAge(maxAge);
         return cookie;
     }
 

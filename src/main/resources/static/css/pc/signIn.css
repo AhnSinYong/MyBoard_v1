@@ -1,7 +1,7 @@
 .component-sign-in{
     margin-top : 100px;
-    width : 300px;
-    height : 250px;
+    width : 270px;
+    height : 400px;
     background-color: white;
     padding: 50px;
 
@@ -16,4 +16,26 @@
 
 .component-sign-in input {
     margin-top: 5px;
+}
+
+.component-sign-in .social .btn a{
+    width: 150px;
+    margin-bottom: -10px;
+}
+
+.component-sign-in .social .btn a[name=google]{
+
+}
+.component-sign-in .social .btn a[name=naver]{
+    background-color: green;
+}
+.component-sign-in .social .btn a[name=kakao]{
+    background-color: #f7e600;
+}
+
+.component-sign-in input[name=x] {
+    position: relative;
+    bottom : 25px;
+    left : 35px;
+
 }

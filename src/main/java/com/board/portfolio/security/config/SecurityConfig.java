@@ -10,6 +10,7 @@ import com.board.portfolio.security.handler.SignInFilterFailureHandler;
 import com.board.portfolio.security.handler.SignInFilterSuccessHandler;
 import com.board.portfolio.security.provider.JwtProvider;
 import com.board.portfolio.security.provider.SignInProvider;
+import com.board.portfolio.security.social.ApplicationOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +30,8 @@ import java.util.Arrays;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final ApplicationOAuth2UserService applicationOAuth2UserService;
 
     private final SignInProvider signInProvider;
     private final SignInFilterSuccessHandler signInFilterSuccessHandler;
@@ -78,13 +81,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationProvider(this.signInProvider);
     }
 
-    //Filter 등록
+    //Filter 등록, Oauth 설정
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
         http
                 .csrf().disable();
 
@@ -95,5 +97,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(jwtFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(signInFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(signOutFilter(), UsernamePasswordAuthenticationFilter.class);
+
+        http
+                .oauth2Login()
+                    .userInfoEndpoint()
+                        .userService(applicationOAuth2UserService);
+
     }
 }

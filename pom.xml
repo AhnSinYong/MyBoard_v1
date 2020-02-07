@@ -86,7 +86,12 @@
             <artifactId>modelmapper</artifactId>
             <version>2.3.0</version>
         </dependency>
+
         <!-- Oauth-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.auth0</groupId>
             <artifactId>java-jwt</artifactId>
@@ -98,6 +103,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
+
         <!-- Web Socket -->
         <dependency>
             <groupId>javax.websocket</groupId>
@@ -109,12 +115,14 @@
             <artifactId>spring-websocket</artifactId>
             <version>4.2.4.RELEASE</version>
         </dependency>
+
         <!-- JSON object -->
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>
             <artifactId>json-simple</artifactId>
             <version>1.1.1</version>
         </dependency>
+
         <!-- QueryDSL -->
         <dependency>
             <groupId>com.querydsl</groupId>
@@ -127,17 +135,20 @@
             <version>4.1.4</version>
             <scope>provided</scope>
         </dependency>
+
         <!-- Caching-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
-        <!-- for use 2level Cache-->
+
+        <!-- for use jpa 2level Cache-->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-ehcache</artifactId>
             <version>5.4.8.Final</version>
         </dependency>
+
         <!-- ehCahce -->
         <dependency>
             <groupId>net.sf.ehcache</groupId>

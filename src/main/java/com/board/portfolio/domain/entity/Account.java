@@ -90,6 +90,8 @@ public class Account extends EntityDefaultValues {
         this.role = Optional.ofNullable(this.role).orElse(AccountRole.MEMBER);
         this.authKey = Optional.ofNullable(this.authKey).orElse(UUID.randomUUID().toString());
         this.isAuth = Optional.ofNullable(this.isAuth).orElse(false);
+        this.password = Optional.ofNullable(this.password).orElse("");
+        this.nickname = Optional.ofNullable(this.nickname).orElse(UUID.randomUUID().toString().substring(0,9));
     }
 
 }

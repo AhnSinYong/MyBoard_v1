@@ -58,10 +58,10 @@ mail.auth.limit =메일인증 유효시간 밀리세컨즈(ex 360000)
 - 게시물 CRUD + 첨부파일CRUD
 - 댓글 CRUD + 대댓글, 삭제된 댓글 표시
 - 좋아요
-- 실시간 알람
+- 알람(실시간)
 - 검색
 - 회원
-  - 로그인, 로그아웃
+  - 로그인, 로그아웃 (Google, Naver, Kakao)
   - 회원가입 + 메일인증
 - 메세지 국제화(한/영)
 
@@ -69,7 +69,7 @@ mail.auth.limit =메일인증 유효시간 밀리세컨즈(ex 360000)
 - SPA
 - vue.js
 - spring boot
-- spring security
+- spring security(JWT, Oauth2.0)
 - spring data jpa
 - Querydsl
 - MySQL
