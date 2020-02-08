@@ -15,6 +15,8 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
@@ -26,7 +28,6 @@ import static com.board.portfolio.util.StaticUtils.modelMapper;
 @Component
 public class ApplicationOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
     private final AccountRepository accountRepository;
-    private final HttpServletResponse response;
     private final JwtFactory jwtFactory;
 
     @Override
@@ -58,7 +59,9 @@ public class ApplicationOAuth2UserService implements OAuth2UserService<OAuth2Use
         return accountRepository.save(account);
     }
     private void responseJwtToken(Account account){
+        HttpServletResponse res = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
+
         String jwt = jwtFactory.generateToken(modelMapper.map(account, AccountSecurityDTO.class));
-        response.addCookie(JwtCookieUtil.createSignInCookie(jwt));
+        res.addCookie(JwtCookieUtil.createSignInCookie(jwt));
     }
 }
