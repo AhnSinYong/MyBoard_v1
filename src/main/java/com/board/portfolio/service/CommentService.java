@@ -4,6 +4,8 @@ import com.board.portfolio.domain.dto.CommentDTO;
 import com.board.portfolio.domain.entity.*;
 import com.board.portfolio.exception.custom.NotAllowAccessException;
 import com.board.portfolio.exception.custom.NotFoundCommentException;
+import com.board.portfolio.exception.custom.NotFoundPostException;
+import com.board.portfolio.repository.BoardRepository;
 import com.board.portfolio.repository.CommentRepository;
 import com.board.portfolio.repository.LikeCommentRepository;
 import com.board.portfolio.security.account.AccountSecurityDTO;
@@ -22,6 +24,7 @@ import static com.board.portfolio.util.StaticUtils.modelMapper;
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final BoardRepository boardRepository;
     private final LikeCommentRepository likeCommentRepository;
     private final AlarmSocketHandler alarmSocketHandler;
 
@@ -72,8 +75,9 @@ public class CommentService {
 
     @Transactional
     public Map writeComment(Long boardId, CommentDTO.Write dto, AccountSecurityDTO accountDTO) {
+        Board board = boardRepository.findById(boardId).orElseThrow(NotFoundPostException::new);
         Comment comment = Comment.builder()
-                .board(new Board(boardId))
+                .board(board)
                 .content(dto.getContent())
                 .account(new Account(accountDTO.getEmail()))
                 .type(CommentType.PARENT)
@@ -83,7 +87,7 @@ public class CommentService {
         comment = commentRepository.save(comment);
         comment.setGroup(comment.getCommentId());
 
-        alarmSocketHandler.commentAlarmProcess(boardId,modelMapper.map(accountDTO, Account.class ) );
+        alarmSocketHandler.commentAlarmProcess(comment.getBoard(),modelMapper.map(accountDTO, Account.class ) );
 
         Map data = new HashMap();
         data.put("boardId", comment.getBoard().getBoardId());
@@ -113,6 +117,7 @@ public class CommentService {
     @Transactional
     public Map replyWriteComment(CommentDTO.Reply dto, AccountSecurityDTO accountDTO) {
         Comment parentComment = commentRepository.findById(dto.getCommentId()).orElseThrow(NotFoundCommentException::new);
+
         Comment comment = Comment.builder()
                 .board(new Board(dto.getBoardId()))
                 .content(dto.getContent())
@@ -123,7 +128,7 @@ public class CommentService {
                 .build();
         comment = commentRepository.save(comment);
 
-        alarmSocketHandler.replyCommentAlarmProcess(comment,modelMapper.map(accountDTO, Account.class ) );
+        alarmSocketHandler.replyCommentAlarmProcess(parentComment, modelMapper.map(accountDTO, Account.class ));
 
         Map data = new HashMap();
         data.put("boardId",dto.getBoardId());

@@ -2,7 +2,6 @@ package com.board.portfolio.socket;
 
 import com.board.portfolio.domain.entity.*;
 import com.board.portfolio.exception.custom.NotAllowAccessException;
-import com.board.portfolio.exception.custom.NotFoundPostException;
 import com.board.portfolio.repository.AlarmRepository;
 import com.board.portfolio.repository.BoardRepository;
 import com.board.portfolio.security.jwt.JwtDecoder;
@@ -67,21 +66,20 @@ public class AlarmSocketHandler extends TextWebSocketHandler {
     }
 
     @Transactional
-    public void commentAlarmProcess(Long boardId, Account triggerAccount){
-        Board board = boardRepository.findById(boardId).orElseThrow(NotFoundPostException::new);
+    public void commentAlarmProcess(Board board, Account triggerAccount){
         Account targetAccount = board.getAccount();
-        if(targetAccount==null)
+        if(isNoAlarmPolicy(triggerAccount, targetAccount))
             return;
 
         Alarm alarm = Alarm.builder()
                 .targetAccount(targetAccount)
                 .triggerAccount(triggerAccount)
                 .eventType(AlarmEventType.WRITE_COMMENT)
-                .eventContentId(boardId.toString())
+                .eventContentId(board.getBoardId().toString())
                 .build();
         alarmRepository.save(alarm);
 
-        JSONObject jsonObject = buildCommentJObject(boardId , triggerAccount.getNickname());
+        JSONObject jsonObject = buildCommentJObject(board.getBoardId(), triggerAccount.getNickname());
         WebSocketSession session = (WebSocketSession)httpSessions.get(targetAccount.getEmail());
         if(session == null){
             return;
@@ -97,21 +95,23 @@ public class AlarmSocketHandler extends TextWebSocketHandler {
     }
 
     @Transactional
-    public void replyCommentAlarmProcess(Comment comment, Account triggerAccount){
-        Account targetAccount = comment.getAccount();
-        if(targetAccount==null)
+    public void replyCommentAlarmProcess(Comment parentComment, Account triggerAccount){
+        if(!isSameAccount(parentComment)){
+            commentAlarmProcess(parentComment.getBoard(), triggerAccount);
+        }
+        Account targetAccount = parentComment.getAccount();
+        if(isNoAlarmPolicy(triggerAccount, targetAccount))
             return;
-
 
         Alarm alarm = Alarm.builder()
                 .targetAccount(targetAccount)
                 .triggerAccount(triggerAccount)
                 .eventType(AlarmEventType.REPLY_COMMENT)
-                .eventContentId(comment.getBoard().getBoardId().toString())
+                .eventContentId(parentComment.getBoard().getBoardId().toString())
                 .build();
         alarmRepository.save(alarm);
 
-        Long boardId = comment.getBoard().getBoardId();
+        Long boardId = parentComment.getBoard().getBoardId();
         String nickname = triggerAccount.getNickname();
         JSONObject jsonObject = buildReplyCommentJObject(boardId, nickname);
 
@@ -136,6 +136,23 @@ public class AlarmSocketHandler extends TextWebSocketHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean isNoAlarmPolicy(Account trigger, Account target){
+        boolean state=false;
+        if(target==null){
+            state = true;
+        }
+        if(trigger.getEmail().equals(target.getEmail())){
+            state = true;
+        }
+        return state;
+    }
+
+    private boolean isSameAccount(Comment parentComment){
+        String commentEmail = parentComment.getAccount().getEmail();
+        String boardEmail = parentComment.getBoard().getAccount().getEmail();
+        return commentEmail.equals(boardEmail);
     }
 
 

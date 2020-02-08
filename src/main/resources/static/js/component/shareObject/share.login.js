@@ -15,7 +15,7 @@ export default {
             loginInfo.email = '';
         },
         logout(){
-            if(confirm("Do you want logout?")){
+            if(confirm(i18n('index.logout.confirm'))){
                 this.deleteCookie('jwt-token');
                 this.setLogoutState();
 

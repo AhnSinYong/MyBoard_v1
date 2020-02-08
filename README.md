@@ -52,16 +52,29 @@ mail.auth.limit =메일인증 유효시간 밀리세컨즈(ex 360000)
 
 3.본문의 하단에 있는 "DataBase" 항목의 DDL을 참고하여 데이터베이스를 세팅
 
-## 표준 정의서
+## 개요
 ### 게시판
+#### 기능
+- 게시물 CRUD + 첨부파일CRUD
+- 댓글 CRUD + 대댓글, 삭제된 댓글 표시
+- 좋아요
+- 알람(실시간)
+- 검색
+- 회원
+  - 로그인, 로그아웃 (Google, Naver, Kakao)
+  - 회원가입 + 메일인증
+- 메세지 국제화(한/영)
+
+#### 기술스택
 - SPA
 - vue.js
 - spring boot
-- spring security
+- spring security(JWT, Oauth2.0)
 - spring data jpa
 - Querydsl
 - MySQL
 - cache(ehcache)
+- WebSocket
 - jmeter
 
 ### Git Branch

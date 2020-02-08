@@ -22,6 +22,13 @@ public class BoardController {
     public ResponseEntity getBoardList(@PathVariable int page){
         return ResponseEntity.ok(boardService.getPaginBoardList(page));
     }
+
+    @GetMapping("/board/search/{page}")
+    public ResponseEntity getSearchBoardList(@PathVariable int page,
+                                             @Valid BoardDTO.Search dto){
+        return ResponseEntity.ok(boardService.getPaginSearchBoardList(page,dto));
+    }
+
     @PreAuthorize("hasRole('ROLE_MEMBER')")
     @PostMapping("/board")
     public ResponseEntity writePost(@Valid BoardDTO.Write dto,

@@ -14,6 +14,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
         @PropertySource("classpath:properties/private/database-config.properties"),
         @PropertySource("classpath:properties/private/mail-config.properties"),
         @PropertySource("classpath:properties/private/jwt-config.properties"),
+        @PropertySource("classpath:properties/private/oauth-config.properties"),
         @PropertySource("classpath:properties/pagination-config.properties"),
         @PropertySource("classpath:properties/file-upload-config.properties")
 })
