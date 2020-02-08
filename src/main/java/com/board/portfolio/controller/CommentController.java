@@ -27,7 +27,7 @@ public class CommentController {
 
     @PreAuthorize("hasRole('ROLE_MEMBER')")
     @PostMapping("/comment/{boardId}")
-    public ResponseEntity writeComment(@PathVariable @BoardIdExist Long boardId,
+    public ResponseEntity writeComment(@PathVariable Long boardId,
                                        @RequestBody @Valid CommentDTO.Write dto,
                                        @ModelAttribute("accountDTO") AccountSecurityDTO accountDTO){
         return ResponseEntity.ok(commentService.writeComment(boardId,dto,accountDTO));
