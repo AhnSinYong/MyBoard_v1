@@ -10,13 +10,14 @@ export default Vue.component('write-Post',{
                              @click="inputMethod.closeView(input,coverViewMethod.hideWritePostView)"> </div>
                 <div ><input class="title" v-model="input.title" type="text" :placeholder="i18n('index.post.title.placeholder')"></div>
                 <div>
-                <summernote
-                    name="editor"
-                    :model="input.content"
-                    :height="'300'"
-                    :lang="'ko-KR'"
-                    :placeholder="i18n('index.post.content.placeholder')"
-                    @change="value => { input.content = value }"/>
+                    <summernote
+                        class="editor"
+                        name="editor"
+                        :model="input.content"
+                        :height="'300'"
+                        :lang="'ko-KR'"
+                        :placeholder="i18n('index.post.content.placeholder')"
+                        @change="value => { input.content = value }"/>
                 </div>
                 <div>
                     <div v-for="(file,index) in input.fileList">
@@ -46,7 +47,6 @@ export default Vue.component('write-Post',{
                 fileList : []
             },
             i18n : i18n,
-
         }
     },
     async created(){
@@ -76,6 +76,7 @@ export default Vue.component('write-Post',{
             console.log(res);
             this.coverViewMethod.resetState();
             this.inputMethod.resetInput(this.input);
+            this.resetEditor();
             shareObject.refreshManager.refresh();
         },
         failWritePost(err){
@@ -87,6 +88,9 @@ export default Vue.component('write-Post',{
         },
         removeFile(index){
             this.input.fileList.splice(index,1);
+        },
+        resetEditor(){
+            $(".component-write-post #summernote").summernote("reset");
         }
 
     }
