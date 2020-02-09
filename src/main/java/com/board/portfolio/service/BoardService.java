@@ -234,6 +234,9 @@ public class BoardService {
 
     @CacheEvict(value = "fileList",key = "#boardId")
     public void updateFileList(List<FileAttachment> fileAttachmentList,BoardDTO.Update dto, long boardId, Account account ){
+        if(fileAttachmentList==null){
+            return;
+        }
         for(FileAttachment file : fileAttachmentList){
             if(!dto.isExistFileId(file.getFileId())){
                 deleteFilePhysic(Arrays.asList(file));
