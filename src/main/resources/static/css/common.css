@@ -27,16 +27,21 @@
 }
 
 .focusPage{
-    background-color: skyblue;
+    background-color: skyblue !important;
 }
 .focusLike{
-    background-color: skyblue;
+    background-color: skyblue !important;
 }
 .right{
     float: right;
 }
 .left{
     float: left;
+}
+
+.editor{
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 
 
