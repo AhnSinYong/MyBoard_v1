@@ -39,12 +39,6 @@
     float: left;
 }
 
-.editor{
-    margin-top: 15px;
-    margin-bottom: 15px;
-}
-
-
 /* width */
 ::-webkit-scrollbar {
     width: 10px;
