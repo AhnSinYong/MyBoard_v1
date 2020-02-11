@@ -113,7 +113,7 @@ create table TB_ACCOUNT(
 create table TB_BOARD(
      BOARD_ID int auto_increment,
      TITLE varchar(110) not null ,
-     CONTENT varchar(750) not null ,
+     CONTENT varchar(5000) not null ,
      LIKE_ int default 0,
      VIEW int default 0,
      REG_DATE datetime default now(),
@@ -222,7 +222,7 @@ create table TB_ALARM(
  |---------------|---------------------|-----------------------------------|-----------------------|----------|-----------|---------------------|
  |BOARD_ID            |게시글 식별 번호      | primary(auto inc)                        | int                     |   unique | not null  |   |
  |TITLE          |게시글의 제목			|                                 |varchar(110)            |           | not null  | 공백금지,50자 이하   |
- |CONTENT     	|게시글의 내용			|                                 |varchar(750)            |           | not null  |공백금지,350자 이하   |
+ |CONTENT     	|게시글의 내용			|                                 |varchar(5000)            |           | not null  |                   |
  |LIKE_     	|게시글의 좋아요			|                                 | int default 0          |          | not null  |                      |
  |VIEW       	|게시글의 조회수			 |                               | int default 0           |          | not null |                       |
  |REG_DATE     	|게시글 생성 날짜		    |                                | datetime default now()  |            |not null |                      |
