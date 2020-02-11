@@ -2,7 +2,10 @@ package com.board.portfolio.service;
 
 import com.board.portfolio.domain.dto.BoardDTO;
 import com.board.portfolio.domain.entity.*;
-import com.board.portfolio.exception.custom.*;
+import com.board.portfolio.exception.custom.FailSaveFileException;
+import com.board.portfolio.exception.custom.NotAllowAccessException;
+import com.board.portfolio.exception.custom.NotFoundFileException;
+import com.board.portfolio.exception.custom.NotFoundPostException;
 import com.board.portfolio.paging.BoardPagination;
 import com.board.portfolio.paging.PagingResult;
 import com.board.portfolio.paging.SearchBoardPagination;
@@ -14,14 +17,16 @@ import com.board.portfolio.security.account.AccountSecurityDTO;
 import com.board.portfolio.store.repository.StoredBoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static com.board.portfolio.util.StaticUtils.modelMapper;
 
