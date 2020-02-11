@@ -15,8 +15,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.DatatypeConverter;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -25,6 +29,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,6 +43,22 @@ public class FileService {
     private String ATTACHMENT_FILE_PATH;
     @Value("${file.save-path.img}")
     private String IMG_FILE_PATH;
+
+    public String Base64ToImg(String base64,String extension){
+        String name = UUID.randomUUID().toString();
+
+        byte[] imageBytes = DatatypeConverter.parseBase64Binary(base64);
+//        byte[] imageBytes = Base64.getDecoder().decode(base64.trim());
+
+        try {
+            BufferedImage bufImg = ImageIO.read(new ByteArrayInputStream(imageBytes));
+            ImageIO.write(bufImg, extension, new File(IMG_FILE_PATH+name+"."+extension));
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return IMG_FILE_PATH.split("/resources")[1]+name+"."+extension;
+    }
 
     public void saveFileAttachment(BoardDetail board, List<MultipartFile> multipartFileList, Account account) throws IOException {
         for(MultipartFile file : multipartFileList){
