@@ -14,21 +14,12 @@ import com.board.portfolio.security.account.AccountSecurityDTO;
 import com.board.portfolio.store.repository.StoredBoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -38,11 +29,7 @@ import static com.board.portfolio.util.StaticUtils.modelMapper;
 @RequiredArgsConstructor
 public class BoardService {
 
-    private final ApplicationContext applicationContext;
-    private BoardService self(){
-        return applicationContext.getBean(BoardService.class);
-    }
-
+    private final FileService fileService;
 
     private final BoardRepository boardRepository;
     private final BoardDetailRepository boardDetailRepository;
@@ -51,8 +38,6 @@ public class BoardService {
     private final BoardPagination boardPagination;
     private final SearchBoardPagination searchBoardPagination;
     private final StoredBoardRepository storedBoardRepository;
-
-    private final String FILE_COMMON_PATH = "./src/main/resources/attachment/";
 
     @Transactional
     public PagingResult<Board> getPaginBoardList(int page){
@@ -74,7 +59,7 @@ public class BoardService {
         board = storedBoardRepository.save(board);
         try {
             if(!boardDTO.isNullFileList()){
-                saveFileAttachment(board, boardDTO.getFileList(), account);
+                fileService.saveFileAttachment(board, boardDTO.getFileList(), account);
             }
         }
         catch (IOException e){
@@ -82,32 +67,11 @@ public class BoardService {
         }
 
     }
-    private void saveFileAttachment(BoardDetail board, List<MultipartFile> multipartFileList, Account account) throws IOException{
-        for(MultipartFile file : multipartFileList){
-            String originName = file.getOriginalFilename();
-            String extension = Arrays.stream(originName.split("\\.")).reduce((x,y)->y).get().toLowerCase();
-            String saveName = UUID.randomUUID().toString()+"."+extension;
-
-            byte[] bytes = file.getBytes();
-            Path path = Paths.get(FILE_COMMON_PATH + saveName);
-            Files.write(path, bytes);
-
-            FileAttachment fileAttachment = FileAttachment.builder()
-                    .board(board)
-                    .originName(originName)
-                    .saveName(saveName)
-                    .extension(extension)
-                    .account(account)
-                    .build();
-
-            fileAttachmentRepository.save(fileAttachment);
-        }
-    }
 
     @Transactional
     public Map readPost(long boardId, AccountSecurityDTO accountDTO) {
         BoardDetail boardDetail = boardDetailRepository.findById(boardId).orElseThrow(NotFoundPostException::new);
-        List<FileAttachment> fileAttachmentList = this.self().getFileAttachment(boardId, boardDetail);
+        List<FileAttachment> fileAttachmentList = fileService.getFileAttachment(boardId, boardDetail);
         boardDetail.increaseView(storedBoardRepository);
 
         Map data = new HashMap<String,Object>();
@@ -125,12 +89,6 @@ public class BoardService {
         }
         return likeBoardRepository.findByBoardAndAccount(new Board(boardId),new Account(email)).isPresent();
 
-    }
-
-    @Cacheable(value = "fileList", key = "#boardId")
-    public List<FileAttachment> getFileAttachment(long boardId, BoardDetail boardDetail){
-        List fileList = boardDetail.getFileAttachmentList();
-        return fileList;
     }
 
 
@@ -159,38 +117,7 @@ public class BoardService {
     @Transactional
     public void download(HttpServletResponse res, String fileId) {
         FileAttachment file = fileAttachmentRepository.findById(fileId).orElseThrow(NotFoundFileException::new);
-
-        setDownloadHeader(res,file);
-        executeDownload(res,file);
-    }
-    private void setDownloadHeader(HttpServletResponse res, FileAttachment file){
-        try{
-            String docName = URLEncoder.encode(file.getOriginName(),"UTF-8").replaceAll("\\+", "%20"); //한글파일명 깨지지 않도록
-            res.setContentType("application/octet-stream");
-            res.setHeader("Content-Disposition",
-                    "attachment;filename="+docName+";");
-        }
-        catch (IOException e){
-            throw new FailDownLoadFileException();
-        }
-    }
-
-    private void executeDownload(HttpServletResponse res, FileAttachment file){
-        File down_file = new File(FILE_COMMON_PATH+file.getSaveName());
-        try(FileInputStream fileIn = new FileInputStream(down_file);
-            ServletOutputStream out = res.getOutputStream();){
-            byte[] outputByte = new byte[4096];
-            while(fileIn.read(outputByte, 0, 4096) != -1)
-            {
-                out.write(outputByte, 0, 4096);
-            }
-            out.flush();
-            file.increaseDown();
-        }
-        catch (IOException e){
-            throw new FailDownLoadFileException();
-        }
-
+        fileService.download(res,file);
     }
 
     @CacheEvict(value = "fileList", key = "#boardId")
@@ -203,17 +130,9 @@ public class BoardService {
         }
 
         List<FileAttachment> fileAttachmentList = board.getFileAttachmentList();
-        deleteFilePhysic(fileAttachmentList);
+        fileService.deleteFilePhysic(fileAttachmentList);
         storedBoardRepository.delete(board);
     }
-    private void deleteFilePhysic(List<FileAttachment> fileAttachmentList){
-        for(FileAttachment fileAttachment : fileAttachmentList){
-            File file = new File(FILE_COMMON_PATH+fileAttachment.getSaveName());
-            if(file.exists())
-                file.delete();
-        }
-    }
-
 
     @Transactional
     public void updatePost(Long boardId, BoardDTO.Update dto, AccountSecurityDTO accountDTO) {
@@ -228,29 +147,7 @@ public class BoardService {
                 LocalDateTime.now(),
                 storedBoardRepository);
 
-        this.self().updateFileList(board.getFileAttachmentList(),dto,boardId,account);
+        fileService.updateFileList(board.getFileAttachmentList(),dto,boardId,account);
 
-    }
-
-    @CacheEvict(value = "fileList",key = "#boardId")
-    public void updateFileList(List<FileAttachment> fileAttachmentList,BoardDTO.Update dto, long boardId, Account account ){
-        if(fileAttachmentList==null){
-            return;
-        }
-        for(FileAttachment file : fileAttachmentList){
-            if(!dto.isExistFileId(file.getFileId())){
-                deleteFilePhysic(Arrays.asList(file));
-                fileAttachmentRepository.delete(file);
-            }
-        }
-
-        try {
-            if(!dto.isNullFileList()){
-                saveFileAttachment(new BoardDetail(boardId), dto.getInputFileList(), account);
-            }
-        }
-        catch (IOException e){
-            throw new FailSaveFileException();
-        }
     }
 }
