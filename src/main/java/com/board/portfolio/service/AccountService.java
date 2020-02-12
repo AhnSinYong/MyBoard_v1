@@ -6,6 +6,7 @@ import com.board.portfolio.exception.custom.NotFoundEmailException;
 import com.board.portfolio.mail.EmailSender;
 import com.board.portfolio.mail.manager.AuthMail;
 import com.board.portfolio.repository.AccountRepository;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,16 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+@RequiredArgsConstructor
 @Service
 public class AccountService {
-    @Autowired
-    AccountRepository accountRepository;
-    @Autowired
-    EmailSender emailSender;
-    @Autowired
-    ModelMapper modelMapper;
-    @Autowired
-    PasswordEncoder passwordEncoder;
+
+    private final AccountRepository accountRepository;
+    private final EmailSender emailSender;
+    private final ModelMapper modelMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public void signUp(AccountDTO.SignUp dto){
