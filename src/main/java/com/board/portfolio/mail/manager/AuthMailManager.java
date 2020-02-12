@@ -2,7 +2,6 @@ package com.board.portfolio.mail.manager;
 
 import com.board.portfolio.domain.entity.Account;
 import com.board.portfolio.repository.AccountRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -16,8 +15,6 @@ public class AuthMailManager implements Runnable{
 
     @Autowired
     private AccountRepository accountRepository;
-    @Autowired
-    ModelMapper modelMapper;
 
     private Long limitTime;
     private final List<AuthMail> authMailList = new ArrayList<>();
