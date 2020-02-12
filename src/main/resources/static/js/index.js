@@ -36,12 +36,37 @@ new Vue({
                     board:{}
                 }
             },
+
+            //for loading state
+            refCount: 0,
+            isLoading: false,
         }
     },
     async created(){
         this.loginMethod.checkLogin();
         document.querySelector("#app div[name=whole]").classList.remove( 'display-none' );
-        document.querySelector(".loading").classList.add('display-none');
+        document.querySelector(".page-loading").classList.add('display-none');
+
+        const setLoading = this.setLoading;
+        axios.interceptors.request.use((config) => {
+            // trigger 'loading=true' event here
+            setLoading(true);
+            return config;
+        }, (error) => {
+            // trigger 'loading=false' event here
+            setLoading(false);
+            return Promise.reject(error);
+        });
+
+        axios.interceptors.response.use((response) => {
+            // trigger 'loading=false' event here
+            setLoading(false);
+            return response;
+        }, (error) => {
+            // trigger 'loading=false' event here
+            setLoading(false);
+            return Promise.reject(error);
+        });
     },
     methods:{
         post(data){
@@ -61,6 +86,15 @@ new Vue({
                 let temp = params[i].split("=");
                 if ([temp[0]] == sname) { sval = temp[1]; }}
             return sval;
+        },
+        setLoading(isLoading) {
+            if (isLoading) {
+                this.refCount++;
+                this.isLoading = true;
+            } else if (this.refCount > 0) {
+                this.refCount--;
+                this.isLoading = (this.refCount > 0);
+            }
         }
     }
 })
