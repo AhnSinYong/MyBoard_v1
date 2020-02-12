@@ -18,8 +18,9 @@
     bottom: 0;
     right: 0;
     left: 0;
-    background:  rgba(0,0,0,0.2);
+    background:  rgba(55, 55, 55, 0.76);
     overflow-y: scroll;
+    z-index: 1041;   /* summernote의 모달창과의 상호작용때문에 추가*/
 }
 
 .cover-view-wrapper{
