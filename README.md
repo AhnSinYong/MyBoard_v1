@@ -55,23 +55,22 @@ mail.auth.limit =메일인증 유효시간 밀리세컨즈(ex 360000)
 ## 개요
 ### 게시판
 #### 기능
-- 게시물 CRUD + 첨부파일CRUD
-- 댓글 CRUD + 대댓글, 삭제된 댓글 표시
+- 게시물 CRUD + (첨부파일CRUD , 페이징)
+- 댓글 CRUD + (대댓글, 삭제된 댓글 표시)
 - 좋아요
 - 알람(실시간)
 - 검색
 - 회원
-  - 로그인, 로그아웃 (Google, Naver, Kakao)
+  - 로그인, 로그아웃, 소셜로그인(Google, Naver, Kakao)
   - 회원가입 + 메일인증
 - 메세지 국제화(한/영)
 
-#### 기술스택
+#### 적용기술
 - SPA
-- vue.js
+- thymeleaf, vue.js
 - spring boot
 - spring security(JWT, Oauth2.0)
-- spring data jpa
-- Querydsl
+- spring data jpa, Querydsl
 - MySQL
 - cache(ehcache)
 - WebSocket
@@ -114,7 +113,7 @@ create table TB_ACCOUNT(
 create table TB_BOARD(
      BOARD_ID int auto_increment,
      TITLE varchar(110) not null ,
-     CONTENT varchar(750) not null ,
+     CONTENT varchar(5000) not null ,
      LIKE_ int default 0,
      VIEW int default 0,
      REG_DATE datetime default now(),
@@ -223,7 +222,7 @@ create table TB_ALARM(
  |---------------|---------------------|-----------------------------------|-----------------------|----------|-----------|---------------------|
  |BOARD_ID            |게시글 식별 번호      | primary(auto inc)                        | int                     |   unique | not null  |   |
  |TITLE          |게시글의 제목			|                                 |varchar(110)            |           | not null  | 공백금지,50자 이하   |
- |CONTENT     	|게시글의 내용			|                                 |varchar(750)            |           | not null  |공백금지,350자 이하   |
+ |CONTENT     	|게시글의 내용			|                                 |varchar(5000)            |           | not null  |                   |
  |LIKE_     	|게시글의 좋아요			|                                 | int default 0          |          | not null  |                      |
  |VIEW       	|게시글의 조회수			 |                               | int default 0           |          | not null |                       |
  |REG_DATE     	|게시글 생성 날짜		    |                                | datetime default now()  |            |not null |                      |

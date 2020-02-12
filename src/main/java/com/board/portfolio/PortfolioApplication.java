@@ -16,7 +16,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
         @PropertySource("classpath:properties/private/jwt-config.properties"),
         @PropertySource("classpath:properties/private/oauth-config.properties"),
         @PropertySource("classpath:properties/pagination-config.properties"),
-        @PropertySource("classpath:properties/file-upload-config.properties")
+        @PropertySource("classpath:properties/file-config.properties")
 })
 public class PortfolioApplication {
 

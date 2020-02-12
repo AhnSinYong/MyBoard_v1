@@ -1,4 +1,5 @@
 import shareObject from "./shareObject/shareObject.js";
+import summernote from "./summernote.js";
 
 export default Vue.component('update-post',{
     props:['board'],
@@ -10,7 +11,16 @@ export default Vue.component('update-post',{
                                  class="btn btn-outline-dark right"
                                  @click="inputMethod.closeView(input,coverViewMethod.hideUpdatePostView)"> </div>
                     <div><input class="title" v-model="post.title"type="text"></div>
-                    <div><textarea class="content" v-model="post.content"></textarea></div>
+                    <div>
+                        <summernote
+                            class="editor"
+                            name="editor"
+                            :model="post.content"
+                            :height="'300'"
+                            :lang="'ko-KR'"
+                            :placeholder="i18n('index.post.content.placeholder')"
+                            @change="value => { post.content = value }"/>
+                    </div>
                     <div>
                         <div v-for="(file,index) in post.fileList">
                             <span class="file-name">{{file.originName}}</span>
@@ -34,7 +44,7 @@ export default Vue.component('update-post',{
             </div>
         </div>`,
     components: {
-
+        summernote,
     },
     data(){
         return {
@@ -60,6 +70,7 @@ export default Vue.component('update-post',{
     watch:{
         board(board, oldVal){
             this.post = board.post;
+            $('.component-update-post #summernote').summernote("code",this.post.content);
             this.post.fileList = board.fileList;
         }
     },

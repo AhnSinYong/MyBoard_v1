@@ -24,13 +24,15 @@
 }
 
 .component-sign-in .social .btn a[name=google]{
-
+    background-color: #cf4a33;
 }
 .component-sign-in .social .btn a[name=naver]{
     background-color: green;
 }
 .component-sign-in .social .btn a[name=kakao]{
-    background-color: #f7e600;
+    /*background-color: #f7e600;*/
+    background-color: #e2d200;
+
 }
 
 .component-sign-in input[name=x] {

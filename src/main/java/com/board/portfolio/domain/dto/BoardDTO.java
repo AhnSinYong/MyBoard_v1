@@ -29,7 +29,6 @@ public class BoardDTO {
         @Size(min=1,max=50,message = "{board.title.size}")
         private String title;
         @NotBlank(message = "{board.content.not.blank}")
-        @Size(min=1,max=350,message = "{board.content.size}")
         private String content;
         @FileSize(fileSize = 1024*1024, nullable = true, message = "{board.filesize}")
         @FileExtension(fileExtension = {"txt","hwp","png","jpg"}, nullable = true, message = "{board.fileextension}")
@@ -45,7 +44,6 @@ public class BoardDTO {
         @Size(min=1,max=50,message = "{board.title.size}")
         private String title;
         @NotBlank(message = "{board.content.not.blank}")
-        @Size(min=1,max=350,message = "{board.content.size}")
         private String content;
 
         @Valid
