@@ -56,7 +56,7 @@ public class BoardService {
 
     @Transactional
     public void writePost(BoardDTO.Write boardDTO, AccountSecurityDTO accountDTO) {
-        String transContent = transImgSrc(boardDTO.getContent());
+        String transContent = fileService.transImgSrc(boardDTO.getContent());
         boardDTO.setContent(transContent);
 
         BoardDetail board = modelMapper.map(boardDTO, BoardDetail.class);
@@ -72,27 +72,6 @@ public class BoardService {
             throw new FailSaveFileException();
         }
 
-    }
-
-    private String transImgSrc(String content){
-        String[] parts = content.split("data:image/");
-
-        for(String part : parts){
-            if(hasImgTag(part)){
-                String[] data = part.split(";");
-                String extension = data[0];
-                String filePath = fileService.Base64ToImg(data[1].split(",")[1],extension);
-                content = content.replaceFirst("data:image/"+extension+";base64.*?\"",filePath+"\"");
-            }
-        }
-        return content;
-    }
-    private boolean hasImgTag(String content){
-        boolean state = false;
-        if(content.split(";").length>1){
-            state = content.split(";")[1].indexOf("base64")==0;
-        }
-        return state;
     }
 
     @Transactional
@@ -155,18 +134,20 @@ public class BoardService {
         if(!board.getAccount().getEmail().equals(accountDTO.getEmail())){
             throw new NotAllowAccessException();
         }
+        fileService.updateStoreImgFolder(board.getContent(),"");
 
         List<FileAttachment> fileAttachmentList = board.getFileAttachmentList();
-        fileService.deleteFilePhysic(fileAttachmentList);
+        fileService.deleteStoreAttachFilePhysic(fileAttachmentList);
         storedBoardRepository.delete(board);
     }
 
     @Transactional
     public void updatePost(Long boardId, BoardDTO.Update dto, AccountSecurityDTO accountDTO) {
-        String transContent = transImgSrc(dto.getContent());
+        String transContent = fileService.transImgSrc(dto.getContent());
         dto.setContent(transContent);
         Account account = modelMapper.map(accountDTO, Account.class);
         BoardDetail board = storedBoardRepository.findById(boardId).orElseThrow(NotFoundPostException::new);
+        fileService.updateStoreImgFolder(board.getContent(),dto.getContent());
         if(!board.getAccount().getEmail().equals(accountDTO.getEmail())){
             throw new NotAllowAccessException();
         }
