@@ -65,3 +65,10 @@
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
+
+/*page loader css*/
+.loading {
+    position : fixed;
+    top : calc(50% - 100px);
+    left : calc(50% - 100px);
+}

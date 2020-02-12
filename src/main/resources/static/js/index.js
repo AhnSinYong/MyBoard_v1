@@ -40,8 +40,9 @@ new Vue({
     },
     async created(){
         this.loginMethod.checkLogin();
+        document.querySelector("#app div[name=whole]").classList.remove( 'display-none' );
+        document.querySelector(".loading").classList.add('display-none');
     },
-
     methods:{
         post(data){
             this.delivery.post[data.name] = data.content;

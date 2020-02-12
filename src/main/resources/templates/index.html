@@ -25,42 +25,52 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-bs4.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-bs4.js"></script>
+
+    <!-- page loader -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
     <title>Portfolio</title>
 </head>
 <body>
+<div class="page loading">
+    <div class="page-center">
+        <i class="fa fa-spinner fa-spin fa-9x"></i>
+    </div>
+</div>
 <div id="app">
-    <div class="header">
-        <div class="top-bar">
-            <div class="title">
-                <span th:text="#{index.title}" class="main inline-block left"></span>
-                <span class="inline-block right">
-                    <input th:value="#{index.signin}" v-if="!loginInfo.isLogin" type="button" class="btn btn-outline-dark" @click="coverViewMethod.showSignInView()">
-                    <input th:value="#{index.logout}" v-else type="button" class="btn btn-outline-dark" @click="loginMethod.logout()">
-                </span>
+    <div name="whole" class="display-none">
+        <div class="header">
+            <div class="top-bar">
+                <div class="title">
+                    <span th:text="#{index.title}" class="main inline-block left"></span>
+                    <span class="inline-block right">
+                        <input th:value="#{index.signin}" v-show="!loginInfo.isLogin" type="button" class="btn btn-outline-dark" @click="coverViewMethod.showSignInView()">
+                        <input th:value="#{index.logout}" v-show="loginInfo.isLogin" type="button" class="btn btn-outline-dark" @click="loginMethod.logout()">
+                    </span>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="body">
-         <board @post="post"/>
-    </div>
-    <div class="footer">
-        <div class="Internationalization">
-            <select v-model="lang" @change="setLanguage(lang)">
-                <option value="ko">한국어</option>
-                <option value="en">ENGLISH</option>
-            </select>
+        <div class="body">
+             <board @post="post"/>
         </div>
-    </div>
-    <div class="cover-view-wrapper">
-        <div v-show="coverViewState.signUp"><sign-up/></div>
-        <div v-show="coverViewState.signIn"><sign-in/></div>
-        <div v-show="coverViewState.writePost"><write-post/></div>
-        <div v-show="coverViewState.post"><post :board_id="delivery.post.boardId" @update_post="updatePost"/></div>
-        <div v-show="coverViewState.updatePost"><update-post :board="delivery.updatePost.board"/></div>
-    </div>
-    <div v-show="loginInfo.isLogin">
-        <alarm :is_login="loginInfo.isLogin"
-                @post="post"/>
+        <div class="footer">
+            <div class="Internationalization">
+                <select v-model="lang" @change="setLanguage(lang)">
+                    <option value="ko">한국어</option>
+                    <option value="en">ENGLISH</option>
+                </select>
+            </div>
+        </div>
+        <div class="cover-view-wrapper">
+            <div v-show="coverViewState.signUp"><sign-up/></div>
+            <div v-show="coverViewState.signIn"><sign-in/></div>
+            <div v-show="coverViewState.writePost"><write-post/></div>
+            <div v-show="coverViewState.post"><post :board_id="delivery.post.boardId" @update_post="updatePost"/></div>
+            <div v-show="coverViewState.updatePost"><update-post :board="delivery.updatePost.board"/></div>
+        </div>
+        <div v-show="loginInfo.isLogin">
+            <alarm :is_login="loginInfo.isLogin"
+                    @post="post"/>
+        </div>
     </div>
 </div>
 
