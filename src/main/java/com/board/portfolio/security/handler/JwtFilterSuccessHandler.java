@@ -1,5 +1,7 @@
 package com.board.portfolio.security.handler;
 
+import com.board.portfolio.security.cookie.JwtCookieUtil;
+import com.board.portfolio.security.token.SignInPostToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,6 +21,8 @@ public class JwtFilterSuccessHandler implements AuthenticationSuccessHandler {
             SecurityContext context = SecurityContextHolder.createEmptyContext();
             context.setAuthentication(auth);
             SecurityContextHolder.setContext(context);
+            String jwt = ((SignInPostToken) auth).getAccountSecurityDTO().getJwtToken();
+            res.addCookie(JwtCookieUtil.createSignInCookie(jwt));
         }
     }
 

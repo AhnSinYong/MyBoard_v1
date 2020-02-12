@@ -16,13 +16,16 @@ public class AccountSecurityDTO {
     private String authKey;
     private boolean isAuth;
 
+    private String jwtToken;
+
     public AccountSecurityDTO(){
 
     }
 
-    public AccountSecurityDTO(String email,String nickname, AccountRole role) {
+    public AccountSecurityDTO(String email,String nickname, AccountRole role, String jwtToken) {
         this.email = email;
         this.nickname = nickname;
         this.role = role;
+        this.jwtToken = jwtToken;
     }
 }

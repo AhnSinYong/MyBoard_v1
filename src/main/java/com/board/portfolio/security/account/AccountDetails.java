@@ -96,6 +96,6 @@ public class AccountDetails extends User {
         String email = decodedJWT.getClaim("email").asString();
         String nickname = decodedJWT.getClaim("nickname").asString();
         AccountRole role = decodedJWT.getClaim("role").as(AccountRole.class);
-        return new SignInPostToken(new AccountSecurityDTO(email,nickname, role), null, parseAuthorities(role));
+        return new SignInPostToken(new AccountSecurityDTO(email,nickname, role, decodedJWT.getToken()), parseAuthorities(role));
     }
 }
