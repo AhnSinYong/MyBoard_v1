@@ -1,4 +1,5 @@
 import shareObject from "./shareObject/shareObject.js";
+import summernote from "./summernote.js";
 
 export default Vue.component('write-Post',{
     template:
@@ -8,7 +9,16 @@ export default Vue.component('write-Post',{
                              class="btn btn-outline-dark right"
                              @click="inputMethod.closeView(input,coverViewMethod.hideWritePostView)"> </div>
                 <div ><input class="title" v-model="input.title" type="text" :placeholder="i18n('index.post.title.placeholder')"></div>
-                <div><textarea class="content" v-model="input.content" :placeholder="i18n('index.post.content.placeholder')"></textarea></div>
+                <div>
+                    <summernote
+                        class="editor"
+                        name="editor"
+                        :model="input.content"
+                        :height="'300'"
+                        :lang="'ko-KR'"
+                        :placeholder="i18n('index.post.content.placeholder')"
+                        @change="value => { input.content = value }"/>
+                </div>
                 <div>
                     <div v-for="(file,index) in input.fileList">
                         <span class="file-name"> name : {{file.name}}, size : {{file.size}}</span>
@@ -23,7 +33,7 @@ export default Vue.component('write-Post',{
             </div>
         </div>`,
     components: {
-
+        summernote,
     },
     data(){
         return {
@@ -37,10 +47,12 @@ export default Vue.component('write-Post',{
                 fileList : []
             },
             i18n : i18n,
-
         }
     },
     async created(){
+
+    },
+    mounted(){
 
     },
     methods:{
@@ -57,16 +69,17 @@ export default Vue.component('write-Post',{
                     'Content-Type': 'multipart/form-data'
                 }
             })
-                .then(this.successSignIn)
-                .catch(this.failSignIn)
+                .then(this.successWritePost)
+                .catch(this.failWritePost)
         },
-        successSignIn(res){
+        successWritePost(res){
             console.log(res);
             this.coverViewMethod.resetState();
             this.inputMethod.resetInput(this.input);
+            this.resetEditor();
             shareObject.refreshManager.refresh();
         },
-        failSignIn(err){
+        failWritePost(err){
             this.failFunc.failFunc(err);
         },
         addFile(){
@@ -75,6 +88,9 @@ export default Vue.component('write-Post',{
         },
         removeFile(index){
             this.input.fileList.splice(index,1);
+        },
+        resetEditor(){
+            $(".component-write-post #summernote").summernote("reset");
         }
 
     }
