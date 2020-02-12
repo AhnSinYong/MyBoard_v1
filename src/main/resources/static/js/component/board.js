@@ -6,7 +6,7 @@ export default Vue.component('board',{
             <div class="board-table">
                 <table class="table table-hover table-striped">
                     <thead>
-                        <tr>
+                        <tr class="board-head">
                             <td name="number">{{i18n('index.board.number')}}</td>
                             <td name="title">{{i18n('index.board.title')}}</td>
                             <td name="like">{{i18n('index.board.like')}}</td>
@@ -20,13 +20,13 @@ export default Vue.component('board',{
                         <tr v-for="board in pagination.list" 
                             @click="coverViewMethod.showPostView();
                                     deliveryData('post','boardId',board.boardId);">
-                            <td>{{board.boardId}}</td>
-                            <td>{{board.title}}</td>
-                            <td>{{board.like}}</td>
-                            <td>{{board.view}}</td>
-                            <td>{{new Date(board.regDate).format('yy-MM-dd a/p hh:mm:ss')}}</td>                            
-                            <td>{{new Date(board.upDate).format('yy-MM-dd a/p hh:mm:ss')}}</td>
-                            <td v-if="board.account">{{board.account.nickname}}</td>
+                            <td class="num">{{board.boardId}}</td>
+                            <td class="title">{{board.title}}</td>
+                            <td class="like">{{board.like}}</td>
+                            <td class="view">{{board.view}}</td>
+                            <td class="date regdate">{{new Date(board.regDate).format('yy-MM-dd a/p hh:mm:ss')}}</td>                            
+                            <td class="date update">{{new Date(board.upDate).format('yy-MM-dd a/p hh:mm:ss')}}</td>
+                            <td class="nickname"v-if="board.account">{{board.account.nickname}}</td>
                             <td v-else>{{i18n('index.unknown')}}</td>
                         </tr>                    
                     </tbody>
