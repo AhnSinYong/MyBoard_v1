@@ -33,6 +33,12 @@
 .focusLike{
     background-color: skyblue !important;
 }
+.warning-font{
+    font-weight: bold;
+    font-size: 0.8em;
+    color: red;
+    margin-bottom: 5px;
+}
 .right{
     float: right;
 }
