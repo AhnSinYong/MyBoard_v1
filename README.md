@@ -67,7 +67,7 @@ mail.auth.limit =메일인증 유효시간 밀리세컨즈(ex 360000)
 
 #### 적용기술
 - SPA
-- thymeleaf, vue.js
+- thymeleaf, vue.js + (jquery, summernote)
 - spring boot
 - spring security(JWT, Oauth2.0)
 - spring data jpa, Querydsl
@@ -337,36 +337,12 @@ create table TB_ALARM(
  
  
  ## 할 것
- - 커스텀한 예외를 못던지는 경우들을 해결해야해
- - security의 exception 처리를 추가해야함
-     - @initBinder로 처리하는 validator가 떨구는 예외도 처리해서 내보내야함
-     - message관련, mail관련 exception 발생하면 클라이언트에 "메일발송실패" 뜨게하자, rollback도 되야하고
- - 메일인증 링크 클릭시 보일 화면 추가
- - 인증유효시간 30분이 지날경우를 적용
-     - 스레드세이프하게 다시 생각해보자(syncronized?)
  - @FileSize , @FileExtension 대충 복붙한거 리팩토링필요함
      - extension 유효성 검사에서 . 으로 나누고 length 2아닐때 예외던지게 했는데 고쳐야함(ex: abc.def.hwp)
  - 프로퍼티즈 이용해서 확장자 제한 관리를 하는 것 필요
- - @AuthenticationPrincipal이 AccountDetails에 자동으로 주입이 안되네 
-     - 내가 구성한 AccountDetails가 문제일까?? 고민이 필요함
  - boardService의 파일다운로드에서 byte[4096]인거 설정파일에서 읽게 수정해야함
- - postView boardId 이슈 ----> vue router를 써야 근본적인 해결이 가능할듯
- - 쿠키유효시간이 다되서 소멸할때 로그인 정보도 갱신되게 만들자
  - 패키지, 클래스 관계도 그려보자 순환참조라던가 양방향참조가 존재하는지...
- 
- ## 생각해볼 것 
- - axios를 export 하는 파일들 안에서 명시적으로 쓰는 것 고려
-    - 경고 밑줄이 그어짐, import 같은 것을 써야 할까?           
 
-- 클라이언트에서 file을 리스트([])로 만들어서 formData에 담아 보냈지만 컨버터에서는 "[Object object]"라는 문자열로 인식했음
-    - 이를 해결하기 위해서 formData에 file[0], file[1] ... 이런식으로 여러개의 값을 추가해줫음
-    - List는 왜 안됬던걸까?
-    
-- 컨트롤러에서 원시타입을 @Valid 할 방법은 무엇이 있을까???
-- 뭔가 boardId, fileId 이런거에서 느낀건데, @Valid로 구지 확인안해도 로직상에서 어쩔수 없이 orElsethrow로 걸러지는거 같아 앞으로는 고려해보자
-- vue 에서 :key 값을 통해서 랜더링을 관리하는 구나, 그런데 updatePost.js에서 왜 deleteFile()했을때 업데이트가 안됬지????
-    - 이를 해결하기 위한 방법으로 :key의 값을 바꿔주는법
-    - this.$forceUpdate() 를 실행하는 법이 있다고함
 
 ### 메모    
 - valid 
@@ -382,27 +358,9 @@ create table TB_ALARM(
 
 - enum 
     - @converter를 사용하는 방법 고려
-        - https://lng1982.tistory.com/279   @Converter를 이용하는 방법 고려
-- @Test에서 JPA의 동작이 예상이 가지 않음 이해가 필요
-- Parsing에 static final이 안되는 이유?
-- @Valid와 message.properties 사용하는법
-    - setBasename에서 "/messages"를 꼭 붙여야하는 구나... 이거떄문에 오래해맴 
-    - https://www.javadevjournal.com/spring-boot/spring-custom-validation-message-source/    @valid에 메세지 사용하는법1
-    - https://www.baeldung.com/spring-custom-validation-message-source   @valid에 메세지 사용하는법2
-    - https://www.baeldung.com/spring-boot-internationalization   메세지 국제화
-- ResponseEntity 안쓰고 응답코드 내려주는법...?
-- @Entity의 Date 를 localdate 시리즈로 모두 변경        
+        - https://lng1982.tistory.com/279   @Converter를 이용하는 방법 고려        
         
 ### 피드백
-- 메일보내기는 스레드로 처리
-  	- 메일보내기위해 커넥션이 존재하는데 이 커넥션을 만드는게 시간이 걸리는 작업
-  	- 또는 커스텀하게해서 커넥션이 일정텀을 두고 close되게 만들면 시간이 덜걸릴수있음
-  	- 즉, 한번에 여러개를 직렬적으로 보내는게 비용이 적게듬
-  	- 메일인증은 그냥 db업데이트로하는게 나음
-  	
 - 대댓글에서 삭제된 댓글 표시할려고 컬럼추가했잖아? 그냥 flag로 삭제처리하고서 뱃치로 나중에 정리해
     - flag + batch 조합이게더 싸게먹혀
 
-- 브레이크포인트에 suspand all로하면 모든 스레드관점에서 다보임 옵션바꿔서하는것도 고려해(내스레드에 대해서만 작업해야하니깐...)
-
-- Vue할때 컴포넌트 다때려박았짢아? 라우트같은거 이용해서 프론트만의 MVC를 만들어야해 이런관점으로 고민이필요함
