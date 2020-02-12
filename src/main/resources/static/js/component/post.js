@@ -256,7 +256,7 @@ export default Vue.component('post',{
         },
 
         deletePost(boardId){
-            if(confirm("do you really want delete this post?")){
+            if(confirm(i18n("index.post.delete.alert"))){
                 axios.delete('/api/board/'+boardId)
                     .then(this.successDeltePost)
                     .catch(this.fail)
