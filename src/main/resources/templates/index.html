@@ -7,6 +7,7 @@
 
     <link rel="stylesheet" type="text/css" href="/static/css/pc/index.css" media="screen and (min-width:801px)">
     <link rel="stylesheet" type="text/css" href="/static/css/pc/signUp.css" media="screen and (min-width:801px)">
+    <link rel="stylesheet" type="text/css" href="/static/css/pc/userInfo.css" media="screen and (min-width:801px)">
     <link rel="stylesheet" type="text/css" href="/static/css/pc/signIn.css" media="screen and (min-width:801px)">
     <link rel="stylesheet" type="text/css" href="/static/css/pc/writePost.css" media="screen and (min-width:801px)">
     <link rel="stylesheet" type="text/css" href="/static/css/pc/post.css" media="screen and (min-width:801px)">
@@ -51,6 +52,10 @@
                         <input th:value="#{index.signin}" v-show="!loginInfo.isLogin" type="button" class="btn btn-outline-dark" @click="coverViewMethod.showSignInView()">
                         <input th:value="#{index.logout}" v-show="loginInfo.isLogin" type="button" class="btn btn-outline-dark" @click="loginMethod.logout()">
                     </span>
+                    <span v-show="loginInfo.isLogin" class="inline-block right user-info">
+                        <span class="nickname">{{loginInfo.nickname}}</span><img class="img-config"src="/static/img/config.png" @click="coverViewMethod.showUserInfoView()"><br>
+                        <span class="email">{{loginInfo.email}}</span>
+                    </span>
                 </div>
             </div>
         </div>
@@ -67,6 +72,7 @@
         </div>
         <div class="cover-view-wrapper">
             <div v-show="coverViewState.signUp"><sign-up/></div>
+            <div v-show="coverViewState.userInfo"><user-info/></div>
             <div v-show="coverViewState.signIn"><sign-in/></div>
             <div v-show="coverViewState.writePost"><write-post/></div>
             <div v-show="coverViewState.post"><post :board_id="delivery.post.boardId" @update_post="updatePost"/></div>
