@@ -15,10 +15,15 @@ export default Vue.component('user-info',{
                         <div class="warning-font">{{guide.nickname}}</div>                
                         <input class="display-block" type="text" :placeholder="i18n('index.signup.email.placeholder')" :value="loginInfo.email" disabled>
                         <div class="warning-font">{{guide.email}}</div>
-                        <input v-model="input.password" class="display-block" type="password" :placeholder="i18n('index.signup.password.placeholder')">
-                        <div class="warning-font">{{guide.password}}</div>
-                        <input v-model="input.passwordCheck" class="display-block" type="password" :placeholder="i18n('index.signup.passwordcheck.placeholder')">
-                        <div class="warning-font">{{guide.passwordCheck}}</div>                    
+                        <input v-show="!loginInfo.isSocial" type="button" :value="i18n('index.userinfo.password.modify')" @click="showPasswordForm()"><br>                        
+                        <div v-show="!loginInfo.isSocial&&isShowPasswordForm">                          
+                            <input v-model="input.password" class="display-block" type="password" :placeholder="i18n('index.signup.password.placeholder')">
+                            <div class="warning-font">{{guide.password}}</div>
+                            <input v-model="input.passwordCheck" class="display-block" type="password" :placeholder="i18n('index.signup.passwordcheck.placeholder')">
+                            <div class="warning-font">{{guide.passwordCheck}}</div>       
+                            <input v-model="input.nowPassword" class="display-block" type="password" :placeholder="i18n('index.userinfo.now-password')">
+                            <div class="warning-font">{{guide.nowPassword}}</div>                                     
+                        </div>
                     </div>
                 </div>
                 <div>
@@ -40,14 +45,18 @@ export default Vue.component('user-info',{
             input :{
                 nickname : '',
                 password : '',
-                passwordCheck : ''
+                passwordCheck : '',
+                nowPassword: ''
             },
             guide :{
                 nickname : '',
                 email : '',
                 password : '',
                 passwordCheck : '',
+                nowPassword : '',
             },
+
+            isShowPasswordForm:false,
             i18n:i18n,
         }
     },
@@ -66,36 +75,39 @@ export default Vue.component('user-info',{
     },
     methods:{
         modifyUserInfo(){
+            if(this.isShowPasswordForm){
+                this.putAccount();
+                return;
+            }
+            this.patchAccount();
+
+        },
+        putAccount(){
             const data = {
                 nickname : this.input.nickname,
                 password: this.input.password,
-                passwordCheck: this.input.passwordCheck
+                passwordCheck: this.input.passwordCheck,
+                nowPassword : this.input.nowPassword,
             }
             axios.put('/api/account', data)
-                .then(res=>{
-                    console.log('/api/account : ', res);
-                    alert(i18n('index.userinfo.complete'))
-                    this.inputMethod.resetInput(this.input);
-                    this.inputMethod.resetInput(this.guide);
-                    this.coverViewMethod.hideUserInfoView();
-                    this.loginMethod.logout();
+                .then(this.successModify)
+                .catch(this.fail);
+        },
+        patchAccount(){
+            const data = {
+                nickname : this.input.nickname,
+            }
+            axios.patch('/api/account',data)
+                .then(this.successModify)
+                .catch(this.fail);
 
-                })
-                .catch(err=>{
-                    const errorContent = err.data.errorContent;
-                    const handleFieldError = this.handleFieldError;
-                    const guide = this.guide;
-                    this.resetGuideMessage();
-                    errorContent.forEach(function(err, index, array){
-                        if(err.field){
-                            handleFieldError(err)
-                        }
-                        else{
-                            guide.passwordCheck = err.message;
-                        }
-                    })
-                    // this.failFunc.failFunc(err);
-                })
+        },
+        successModify(){
+            alert(i18n('index.userinfo.complete'))
+            this.inputMethod.resetInput(this.input);
+            this.inputMethod.resetInput(this.guide);
+            this.coverViewMethod.hideUserInfoView();
+            this.loginMethod.logout();
         },
         handleFieldError(err){
             switch (err.field) {
@@ -107,6 +119,9 @@ export default Vue.component('user-info',{
                     break;
                 case "password" :
                     this.guide.password = err.message;
+                    break;
+                case "nowPassowrd" :
+                    this.guide.nowPassword = err.message;
                     break;
                 default :
                     break;
@@ -124,6 +139,24 @@ export default Vue.component('user-info',{
         closedEvent(){
             this.coverViewMethod.hideUserInfoView();
             this.resetGuideMessage();
+        },
+        showPasswordForm(){
+            this.isShowPasswordForm = !this.isShowPasswordForm;
+        },
+        fail(err){
+            const errorContent = err.data.errorContent;
+            const handleFieldError = this.handleFieldError;
+            const guide = this.guide;
+            this.resetGuideMessage();
+            errorContent.forEach(function(err, index, array){
+                if(err.field){
+                    handleFieldError(err)
+                }
+                else{
+                    guide.passwordCheck = err.message;
+                }
+            })
+            // this.failFunc.failFunc(err);
         }
 
     }
