@@ -5,6 +5,7 @@ import com.board.portfolio.exception.ErrorContent;
 import com.board.portfolio.exception.FieldErrorContent;
 import com.board.portfolio.exception.GlobalErrorContent;
 import com.board.portfolio.exception.custom.CustomRuntimeException;
+import com.board.portfolio.exception.custom.FieldException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
@@ -54,6 +55,11 @@ public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> accessDeniedException(AccessDeniedException ex, WebRequest req, Locale locale){
         String message = validMessageSource.getMessage("signin.need", null,locale);
         return responseWithBody(ex, new ApiError(HttpStatus.BAD_REQUEST,Arrays.asList(new GlobalErrorContent(message))), req);
+    }
+    @ExceptionHandler(FieldException.class)
+    public ResponseEntity fieldException(FieldException ex, WebRequest req, Locale locale){
+        String message = validMessageSource.getMessage(ex.getMessage(), null,locale);
+        return responseWithBody(ex, new ApiError(HttpStatus.BAD_REQUEST,Arrays.asList(new FieldErrorContent(ex.getFieldName(),message,ex.getRejectedValue()))), req);
     }
 
     @ExceptionHandler(CustomRuntimeException.class)
