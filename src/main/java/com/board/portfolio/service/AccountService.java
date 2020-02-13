@@ -2,7 +2,8 @@ package com.board.portfolio.service;
 
 import com.board.portfolio.domain.dto.AccountDTO;
 import com.board.portfolio.domain.entity.Account;
-import com.board.portfolio.exception.custom.CustomRuntimeException;
+import com.board.portfolio.exception.custom.DuplicateNicknameException;
+import com.board.portfolio.exception.custom.NotCorrectPasswordException;
 import com.board.portfolio.exception.custom.NotFoundEmailException;
 import com.board.portfolio.mail.EmailSender;
 import com.board.portfolio.mail.manager.AuthMail;
@@ -51,12 +52,12 @@ public class AccountService {
 
         if(!accountDTO.getNickname().equals(dto.getNickname())){
             if(accountRepository.existsByNickname(dto.getNickname())){
-                throw new CustomRuntimeException("nickname.duplicate");
+                throw new DuplicateNicknameException();
             }
         }
         Account account = accountRepository.findById(accountDTO.getEmail()).orElseThrow(NotFoundEmailException::new);
         if(!passwordEncoder.matches(dto.getNowPassword(), account.getPassword())){
-            throw new CustomRuntimeException("index.userinfo.now-password");
+            throw new NotCorrectPasswordException(dto.getNowPassword());
         }
         account.setNickname(dto.getNickname());
         account.setPassword(passwordEncoder.encode(dto.getPassword()));
