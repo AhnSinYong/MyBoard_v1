@@ -53,6 +53,7 @@ public class ApplicationOAuth2UserService implements OAuth2UserService<OAuth2Use
                 Account.builder()
                         .email(email)
                         .role(AccountRole.MEMBER)
+                        .isSocial(true)
                         .isAuth(true)
                         .build()
         );
