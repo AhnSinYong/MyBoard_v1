@@ -7,6 +7,7 @@ import writePost from "./component/writePost.js"
 import post from "./component/post.js"
 import updatePost from "./component/updatePost.js"
 import alarm from "./component/alarm.js";
+import userInfo from "./component/userInfo.js";
 
 new Vue({
     el : '#app',
@@ -18,6 +19,7 @@ new Vue({
         post,
         updatePost,
         alarm,
+        userInfo,
 
     },
     data(){

@@ -4,6 +4,7 @@ const coverViewState = {
     writePost : false,
     post : false,
     updatePost : false,
+    userInfo : false,
 }
 
 function resetState(){
@@ -55,6 +56,15 @@ export default {
             resetState();
             coverViewState.updatePost = false;
         },
+        showUserInfoView(){
+            resetState();
+            coverViewState.userInfo = true;
+        },
+        hideUserInfoView(){
+            resetState();
+            coverViewState.userInfo = false;
+        },
+
         resetState : resetState
     }
 }

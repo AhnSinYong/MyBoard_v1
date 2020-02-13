@@ -1,6 +1,7 @@
 const loginInfo ={
     isLogin : false,
     email : '',
+    nickname :'',
 }
 
 export default {
@@ -9,10 +10,12 @@ export default {
         setLoginState(){
             loginInfo.isLogin = true;
             loginInfo.email = this.getEmail();
+            loginInfo.nickname = this.getNickname();
         },
         setLogoutState(){
             loginInfo.isLogin = false;
             loginInfo.email = '';
+            loginInfo.nickname = '';
         },
         logout(){
             if(confirm(i18n('index.logout.confirm'))){
@@ -46,6 +49,13 @@ export default {
             const jwt = this.getParsedJwt();
             if(jwt){
                 return jwt.claim.email;
+            }
+            return '';
+        },
+        getNickname(){
+            const jwt = this.getParsedJwt();
+            if(jwt){
+                return jwt.claim.nickname;
             }
             return '';
         },
