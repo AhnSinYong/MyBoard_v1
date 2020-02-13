@@ -102,7 +102,7 @@ create table TB_ACCOUNT(
     NICKNAME varchar(30) unique ,
     SIGNUP_DATE datetime default now(),
     ROLE varchar(30) default 'MEMBER',
-    SOCIAL_ID varchar(100) unique,
+    IS_SOCIAL boolean default false,
     AUTH_KEY varchar(40) not null,
     IS_AUTH boolean default false,
     primary key(EMAIL)
@@ -207,7 +207,7 @@ create table TB_ALARM(
  |NICKNAME     	 |회원의 별명		   |           | varchar(30)            | unique   |          |최소4자 이상, 10자이하      |
  |SIGNUP_DATE  	 |회원 가입일		   |           | DATETIME default now() |          | not null |                      |                       |
  |ROLE       	 |회원의 권한		   |           | varchar(30) default 'MEMBER'|          | not null |MEMBER, ADMIN, SYSTEM 중 하나  |
- |SOCIAL_ID    	 |소셜 아이디		   |           | varchar(100)            | unique   | null     |소셜에서 제공하는 ID     |
+ |IS_SOCIAL    	 |소셜 아이디 여부   |           | boolean default false    |          | not null       |             |
  |AUTH_KEY       |이메일 인증을 위한 키 |           | varchar(40)           |            | not null | 무작위 문자열   |
  |IS_AUTH        |이메일 인증을 한 계정인지 명시|    | boolean default false  |             | not null|  이메일 인증을 마치면 true  |
 
