@@ -33,6 +33,12 @@
 .focusLike{
     background-color: skyblue !important;
 }
+.warning-font{
+    font-weight: bold;
+    font-size: 0.8em;
+    color: red;
+    margin-bottom: 5px;
+}
 .right{
     float: right;
 }
@@ -58,4 +64,12 @@
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
+}
+
+/*page loader css*/
+.loading {
+    position : fixed;
+    top : calc(50% - 100px);
+    left : calc(50% - 100px);
+    z-index: 2000;
 }

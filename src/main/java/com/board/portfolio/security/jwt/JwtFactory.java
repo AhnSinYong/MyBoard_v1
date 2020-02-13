@@ -26,6 +26,7 @@ public class JwtFactory {
                     .withClaim("email", dto.getEmail())
                     .withClaim("nickname", dto.getNickname())
                     .withClaim("role", dto.getRole().toString())
+                    .withClaim("isSocial",dto.isSocial())
                     .withClaim("gen-time", new Date())
                     .sign(generateAlgorithm());
 

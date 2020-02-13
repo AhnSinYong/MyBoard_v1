@@ -3,7 +3,6 @@ package com.board.portfolio.validation.validator.constraint;
 import com.board.portfolio.repository.AccountRepository;
 import com.board.portfolio.validation.anotation.NicknameDuplicate;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintValidator;
@@ -12,8 +11,7 @@ import javax.validation.ConstraintValidatorContext;
 @Component
 @RequiredArgsConstructor
 public class NicknameDuplicateValidator implements ConstraintValidator<NicknameDuplicate, String> {
-    @Autowired
-    private AccountRepository accountRepository;
+    private final AccountRepository accountRepository;
     @Override
     public void initialize(NicknameDuplicate nicknameDuplicate) {
     }

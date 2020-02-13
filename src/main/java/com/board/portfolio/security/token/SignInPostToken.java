@@ -12,6 +12,9 @@ public class SignInPostToken extends UsernamePasswordAuthenticationToken {
     public SignInPostToken(Object principal, Object credentials, Collection<? extends GrantedAuthority> authorities) {
         super(principal, credentials, authorities);
     }
+    public SignInPostToken(Object principal, Collection<? extends GrantedAuthority> authorities){
+        super(principal, null, authorities);
+    }
 
     public String getEmail(){
         return (String)super.getPrincipal();

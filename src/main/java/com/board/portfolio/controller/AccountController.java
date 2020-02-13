@@ -1,10 +1,12 @@
 package com.board.portfolio.controller;
 
 import com.board.portfolio.domain.dto.AccountDTO;
+import com.board.portfolio.security.account.AccountSecurityDTO;
 import com.board.portfolio.service.AccountService;
 import com.board.portfolio.validation.validator.AccountAuthValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +27,22 @@ public class AccountController {
     @GetMapping("/authenticate")
     public ResponseEntity authenticate(@Valid AccountDTO.Auth dto){
         accountService.authenticate(dto);
+        return ResponseEntity.ok(Result.SUCCESS);
+    }
+
+    @PreAuthorize("hasRole('ROLE_MEMBER')")
+    @PutMapping("/account")
+    public ResponseEntity modifyUserInfoAll(@RequestBody @Valid AccountDTO.ModifyAll dto,
+                                         @ModelAttribute("accountDTO") AccountSecurityDTO accountDTO){
+        accountService.modifyUserInfoAll(dto,accountDTO);
+        return ResponseEntity.ok(Result.SUCCESS);
+    }
+
+    @PreAuthorize("hasRole('ROLE_MEMBER')")
+    @PatchMapping("/account")
+    public ResponseEntity modifyUserInfo(@RequestBody @Valid AccountDTO.Modify dto,
+                                         @ModelAttribute("accountDTO") AccountSecurityDTO accountDTO){
+        accountService.modifyUserInfo(dto,accountDTO);
         return ResponseEntity.ok(Result.SUCCESS);
     }
 
