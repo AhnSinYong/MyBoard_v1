@@ -120,7 +120,7 @@ export default Vue.component('user-info',{
                 case "password" :
                     this.guide.password = err.message;
                     break;
-                case "nowPassowrd" :
+                case "nowPassword" :
                     this.guide.nowPassword = err.message;
                     break;
                 default :
