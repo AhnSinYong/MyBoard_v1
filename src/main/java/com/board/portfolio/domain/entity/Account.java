@@ -15,7 +15,7 @@ import java.util.UUID;
 @Entity
 @Table(
         name = "TB_ACCOUNT",
-        uniqueConstraints = {@UniqueConstraint(columnNames = {"NICKNAME","SOCIAL_ID"})
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"NICKNAME"})
 })
 @NoArgsConstructor
 @AllArgsConstructor
@@ -44,8 +44,8 @@ public class Account extends EntityDefaultValues {
     @Enumerated(value= EnumType.STRING)
     private AccountRole role;
 
-    @Column(name="SOCIAL_ID")
-    private String socialId;
+    @Column(name="IS_SOCIAL")
+    private boolean isSocial;
 
     @Column(name="AUTH_KEY")
     private String authKey;
@@ -92,6 +92,7 @@ public class Account extends EntityDefaultValues {
         this.isAuth = Optional.ofNullable(this.isAuth).orElse(false);
         this.password = Optional.ofNullable(this.password).orElse("");
         this.nickname = Optional.ofNullable(this.nickname).orElse(UUID.randomUUID().toString().substring(0,9));
+        this.isSocial = Optional.ofNullable(this.isSocial).orElse(false);
     }
 
 }

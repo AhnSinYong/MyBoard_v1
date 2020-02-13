@@ -1,6 +1,8 @@
 const loginInfo ={
     isLogin : false,
     email : '',
+    nickname :'',
+    isSocial : false,
 }
 
 export default {
@@ -9,19 +11,23 @@ export default {
         setLoginState(){
             loginInfo.isLogin = true;
             loginInfo.email = this.getEmail();
+            loginInfo.nickname = this.getNickname();
+            loginInfo.isSocial = this.isSocialId();
         },
         setLogoutState(){
             loginInfo.isLogin = false;
             loginInfo.email = '';
+            loginInfo.nickname = '';
+            loginInfo.isSocial = false;
         },
         logout(){
-            if(confirm(i18n('index.logout.confirm'))){
-                this.deleteCookie('jwt-token');
-                this.setLogoutState();
+            this.deleteCookie('jwt-token');
+            this.setLogoutState();
 
-                axios.post('/api/account/signOut')
-
-            }
+            axios.post('/api/account/signOut')
+            // if(confirm(i18n('index.logout.confirm'))){
+            //
+            // }
         },
         getParsedJwt(){
             let token = this.getCookie('jwt-token').split('\.');
@@ -48,6 +54,20 @@ export default {
                 return jwt.claim.email;
             }
             return '';
+        },
+        getNickname(){
+            const jwt = this.getParsedJwt();
+            if(jwt){
+                return jwt.claim.nickname;
+            }
+            return '';
+        },
+        isSocialId(){
+            const jwt = this.getParsedJwt();
+            if(jwt){
+                return jwt.claim.isSocial;
+            }
+            return false;
         },
         checkLogin(){
             if(this.isLogin()){

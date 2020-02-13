@@ -2,25 +2,27 @@ package com.board.portfolio.mail;
 
 import com.board.portfolio.mail.manager.AuthMail;
 import com.board.portfolio.mail.manager.AuthMailManager;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+@RequiredArgsConstructor
 @Component
 public class EmailSender {
-    @Autowired
-    JavaMailSender mailSender;
-    @Autowired
-    AuthMailManager manager;
+    private final JavaMailSender mailSender;
+    private final AuthMailManager manager;
     @Value("${mail.from}")
-    String from;
+    private String from;
 
+    @Async
     public void sendAuthMail(AuthMail authMail) {
         String to = authMail.getEmail();
         String authKey = authMail.getAuthKey();

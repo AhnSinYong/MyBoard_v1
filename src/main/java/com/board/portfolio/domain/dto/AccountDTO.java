@@ -39,4 +39,21 @@ public class AccountDTO {
         @AuthKeyExist(message = "{authkey.exist}")
         private String authKey;
     }
+
+    @Data
+    public static class ModifyAll extends PasswordDTO {
+        @NotBlank(message = "{nickname.not.blank}")
+        @Size(min=5,max=10,message = "{nickname.size}")
+        private String nickname;
+        @NotBlank(message = "{password.not.blank}")
+        private String nowPassword;
+    }
+
+    @Data
+    public static class Modify {
+        @NotBlank(message = "{nickname.not.blank}")
+        @Size(min=5,max=10,message = "{nickname.size}")
+        @NicknameDuplicate(message = "{nickname.duplicate}")
+        private String nickname;
+    }
 }

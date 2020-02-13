@@ -177,6 +177,7 @@ export default Vue.component('post',{
     },
     data(){
         return {
+            coverViewState:shareObject.coverView.state,
             coverViewMethod : shareObject.coverView.method,
             inputMethod : shareObject.input.method,
             loginInfo : shareObject.login.info,
@@ -203,18 +204,29 @@ export default Vue.component('post',{
             fileList:[],
             commentList:[],
             i18n: i18n,
-
         }
     },
     async created(){
     },
     watch:{
-        board_id(boardId, oldVal){
-            this.getPost(boardId);
-            this.getCommentList(boardId);
+        coverViewState:{
+            deep:true,
+            handler(state,oldState){
+                if(state.post){
+                    this.watchGetPost();
+                }
+            }
         }
     },
     methods:{
+        watchGetPost(){
+            this.getPost(this.board_id)
+            this.getCommentList(this.board_id)
+            // setTimeout(()=>{
+            //     getPost(boardId)
+            //     getCommentList(boardId)
+            // },0)
+        },
         getPost(boardId){
             axios.get('/api/board/post/'+boardId)
                 .then(this.successGetPost)
@@ -256,7 +268,7 @@ export default Vue.component('post',{
         },
 
         deletePost(boardId){
-            if(confirm("do you really want delete this post?")){
+            if(confirm(i18n("index.post.delete.alert"))){
                 axios.delete('/api/board/'+boardId)
                     .then(this.successDeltePost)
                     .catch(this.fail)

@@ -1,4 +1,4 @@
-.component-sign-up{
+.component-user-info{
     margin-top : 100px;
     width : 300px;
     /*height : 300px;*/
@@ -9,15 +9,15 @@
 }
 
 
-.component-sign-up input{
+.component-user-info input{
     margin-bottom: 5px;
 }
 
-.component-sign-up input[name=signup]{
+.component-user-info input[name=update]{
     margin-top: 35px;
     margin-left: 120px;
 }
 
-.component-sign-up div[name=input-list]{
+.component-user-info div[name=input-list]{
     margin-top : 25px;
 }
