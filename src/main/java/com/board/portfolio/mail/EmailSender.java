@@ -21,6 +21,8 @@ public class EmailSender {
     private final AuthMailManager manager;
     @Value("${mail.from}")
     private String from;
+    @Value("${mail.auth.url}")
+    private String authUrl;
 
     @Async
     public void sendAuthMail(AuthMail authMail) {
@@ -44,7 +46,7 @@ public class EmailSender {
         return new StringBuffer()
                 .append("<h1>[이메일 인증]</h1>")
                 .append("<p>아래 링크를 클릭하시면 이메일 인증이 완료됩니다.</p>")
-                .append("<a href='"+"localhost:8181/api/authenticate?")
+                .append("<a href='"+authUrl+":8181/api/authenticate?")
                 .append("email="+to)
                 .append("&authKey="+authKey)
                 .append("' target='_blenk'>이메일 인증 확인</a>")
