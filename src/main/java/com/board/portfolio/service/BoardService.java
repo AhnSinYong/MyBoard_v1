@@ -16,6 +16,7 @@ import com.board.portfolio.repository.LikeBoardRepository;
 import com.board.portfolio.security.account.AccountSecurityDTO;
 import com.board.portfolio.store.repository.StoredBoardRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +31,7 @@ import java.util.Optional;
 
 import static com.board.portfolio.util.StaticUtils.modelMapper;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BoardService {
@@ -69,6 +71,7 @@ public class BoardService {
             }
         }
         catch (IOException e){
+            log.error("IOException",e);
             throw new FailSaveFileException();
         }
 
