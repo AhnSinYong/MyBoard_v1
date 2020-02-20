@@ -4,6 +4,8 @@ import lombok.Getter;
 
 import java.util.Map;
 
+import static com.board.portfolio.util.StaticUtils.objectMapper;
+
 @Getter
 public class OAuthAttributes {
     private String serviceName;
@@ -36,7 +38,7 @@ public class OAuthAttributes {
     }
 
     private void OfKakao(Map<String, Object> attributes) {
-        this.email = attributes.get("kaccount_email").toString();
+        this.email = objectMapper.convertValue(attributes.get("kakao_account"),Map.class).get("email").toString();
     }
 
 }
