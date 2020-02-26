@@ -6,7 +6,7 @@ echo "> Git pull"
 git pull
 
 echo "> Maven Build(package no test)"
-cd REPOSITORY/PROJECT_NAME
+cd $REPOSITORY/$PROJECT_NAME
 mvn package -Dmaven.test.skip=true
 
 echo "> application run"
