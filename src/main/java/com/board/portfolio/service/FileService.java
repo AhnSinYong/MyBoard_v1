@@ -38,7 +38,7 @@ public class FileService {
     private String ATTACHMENT_FILE_PATH;
     @Value("${file.save-path.img}")
     private String IMG_FILE_PATH;
-    @Value("${file.img.req-path}")
+    @Value("${file.req-path.img}")
     private String REQ_PATH;
 
     public String Base64ToImg(String base64,String extension){
