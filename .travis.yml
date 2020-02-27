@@ -21,8 +21,24 @@ before_install:
 script:
   - echo "skipping tests"
 
+before_deploy:
+    - zip -r myboardv1-webservice *
+    - mkdir -p deploy
+    - mv myboardv1-webservice.zip deploy/myboardv1-webservice.zip
+
+deploy:
+    - provider: s3
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+
+    bucket: myboardv1-build
+    region: ap-northeast-2
+    skip_cleanup: true
+    acl: private #zip파일 접근을 private으로
+    local_dir: deploy #before_deploy에서 생성한 디렉토리
+    wait-until-deployed: true
+
 notifications:
   email:
     recipients:
       - tpea888@gmail.com
-
