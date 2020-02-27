@@ -16,6 +16,7 @@ branches:
 
 before_install:
   - chmod +x ./MyBoard_v1/mvnw
+  - chmod +x ./deploy.sh
 
 ## master 브랜치에 푸시되었을때 수행하는 명령어
 script: "./deploy.sh"
