@@ -1,6 +1,7 @@
 
 REPOSITORY=/home/ec2-user/app/MyBoard_v1
 PROJECT_NAME=MyBoard_v1
+WAR_NAME=portfolio-0.0.1-SNAPSHOT.war
 
 cd $REPOSITORY/$PROJECT_NAME/
 
@@ -14,7 +15,8 @@ echo "> move repository"
 cd $REPOSITORY
 
 echo "현재 구동중인 애플리케이션 pid 확인"
-CURRENT_PID=$(pgrep -f ${PROJECT_NAME}*.war)
+#CURRENT_PID=$(pgrep -f ${PROJECT_NAME}*.war)
+CURRENT_PID=$(pgrep -f java)
 
 echo "현재 구동중인 애플리케이션 pid: $CURRENT_PID"
 if [ -z "$CURRENT_PID" ]; then
@@ -26,4 +28,5 @@ else
 fi
 
 echo "> application run"
-nohup java -jar target/portfolio-0.0.1-SNAPSHOT.war 2>&1 &
+cd $REPOSITORY/$PROJECT_NAME/
+nohup java -jar target/portfolio-0.0.1-SNAPSHOT.war &
