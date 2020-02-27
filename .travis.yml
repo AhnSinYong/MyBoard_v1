@@ -20,6 +20,8 @@ before_install:
 ## master 브랜치에 푸시되었을때 수행하는 명령어
 script:
   - echo "skipping tests"
+#  - cd ./MyBoard_V1
+#  - mvn package -Dmaven.test.skip=true
 
 before_deploy:
     - zip -r myboardv1-webservice *
