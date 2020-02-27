@@ -19,7 +19,10 @@ before_install:
   - chmod +x ./deploy.sh
 
 ## master 브랜치에 푸시되었을때 수행하는 명령어
-script: "./deploy.sh"
+#script: " "
+test:
+  cd ./MyBoard_v1; \
+  mvn test
 
 notifications:
   email:
