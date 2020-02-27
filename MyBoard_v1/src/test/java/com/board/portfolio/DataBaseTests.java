@@ -23,94 +23,18 @@ class DataBaseTests {
     @Value("${spring.datasource.password}")
     private String PW;
 
-    @Autowired
-    AccountRepository accountRepository;
-    @Autowired
-    BoardRepository boardRepository;
-    @Autowired
-    CommentRepository commentRepository;
-    @Autowired
-    LikeBoardRepository likeBoardRepository;
-    @Autowired
-    LikeCommentRepository likeCommentRepository;
-    @Autowired
-    FileAttachmentRepository fileAttachmentRepository;
-    @Autowired
-    AlarmRepository alarmRepository;
-    @Autowired
-    BoardDetailRepository boardDetailRepository;
-
-
     @Test
     void dbConnectionTest() throws ClassNotFoundException {
-
-        System.out.println(USER);
-        System.out.println(PW);
-        Class.forName(DRIVER);
-        try(Connection con = DriverManager.getConnection(URL, USER, PW)) {
-            System.out.println(con);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if(URL!=null){
+            System.out.println(USER);
+            System.out.println(PW);
+            Class.forName(DRIVER);
+            try(Connection con = DriverManager.getConnection(URL, USER, PW)) {
+                System.out.println(con);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
-//
-//    @Test
-//    @Transactional
-//    void saveMemberTableTest() {
-//        Account account = insertMember();
-//    }
-//    @Test
-//    @Transactional
-//    void saveBoardTableTest(){
-//        Board board = insertBoard();
-//    }
-
-    @Test
-    @Transactional
-    void findAccountTest(){
-        Account account = findMember("admin");
-    }
-    @Test
-    @Transactional
-    void findCommentTest(){
-        Comment comment_ = commentRepository.findById((long)2).orElse(null);
-
-    }
-
-    @Test
-    @Transactional
-    void findLikeBoardTest(){
-        LikeBoard likeBoard = likeBoardRepository.findById("test-id").orElse(null);
-    }
-
-    @Test
-    void findLikeCommentTest(){
-//        LikeComment comment = likeCommentRepository.save(buildLikeComment());
-        LikeComment commentLike = likeCommentRepository.findById("test-id").orElse(null);
-    }
-
-    @Test
-    void findFileAtachmentTest(){
-        FileAttachment fileAttachment = fileAttachmentRepository.findById("test-id").orElse(null);
-    }
-
-    @Test
-    void findAlarmTest(){
-        Alarm alarm = alarmRepository.findById("test-id").orElse(null);
-    }
-
-    @Test
-    void findAllBoard(){
-        List<BoardDetail> boardDetailList = boardDetailRepository.findAll();
-
-    }
-
-
-
-    private Account findMember(String email){
-        return accountRepository.findById(email).orElse(null);
-    }
-
-
 
 }
