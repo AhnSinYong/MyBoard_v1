@@ -15,7 +15,7 @@ branches:
 #    - '$HOME/.gradle'  #maven 기준으로 변경해야함
 
 before_install:
-  - chmod +x mvnw
+  - chmod +x ./MyBoard_v1/mvnw
 
 ## master 브랜치에 푸시되었을때 수행하는 명령어
 script: "./deploy.sh"
