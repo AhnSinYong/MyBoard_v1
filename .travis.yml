@@ -1,0 +1,27 @@
+language: java
+jdk:
+  - openjdk8
+
+
+branches:
+  only:
+    - master
+
+
+#Travis CII 서버의 Home
+#cache:
+#  directories:
+#    - '$HOME/.m2/repository'
+#    - '$HOME/.gradle'  #maven 기준으로 변경해야함
+
+before_install:
+  - chmod +x mvnw
+
+## master 브랜치에 푸시되었을때 수행하는 명령어
+script: "./deploy.sh"
+
+notifications:
+  email:
+    recipients:
+      - tpea888@gmail.com
+
