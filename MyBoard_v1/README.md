@@ -75,6 +75,9 @@ mail.auth.limit =메일인증 유효시간 밀리세컨즈(ex 360000)
 - cache(ehcache)
 - WebSocket
 - jmeter
+### CI/CD
+- aws codedeploy, s3
+- travis
 
 ### Git Branch
 - master/origin
