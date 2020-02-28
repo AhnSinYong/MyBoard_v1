@@ -27,7 +27,10 @@ git pull
 
 
 echo "> application run"
-cp -rf $REPOSITORY/$PROJECT_NAME/target/classes/properties/private $REPOSITORY/$ZIP/$PROJECT_NAME/target/classes/properties
+cp -rf $REPOSITORY/$PROJECT_NAME/src/main/resources/properties/private $REPOSITORY/$ZIP/$PROJECT_NAME/src/main/properties
+cd $REPOSITORY/$ZIP/$PROJECT_NAME
+chmod +x ./mvnw
+./mvnw clean -Dmaven.test.skip=true
 cd $REPOSITORY/$PROJECT_NAME
 nohup java -jar ../$ZIP/$PROJECT_NAME/target/$WAR_NAME > $REPOSITORY/nohup.out &
 
