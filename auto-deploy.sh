@@ -25,5 +25,5 @@ WAR_NAME=portfolio-0.0.1-SNAPSHOT.war
 
 echo "> application run"
 cd $REPOSITORY/$PROJECT_NAME
-nohup java -jar ../$ZIP/$PROJECT_NAME/target/$WAR_NAME &
+nohup java -jar ../$ZIP/$PROJECT_NAME/target/$WAR_NAME>$REPOSITORY/nohup.out &
 
