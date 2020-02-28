@@ -26,6 +26,7 @@ cd $REPOSITORY/$ZIP/$PROJECT_NAME
 chmod +x ./mvnw
 ./mvnw clean package -Dmaven.test.skip=true
 cd $REPOSITORY/$PROJECT_NAME
+chmod +x ../$ZIP/$PROJECT_NAME/target/$WAR_NAME
 nohup java -jar ../$ZIP/$PROJECT_NAME/target/$WAR_NAME > $REPOSITORY/nohup.out &
 echo "> fin"
 
