@@ -4,6 +4,9 @@ ZIP=zip
 PROJECT_NAME=MyBoard_v1
 WAR_NAME=portfolio-0.0.1-SNAPSHOT.war
 
+echo "> git pull"
+git pull
+
 #echo "> move original "
 #cd $REPOSITORY/$PROJECT_NAME
 
