@@ -19,9 +19,10 @@ before_install:
 
 ## master 브랜치에 푸시되었을때 수행하는 명령어
 script:
-  - echo "skipping tests"
-#  - cd ./MyBoard_V1
-#  - mvn package -Dmaven.test.skip=true
+  - echo "> start build"
+  - cd ./MyBoard_v1
+  - mvn package -Dmaven.test.skip=true
+  - cd ..
 
 before_deploy:
     - zip -r myboardv1-webservice *
@@ -30,7 +31,7 @@ before_deploy:
 
 deploy:
     - provider: s3
-      access_key_id: $AWS_ACCESS_KEY
+      access_key_id: $AWS_ACCESS_KEY #travis에서 환경변수로 주입됨
       secret_access_key: $AWS_SECRET_KEY
       bucket: myboardv1-build
       region: ap-northeast-2
