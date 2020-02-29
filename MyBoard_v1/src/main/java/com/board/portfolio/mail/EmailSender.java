@@ -50,6 +50,10 @@ public class EmailSender {
                 .append("email="+to)
                 .append("&authKey="+authKey)
                 .append("' target='_blenk'>이메일 인증 확인</a>")
+                .append("만약 인증링크가 동작하지 않으면 아래 링크를 직접 주소창에 입력해주세요.")
+                .append(authUrl+":8181/api/authenticate?")
+                .append("email="+to)
+                .append("&authKey="+authKey)
                 .toString();
     }
 
