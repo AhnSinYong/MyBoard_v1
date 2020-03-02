@@ -1,3 +1,8 @@
+##서비스 url
+- http://ec2-13-209-209-84.ap-northeast-2.compute.amazonaws.com:8181/?lang=ko
+- 테스트 아이디
+    - 아이디 : test01~05, 비밀번호 : 1234
+
 ## 실행방법
 1.본 레포지토리를 클론받는다.(git clone)
 
