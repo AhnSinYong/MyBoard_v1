@@ -1,6 +1,7 @@
 package com.board.portfolio.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,5 +18,10 @@ public class WebViewController {
         mv.addObject("locale", locale.toLanguageTag());
         mv.setViewName("index");
         return mv;
+    }
+
+    @GetMapping("/health")
+    public ResponseEntity healthCheck(){
+        return ResponseEntity.ok(Result.SUCCESS);
     }
 }
