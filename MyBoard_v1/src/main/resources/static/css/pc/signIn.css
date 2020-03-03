@@ -34,6 +34,12 @@
     background-color: #e2d200;
 
 }
+.component-sign-in .social .btn div[name=test]{
+    /*background-color: #f7e600;*/
+    background-color: #545b62;
+    width: 150px;
+
+}
 
 .component-sign-in input[name=x] {
     position: relative;

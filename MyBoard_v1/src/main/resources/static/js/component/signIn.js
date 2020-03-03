@@ -53,6 +53,12 @@ export default Vue.component('sign-in',{
                         <a href="/oauth2/authorization/kakao"
                            name="kakao"
                            class="btn btn-secondary active" role="button"> Kakao {{i18n('index.signin')}}</a>
+                    </div>
+                    <div class="btn">
+                        <div
+                           name="test"
+                           class="btn btn-secondary active" role="button"
+                           @click="guideTest()"> TEST {{i18n('index.signin')}}</div>
                     </div>                                  
                 </div>
             </div>
@@ -97,6 +103,9 @@ export default Vue.component('sign-in',{
             this.failFunc.failFunc(err);
             // alert(err.data.message);
             this.input.password='';
+        },
+        guideTest(){
+            alert("id : test01~05\n pw : 1234")
         }
 
     }

@@ -1,9 +1,9 @@
-##서비스 url
+## 서비스
 - http://ec2-13-209-209-84.ap-northeast-2.compute.amazonaws.com:8181/?lang=ko
 - 테스트 아이디
     - 아이디 : test01~05, 비밀번호 : 1234
 
-## 실행방법
+## local 실행방법
 1.본 레포지토리를 클론받는다.(git clone)
 
 2.클론 받은 프로젝트 폴더에 properties 파일들을 생성
@@ -16,20 +16,26 @@
  - /resources/properties/private/database-config.properties
 ~~~
 # MySQL Configuration
-#spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+#### MySQL Configuration ###
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-spring.datasource.url=jdbc:mysql://localhost:3306/portfolio_board?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+spring.datasource.url=jdbc:mysql://localhost:3306/DB명?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+spring.datasource.username=유저네임
+spring.datasource.password=비밀번호
 
-spring.datasource.username=root
-spring.datasource.password=1234
-
-spring.datasource.hikari.maximum-pool-size=10
-spring.datasource.hikari.minimum-idle=2
+###hikari 관련 옵션 ###
+spring.datasource.hikari.maximum-pool-size=30
+spring.datasource.hikari.minimum-idle=10
 spring.datasource.hikari.connection-test-query=select now()
 
 spring.jpa.generate-ddl=false
 spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
 spring.jpa.database=mysql
+
+
+##jpa mapping name strategy
+spring.jpa.hibernate.naming.implicit-strategy=org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+spring.jpa.hibernate.naming.physical-strategy=org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 ~~~ 
 - /resources/properties/private/jwt-config.properties
 ~~~
@@ -42,16 +48,52 @@ jwt.cookie.name=jwt-token
 ~~~
 spring.mail.host=smtp.gmail.com
 spring.mail.port=587
-spring.mail.username= 구글메일
-spring.mail.password= 구글메일 비밀번호
+spring.mail.username= 메일
+spring.mail.password= 비밀번호
 spring.mail.properties.mail.smtp.starttls.enable=true
 spring.mail.properties.mail.smtp.auth=true
 
 
-mail.from=[발송자 별명]<구글메일>
-mail.auth.limit =메일인증 유효시간 밀리세컨즈(ex 360000) 
+mail.from=[별명]<이메일>
+mail.auth.limit =3600000
+
+mail.auth.url =localhost
 ~~~
- 
+- /resources/properties/private/oauth-config.properties
+~~~
+##Google
+spring.security.oauth2.client.registration.google.client-id = 아이디
+spring.security.oauth2.client.registration.google.client-secret = 시크릿
+spring.security.oauth2.client.registration.google.scope = profile,email 
+
+
+#Naver
+spring.security.oauth2.client.registration.naver.client-id = 아이디
+spring.security.oauth2.client.registration.naver.client-secret = 시크릿
+spring.security.oauth2.client.registration.naver.redirect-uri={baseUrl}/{action}/oauth2/code/{registrationId}
+spring.security.oauth2.client.registration.naver.authorization-grant-type=authorization_code
+spring.security.oauth2.client.registration.naver.scope=name,email,profile_image
+spring.security.oauth2.client.registration.naver.client-name=Naver
+
+spring.security.oauth2.client.provider.naver.authorization-uri=https://nid.naver.com/oauth2.0/authorize
+spring.security.oauth2.client.provider.naver.token-uri=https://nid.naver.com/oauth2.0/token
+spring.security.oauth2.client.provider.naver.user-info-uri=https://openapi.naver.com/v1/nid/me
+spring.security.oauth2.client.provider.naver.user-name-attribute=response
+
+
+##Kakao
+spring.security.oauth2.client.registration.kakao.client-id =아이디
+#spring.security.oauth2.client.registration.kakao.client-secret = 필수가 아님
+spring.security.oauth2.client.registration.kakao.redirect-uri={baseUrl}/{action}/oauth2/code/{registrationId}
+spring.security.oauth2.client.registration.kakao.authorization-grant-type=authorization_code
+spring.security.oauth2.client.registration.kakao.scope=account_email,profile
+spring.security.oauth2.client.registration.kakao.client-name=Kakao
+
+spring.security.oauth2.client.provider.kakao.authorization-uri=https://kauth.kakao.com/oauth/authorize
+spring.security.oauth2.client.provider.kakao.token-uri=https://kauth.kakao.com/oauth/token
+spring.security.oauth2.client.provider.kakao.user-info-uri=https://kapi.kakao.com/v2/user/me
+spring.security.oauth2.client.provider.kakao.user-name-attribute=id
+~~~
 </p>
 </details>
 
