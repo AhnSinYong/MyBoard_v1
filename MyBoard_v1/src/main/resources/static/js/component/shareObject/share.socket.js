@@ -2,8 +2,12 @@
 export default {
     socket : {isEmpty:true},
     create(path){
-        this.socket = new WebSocket("ws://" + window.location.host + path);
-
+        if (location.protocol !== 'https:') {
+            this.socket = new WebSocket("ws://" + window.location.host + path);
+        }
+        else{
+            this.socket = new WebSocket("wss://" + window.location.host + path);
+        }
     },
     send(obj){
         console.log('Info : connection opened.');
