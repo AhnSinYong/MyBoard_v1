@@ -6,7 +6,7 @@ export default {
             this.socket = new WebSocket("ws://" + window.location.host + path);
         }
         else{
-            this.socket = new WebSocket("wss://" + window.location.host + path);
+            this.socket = new WebSocket("wss://" + window.location.host+":8181" + path);
         }
     },
     send(obj){
