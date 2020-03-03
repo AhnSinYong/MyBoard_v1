@@ -57,6 +57,7 @@ public class ApplicationOAuth2UserService implements OAuth2UserService<OAuth2Use
                         .isAuth(true)
                         .build()
         );
+        account.setAuth(true);
         return accountRepository.save(account);
     }
     private void responseJwtToken(Account account){

@@ -1,5 +1,5 @@
 ## 서비스
-- http://ec2-13-209-209-84.ap-northeast-2.compute.amazonaws.com:8181/?lang=ko
+- https://myboard.joon.link
 - 테스트 아이디
     - 아이디 : test01~05, 비밀번호 : 1234
 
