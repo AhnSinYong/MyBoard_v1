@@ -15,9 +15,12 @@
 
 .component-user-info input[name=update]{
     margin-top: 35px;
-    margin-left: 120px;
 }
 
 .component-user-info div[name=input-list]{
+    margin-top: 35px;
     margin-top : 25px;
+}
+.component-user-info input[name=delete-account]{
+    margin-top : 35px;
 }
