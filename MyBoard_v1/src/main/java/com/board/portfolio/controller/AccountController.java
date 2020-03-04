@@ -46,6 +46,13 @@ public class AccountController {
         return ResponseEntity.ok(Result.SUCCESS);
     }
 
+    @PreAuthorize("hasRole('ROLE_MEMBER')")
+    @DeleteMapping("/account")
+    public ResponseEntity deleteAccount(@ModelAttribute("accountDTO") AccountSecurityDTO accountDTO){
+        accountService.deleteAccount(accountDTO);
+        return ResponseEntity.ok(Result.SUCCESS);
+    }
+
     @InitBinder("auth")
     protected void initBinderAuth(WebDataBinder binder){ binder.addValidators(accountAuthValidator); }
 }

@@ -69,4 +69,10 @@ public class AccountService {
         Account account = accountRepository.findById(accountDTO.getEmail()).orElseThrow(NotFoundEmailException::new);
         account.setNickname(dto.getNickname());
     }
+
+    @Transactional
+    public void deleteAccount(AccountSecurityDTO accountDTO) {
+        Account account = modelMapper.map(accountDTO, Account.class);
+        accountRepository.delete(account);
+    }
 }
