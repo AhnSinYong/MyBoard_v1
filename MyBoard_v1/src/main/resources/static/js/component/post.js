@@ -12,7 +12,7 @@ export default Vue.component('post',{
                     <div class="title"><span>{{post.title}}</span></div>                    
                     <span class="right">
                         <span v-if="post.account!=null" class="nickname">{{post.account.nickname}}</span>
-                        <span v-else class="nickname"> unknown </span>
+                        <span v-else class="nickname"> {{i18n('index.unknown')}} </span>
                     </span>
                     <span class="right like">
                         <input :class="{focusLike:post.isLiked}"type="button" :value="i18n('index.board.like')"

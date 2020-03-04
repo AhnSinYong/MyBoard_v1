@@ -27,7 +27,7 @@ export default Vue.component('board',{
                             <td class="date regdate">{{new Date(board.regDate).format('yy-MM-dd a/p hh:mm:ss')}}</td>                            
                             <td class="date update">{{new Date(board.upDate).format('yy-MM-dd a/p hh:mm:ss')}}</td>
                             <td class="nickname"v-if="board.account">{{board.account.nickname}}</td>
-                            <td v-else>{{i18n('index.unknown')}}</td>
+                            <td v-else class="nickname">{{i18n('index.unknown')}}</td>
                         </tr>                    
                     </tbody>
                 </table>
