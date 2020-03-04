@@ -25,14 +25,14 @@ export default {
             this.setLogoutState();
 
             axios.post('/api/account/signOut')
-            // if(confirm(i18n('index.logout.confirm'))){
-            //
-            // }
         },
         getParsedJwt(){
             let token = this.getCookie('jwt-token').split('\.');
             const header = JSON.parse(atob(token[0]));
-            const claim = JSON.parse(atob(token[1]));
+            const claim = JSON.parse(
+                decodeURIComponent(atob(token[1]).split('').map(function(c) {
+                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(''))); //한글 디코딩 jwt는 base64 + uriencode 기반
 
             return {
                 header : header,

@@ -1,5 +1,6 @@
 import shareObject from "./shareObject/shareObject.js";
 
+
 export default Vue.component('user-info',{
     template:
         `<div class="cover-view">
@@ -27,6 +28,7 @@ export default Vue.component('user-info',{
                     </div>
                 </div>
                 <div>
+                    <input class="btn btn-outline-dark" name="delete-account" type="button" :value="i18n('index.userinfo.delete-account')" @click="deleteAccount()">
                     <input class="btn btn-outline-dark" name="update"type="button" :value="i18n('index.userinfo.modify')" @click="modifyUserInfo()">
                 </div>
             </div>
@@ -73,43 +75,43 @@ export default Vue.component('user-info',{
           }
       }
     },
-    methods:{
-        modifyUserInfo(){
-            if(this.isShowPasswordForm){
+    methods: {
+        modifyUserInfo() {
+            if (this.isShowPasswordForm) {
                 this.putAccount();
                 return;
             }
             this.patchAccount();
 
         },
-        putAccount(){
+        putAccount() {
             const data = {
-                nickname : this.input.nickname,
+                nickname: this.input.nickname,
                 password: this.input.password,
                 passwordCheck: this.input.passwordCheck,
-                nowPassword : this.input.nowPassword,
+                nowPassword: this.input.nowPassword,
             }
             axios.put('/api/account', data)
                 .then(this.successModify)
                 .catch(this.fail);
         },
-        patchAccount(){
+        patchAccount() {
             const data = {
-                nickname : this.input.nickname,
+                nickname: this.input.nickname,
             }
-            axios.patch('/api/account',data)
+            axios.patch('/api/account', data)
                 .then(this.successModify)
                 .catch(this.fail);
 
         },
-        successModify(){
+        successModify() {
             alert(i18n('index.userinfo.complete'))
             this.inputMethod.resetInput(this.input);
             this.inputMethod.resetInput(this.guide);
             this.coverViewMethod.hideUserInfoView();
             this.loginMethod.logout();
         },
-        handleFieldError(err){
+        handleFieldError(err) {
             switch (err.field) {
                 case "nickname" :
                     this.guide.nickname = err.message;
@@ -127,32 +129,40 @@ export default Vue.component('user-info',{
                     break;
             }
         },
-        resetGuideMessage(){
-            for(let prop in this.guide){
+        resetGuideMessage() {
+            for (let prop in this.guide) {
                 this.guide[prop] = '';
             }
         },
-        setUserInfo(){
+        setUserInfo() {
             this.input.nickname = this.loginInfo.nickname;
             this.input.email = this.loginInfo.email;
         },
-        closedEvent(){
+        closedEvent() {
             this.coverViewMethod.hideUserInfoView();
             this.resetGuideMessage();
         },
-        showPasswordForm(){
+        showPasswordForm() {
             this.isShowPasswordForm = !this.isShowPasswordForm;
         },
-        fail(err){
+        deleteAccount() {
+            if (confirm(i18n('index.userinfo.delete-account.warning'))) {
+                axios.delete("/api/account")
+                    .then(res => {
+                        this.coverViewMethod.resetState();
+                        this.loginMethod.logout();
+                    })
+            }
+        },
+        fail(err) {
             const errorContent = err.data.errorContent;
             const handleFieldError = this.handleFieldError;
             const guide = this.guide;
             this.resetGuideMessage();
-            errorContent.forEach(function(err, index, array){
-                if(err.field){
+            errorContent.forEach(function (err, index, array) {
+                if (err.field) {
                     handleFieldError(err)
-                }
-                else{
+                } else {
                     guide.passwordCheck = err.message;
                 }
             })

@@ -91,7 +91,7 @@ public class Account extends EntityDefaultValues {
         this.authKey = Optional.ofNullable(this.authKey).orElse(UUID.randomUUID().toString());
         this.isAuth = Optional.ofNullable(this.isAuth).orElse(false);
         this.password = Optional.ofNullable(this.password).orElse("");
-        this.nickname = Optional.ofNullable(this.nickname).orElse(UUID.randomUUID().toString().substring(0,9));
+        this.nickname = Optional.ofNullable(this.nickname).orElse("임시닉네임:"+UUID.randomUUID().toString().substring(0,9));
         this.isSocial = Optional.ofNullable(this.isSocial).orElse(false);
     }
 
