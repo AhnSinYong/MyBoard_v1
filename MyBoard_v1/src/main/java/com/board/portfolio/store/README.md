@@ -6,6 +6,7 @@
     - ![diagram](./diagram.png)
 - 성능테스트(Jmeter) 
     - ![portfolio_erd_v3](./perfomance-test.png)
+    - StoredRepository를 적용한 로직 케이스 중 B가 가장 성능이 좋다고 판단하여, 케이스 B 채택
 ## StoreManager
 - StoreConfig에서 bean으로 생성하여 초기에 어떤 값을 캐싱할지 설정합니다.
     - 아래 코드는 게시판 목록을 캐싱하기 위해 임의 개수만큼의 게시물을 쿼리하여 StoreManager에게 전달하고 있습니다.
