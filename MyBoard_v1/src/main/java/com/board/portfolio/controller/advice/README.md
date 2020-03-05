@@ -26,42 +26,63 @@
 @RestControllerAdvice
 public class ExceptionHandlerAdvice extends ResponseEntityExceptionHandler {
     private final MessageSource validMessageSource;
-    @Override
+    /**
+    *  multipart/form-data에서 @Valid에 의해 발생한 예외
+    */
+    @Override 
     protected ResponseEntity<Object> handleBindException(BindException ex, HttpHeaders headers, HttpStatus status, WebRequest req) {
         List<ErrorContent> contentList = getErrorContentList(ex, BindException.class);
         return responseWithBody(ex, new ApiError(HttpStatus.BAD_REQUEST, contentList), req);
     }
 
-    @Override
+    /**
+    *  @Valid에 의해 발생한 예외
+    */
+    @Override 
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest req) {
         List<ErrorContent> contentList = getErrorContentList(ex, MethodArgumentNotValidException.class);
         return responseWithBody(ex,new ApiError(HttpStatus.BAD_REQUEST,contentList), req);
     }
 
+    /**
+    *  @PathVariable, @RequestParam 에서
+    *  @Valid에 의해 발생한 예외
+    */
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Object> constraintViolationException(ConstraintViolationException ex, WebRequest req, Locale locale){
         List<ErrorContent> contentList = getErrorContentList(ex, ConstraintViolationException.class);
         return responseWithBody(ex,new ApiError(HttpStatus.BAD_REQUEST,contentList),req);
     }
 
-
+    /**
+    *  @PreAuthoize에 의해 발생한 예외
+    */
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<Object> accessDeniedException(AccessDeniedException ex, WebRequest req, Locale locale){
         String message = validMessageSource.getMessage("signin.need", null,locale);
         return responseWithBody(ex, new ApiError(HttpStatus.BAD_REQUEST,Arrays.asList(new GlobalErrorContent(message))), req);
     }
+
+    /**
+    *  서비스 로직상에서 필드에러가 발생했을때
+    */
     @ExceptionHandler(FieldException.class)
     public ResponseEntity fieldException(FieldException ex, WebRequest req, Locale locale){
         String message = validMessageSource.getMessage(ex.getMessage(), null,locale);
         return responseWithBody(ex, new ApiError(HttpStatus.BAD_REQUEST,Arrays.asList(new FieldErrorContent(ex.getFieldName(),message,ex.getRejectedValue()))), req);
     }
-
+    /**
+    *  커스텀하게 정의한 예외
+    */
     @ExceptionHandler(CustomRuntimeException.class)
     public ResponseEntity customRuntimeException(CustomRuntimeException ex, WebRequest req, Locale locale){
         String message = validMessageSource.getMessage(ex.getMessage(), null,locale);
         return responseWithBody(ex, new ApiError(HttpStatus.BAD_REQUEST,Arrays.asList(new GlobalErrorContent(message))), req);
     }
 
+    /**
+    *  RuntimeException 
+    */
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity runtimeException(RuntimeException ex, WebRequest req){
         log.error("runtimeException ", ex);
